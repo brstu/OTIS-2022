@@ -103,3 +103,4 @@ Nonlinear model
 0.9680117333976123
 0.9354146551381919
 ```
+![image](https://user-images.githubusercontent.com/112876032/191744099-2c33122a-6c5c-42eb-9e1d-e4bbeccb8fae.png)
