@@ -1,3 +1,20 @@
+<p style=“text-align: center;”>Министерство образования Республики Беларусь</p>
+<p style=“text-align: center;”>Учреждение образования</p>
+<p style=“text-align: center;”>“Брестский Государственный технический университет”</p>
+<p style=“text-align: center;”>Кафедра ИИТ</p>
+<div style=“margin-bottom: 10em;”></div>
+<p style=“text-align: center;”>Лабораторная работа №1</p>
+<p style=“text-align: center;”>По дисциплине “Общая теория интеллектуальных систем”</p>
+<p style=“text-align: center;”>Тема: “Моделирования температуры объекта”</p>
+<div style=“margin-bottom: 10em;”></div>
+<p style=“text-align: right;”>Выполнил:</p>
+<p style=“text-align: right;”>Студент 2 курса</p>
+<p style=“text-align: right;”>Группы ИИ-21</p>
+<p style=“text-align: right;”>Корнейчук А.И.</p>
+<p style=“text-align: right;”>Проверил:</p>
+<p style=“text-align: right;”>Иванюк Д. С.</p>
+<div style=“margin-bottom: 10em;”></div>
+<p style=“text-align: center;”>Брест 2022</p>
 # Общее задание #
 1. Написать отчет по выполненной лабораторной работе №1 в .md формате (readme.md) и с помощью запроса на внесение изменений (**pull request**) разместить его в следующем каталоге: **trunk\ii0xxyy\task_01\doc** (где **xx** - номер группы, **yy** - номер студента, например **ii02102**).
 2. Исходный код написанной программы разместить в каталоге: **trunk\ii0xxyy\task_01\src**.
