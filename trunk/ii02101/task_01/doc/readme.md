@@ -100,5 +100,37 @@ end
 main()
 
 ```
+
+## Результат программы ##
+
+``` julia
+
+start of linear module operation
+1 time has passed: 0.5
+2 time has passed: 0.75
+3 time has passed: 0.875
+4 time has passed: 0.9375
+5 time has passed: 0.96875
+6 time has passed: 0.984375
+7 time has passed: 0.9921875
+8 time has passed: 0.99609375
+9 time has passed: 0.998046875
+10 time has passed: 0.9990234375
+end of linear module operation
+
+start of non-linear module operation
+1 time has passed: 0.5
+2 time has passed: 1.1707354924039484
+3 time has passed: 1.3811032386059225
+4 time has passed: 0.9259763151197518
+5 time has passed: 0.43000057211994025
+6 time has passed: 0.7070197103825415
+7 time has passed: 1.181795101583481
+8 time has passed: 1.2616946077609823
+9 time has passed: 0.8532629652210845
+10 time has passed: 0.5514303333879209
+end of non-linear module operation
+
+```
 ## График линейной и не линейной зависимости ##
 ![graphic linear and non-linear models](https://github.com/offendeddddd/myrepos/blob/main/picutres/photo_2022-09-21_22-09-16.jpg)
