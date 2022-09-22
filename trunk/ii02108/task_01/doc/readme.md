@@ -107,8 +107,10 @@ Task is to write program (**Julia**), which simulates this object temperature.
     0.6281723315922821
     0.6013897855732264
     0.6241301461015194
-
-
-
+    Графики:
+    Линейный
+![lin](https://user-images.githubusercontent.com/108889278/191748637-03978caf-3c23-475a-a2e0-3971e48ab746.png)
+    Нелинейный
+![nonlin](https://user-images.githubusercontent.com/108889278/191748676-32a29b9b-d82c-44e7-8d1c-82e301cce276.png)
 
 
