@@ -110,8 +110,8 @@ Task is to write program (**Julia**), which simulates this object temperature.
 
     Линейный
     
-    ![lin](https://user-images.githubusercontent.com/45300214/191750141-3956f153-131d-493d-968d-af04536ee022.png)
+   ![lin](https://user-images.githubusercontent.com/45300214/191750141-3956f153-131d-493d-968d-af04536ee022.png)
 
     Нелинейный
 
-    ![nonlin](https://user-images.githubusercontent.com/45300214/191750174-bcac5e42-478c-4175-8d88-3d844cfb028c.png)
+   ![nonlin](https://user-images.githubusercontent.com/45300214/191750174-bcac5e42-478c-4175-8d88-3d844cfb028c.png)
