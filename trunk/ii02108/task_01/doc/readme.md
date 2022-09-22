@@ -79,7 +79,7 @@ Task is to write program (**Julia**), which simulates this object temperature.
 
     println(nonlinear_model(y, y, u, u, 0, 10))
 
-Вывод:
+    Вывод:
     Линейная модель
     0.0
     0.5
