@@ -43,7 +43,7 @@ Task is to write program (**Julia**), which simulates this object temperature.
 # Выполнение задания #
 
 Код программы:
-
+```Julia
     using PyPlot
 
     y_lin = [] # empty list to store the y values for the linear model
