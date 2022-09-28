@@ -105,7 +105,7 @@ Task is to write program (**Julia**), which simulates this object temperature.
     end
 
     main()
-      
+```     
 
 Вывод программы:
 
