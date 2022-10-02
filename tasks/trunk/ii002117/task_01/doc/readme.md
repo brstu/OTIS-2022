@@ -106,5 +106,5 @@ end
 main()
 ```
 ## График
-![Figure_1](https://user-images.githubusercontent.com/113047080/191750604-e17d5eb8-9a6b-4d75-ac4f-caa1ad82b059.png)
+![Снимок экрана от 2022-10-02 20-05-17](https://user-images.githubusercontent.com/113047080/193466804-4a14d329-a95f-48d1-be22-bf203c254794.png)
 ##
