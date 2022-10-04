@@ -43,7 +43,7 @@ Task is to write program (**Julia**), which simulates this object temperature.
 # Выполнение задания #
 
 Код программы:
-
+```julia
     a = 0.3
     b = 0.47
     c = 0.13
@@ -105,10 +105,8 @@ Task is to write program (**Julia**), which simulates this object temperature.
     0.5629800155884126
     0.5758854148766465
     0.5856682296544619
-
+```
     Графики:
-
-    Линейный
     ![Линейный График:](linear.jpg)
     ![Не линейный](notlinear.jpg)
-    Нелинейный
+    
