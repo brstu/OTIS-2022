@@ -1,20 +1,18 @@
 <p align="center">Министерство образования Республики Беларусь</p>
-<p style="text-align: center;">Учреждение образования</p>
-<p style="text-align: center;">"Брестский Государственный технический университет"</p>
-<p style="text-align: center;">Кафедра ИИТ</p>
-<div style="margin-bottom: 10em;"></div>
-<p style="text-align: center;">Лабораторная работа №1</p>
-<p style="text-align: center;">По дисциплине "Общая теория интеллектуальных систем"</p>
-<p style="text-align: center;">Тема: "Моделирования температуры объекта"</p>
-<div style="margin-bottom: 10em;"></div>
-<p style="text-align: right;">Выполнил:</p>
-<p style="text-align: right;">Студент 2 курса</p>
-<p style="text-align: right;">Группы ИИ-21</p>
-<p style="text-align: right;">Карагодин Д. Л.</p>
-<p style="text-align: right;">Проверил:</p>
-<p style="text-align: right;">Иванюк Д. С.</p>
-<div style="margin-bottom: 10em;"></div>
-<p style="text-align: center;">Брест 2022</p>
+<p align="center">Учреждение образования</p>
+<p align="center">"Брестский Государственный технический университет"</p>
+<p align="center">Кафедра ИИТ</p>
+<br>
+<br>
+<p align="center">Лабораторная работа №1</p>
+<p align="center">По дисциплине: "Общая теория интеллектуальных систем"</p>
+<p align="center">Тема: "Моделирования температуры объекта"</p>
+<br>
+<br>
+<p align="right">Выполнил:<br>Студент 2 курса<br>Группы ИИ-21<br>Карагодин Д. Л.</p>
+<p align="right">Проверил:<br>Иванюк Д. С.</p>
+<br>
+<p align="center">Брест 2022</p>
 
 ---
 
