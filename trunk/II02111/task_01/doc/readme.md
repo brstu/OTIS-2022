@@ -109,4 +109,6 @@ Task is to write program (**Julia**), which simulates this object temperature.
     Графики:
 
     Линейный
+    ![Линейный График:](linear.png)
+    ![Не линейный](notlinear.png)
     Нелинейный
