@@ -106,7 +106,6 @@ Task is to write program (**Julia**), which simulates this object temperature.
     0.5758854148766465
     0.5856682296544619
 ```
-    Графики:
-    ![Линейный График:](https://github.com/OneVan4/OTIS-2022/blob/main/trunk/II02111/task_01/doc/linear.jpg)
-    ![Не линейный](notlinear.jpg)
-    
+ Графики:
+ ![линейный график](linear.jpg)
+ ![нелинейный график](notlinear.jpg)
