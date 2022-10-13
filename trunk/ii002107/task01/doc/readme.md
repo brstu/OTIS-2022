@@ -122,3 +122,5 @@ not_liner_model
 1.1815994514980945
 1.1262701553270058
 1.1752211878416294
+
+![image](https://user-images.githubusercontent.com/102619109/195598427-341ff985-ecfb-4604-b0f1-15e8ad4f6b2d.png)
