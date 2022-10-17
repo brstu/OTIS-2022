@@ -11,6 +11,7 @@ jobs:
         uses: platisd/duplicate-code-detection-tool@master
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
+          file_extensions: "jl"
           # Only report similarities above 5%
           ignore_below: 50
           # If a file is more than 70% similar to another, then the job fails
