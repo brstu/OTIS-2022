@@ -24,7 +24,8 @@ function lin(alpha, beta, w, f, k)
 
 end
 
-alpha = 0.5
+function main()
+    alpha = 0.5
 beta = 0.6
 gamma = 0.7
 delta = 0.8
@@ -34,3 +35,6 @@ w = 1.0
 
 lin(alpha, beta, w, f, k)
 noLin(alpha, beta, gamma, delta, f, w, k)
+end
+
+main()
