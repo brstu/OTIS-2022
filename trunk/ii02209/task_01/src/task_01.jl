@@ -49,6 +49,3 @@ function main()
 end
 
 main()
-
-
->>>>>>> Lab1
