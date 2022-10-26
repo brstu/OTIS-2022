@@ -52,5 +52,3 @@ t = 3.7 current time is 6s\
 t = 0.4 current time is 7s\
 t = 2.4 current time is 8s\
 t = 5.6 current time is 9s
-
->>>>>>> Lab1
