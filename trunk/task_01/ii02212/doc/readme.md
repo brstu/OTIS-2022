@@ -87,7 +87,7 @@ plot!(x,arr_yt_not_lin, label = "non-linear dependence",  lw = 3)
 ```
 
 ## График зависимости ##
-![](https://github.com/neonchikCallMe/OTIS-2022/blob/Lab1/trunk/ii02212/doc/photo_2022-10-27_22-19-54.jpg?raw=true) 
+![](https://github.com/neonchikCallMe/OTIS-2022/blob/Lab1/trunk/ii02212/doc/photo_2022-10-27_20-59-24.jpg?raw=true) 
 ## Результат работы программы ##
 linear model\
 1.5499999999999998\
