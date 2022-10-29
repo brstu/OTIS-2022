@@ -1,47 +1,44 @@
 using Plots
 using LinearAlgebra
 
-a = 1 # linear and nonlinear model parameter; can be changed
-b = 0.5 # linear and nonlinear model parameter; can be changed
-c = 0.001 # nonlinear model parameter; can be changed
-d = 0.999 # nonlinear model parameter; can be changed
-
-K = 1
-T_D = 0.1
-T = 0.01
+K = 0.0001
+T = 100
+T_D = 100
 T_0 = 1
-global q_0 = K * (1 + T_D/T_0)
-global q_1 = -K * (1 + 2 * T_D / T_0 - T_0 / T)
-global q_2 = K * T_D / T_0
 
-global w = 20#parse(Int64, readline())
+q_0 = K * (1 + T_D/T_0)
+q_1 = -K * (1 + 2 * T_D / T_0 - T_0 / T)
+q_2 = K * T_D / T_0
 
-q = [0.000004,0.0000011,0.000014]
-e = [0.001,0.19,0.00002]
+
+q = [q_0, q_1, q_2]
+e = [0.0, 0.0, 0.0]
 y = [0.0, 0.0, 0.0]
 u = [1.0, 1.0]
 
-function nonlinear_model(a, b, c, d)
-    while w - y[1] > 0.001
-        e[1] = w - y[1]
-        e[3] = e[2]
-        e[2] = e[1]
-        
-        println(y[1])
-        
+function nonlinear_model(time, a = 0.5, b = 0.3, c = 0.9, d = 0.7)
+    i = 0
+    while i < time
+        e[1] = w - y[length(y)]
+        e[2] = w - y[length(y) - 1]
+        e[3] = w - y[length(y) - 2]
         u[1] = u[2] + dot(q, e)
-        !push(a*y[length(y)] - b*y[length(y) - 1]^2 + c*u[1] + d*sin(u[2]))
+        push!(y, (a*y[length(y)] - b*y[length(y) - 1]^2 + c*u[1] + d*sin(u[2])))
         u[2] = u[1]
+        
+        i += 1
     end
 end
 
 function main()
-    println("Nonlinear Model:")
-    nonlinear_model(a, b, c, d)
+    global w = parse(Int64, readline())
+    nonlinear_model(100)
     
-    plot(1:length(y_nonlin), y_nonlin, label="nonlinear_model")
-    plot(1:length(y_nonlin), y_nonlin, "b.") 
-    legend()
+    for el in y
+        println(el * w / y[length(y)])  
+    end
+    
+    plot(1:length(y), y * w / y[length(y)], label="nonlinear_model")
 end
 
 main()
