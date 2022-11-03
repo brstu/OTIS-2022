@@ -2,8 +2,8 @@
 
 | №  | ФИО                            | GitHub account name                  | Task #0          |  Task #1         | Рейтинг |Доклад        |
 |----|--------------------------------|--------------------------------------|------------------|------------------|---------|--------------|
-| 1  | Богуш Алексей Дмитриевич       | [Lenonim](https://github.com/Lenonim)|:heavy_check_mark:|:heavy_check_mark:|8        |Cmake         |
-| 2  | Годынюк Иван Андреевич         |                                      |                  |                  |5        |C++ standards |
+| 1  | Богуш Алексей Дмитриевич       |[offendeddddd](https://github.com/offendeddddd)|:heavy_check_mark:|:heavy_check_mark:|8        |Cmake         |
+| 2  | Годынюк Иван Андреевич         |[Klaster308](https://github.com/Klaster308)    |                  |                  |5        |C++ standards |
 | 3  | Кабак Денис Николаевич         | GreenDoritos                         |                  |                  |5        |              |
 | 4  | Карагодин Даниил Любомирович   | Bybko                                |:heavy_check_mark:|:heavy_check_mark:|7        |Hello git!    |
 | 5  | Кирилович Арсений Андреевич    | Vlad-203                             |                  |                  |5        |              |
