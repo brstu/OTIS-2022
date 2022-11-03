@@ -19,3 +19,4 @@
 | 15 | Шпак Илья Сергеевич            |[IlyaShpak](https://github.com/IlyaShpak)                |:heavy_check_mark:|:heavy_check_mark:|:heavy_check_mark:|5        |
 | 16 | Шурина Ангелина Александровна  |                                                         |                  |                  |                  |5        |
 | 17 | Ясюкевич Владислав Сергеевич   |[y-vladislav](https://github.com/y-vladislav)            |:heavy_check_mark:|                  |                  |5        |
+
