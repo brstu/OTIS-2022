@@ -84,3 +84,4 @@ plot(1:temp, Yt)
 40.31392993073399
 39.965598922507816
 ```
+![graph](https://user-images.githubusercontent.com/102619109/199733333-c62fd263-314b-44b1-b655-4c644a3164df.png)
