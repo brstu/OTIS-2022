@@ -11,7 +11,7 @@
 | 7  | Корпач Денис Ростиславович     |[DenisKorpach](https://github.com/DenisKorpach)|:heavy_check_mark:|:heavy_check_mark:|7        |MS VS         |
 | 8  | Литвинюк Тимофей Владимирович  |[4eburaWka](https://github.com/4eburaWka)|:heavy_check_mark:|                  |5        |              |
 | 9  | Парфеевец Иван Александрович   |[OneVan4](https://github.com/OneVan4)|:heavy_check_mark:|:heavy_check_mark:|7        |              |
-| 10 | Пучинский Андрей Анатольевич   |[hxxler]([https://github.com/hxxler)|:heavy_check_mark:|:heavy_check_mark:|7        |              |
+| 10 | Пучинский Андрей Анатольевич   |[hxxler](https://github.com/hxxler)|:heavy_check_mark:|:heavy_check_mark:|7        |              |
 | 11 | Романко Никита Алексеевич      ||:heavy_check_mark:|:heavy_check_mark:|7        |GitHub        |
 | 12 | Соболева Полина Сергеевна      ||                  |                  |5        |              |
 | 13 | Худик Андрей Александрович     | lakarp                               |                  |                  |5        |              |
