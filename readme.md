@@ -2,7 +2,7 @@
 
 | №  | ФИО                            | GitHub account name                                     | Task #0          |  Task #1         |  Task #2         | Рейтинг |
 |----|--------------------------------|---------------------------------------------------------|------------------|------------------|------------------|---------|
-| 1  | Богуш Алексей Дмитриевич       |[offendeddddd](https://github.com/offendeddddd)          :heavy_check_mark: |                  |5        |
+| 1  | Богуш Алексей Дмитриевич       |[offendeddddd](https://github.com/offendeddddd)          |:heavy_check_mark:|                  |                  |5        |
 | 2  | Годынюк Иван Андреевич         |[Klaster308](https://github.com/Klaster308)              |                  |                  |                  |5        |
 | 3  | Кабак Денис Николаевич         |[DenisKabak](https://github.com/DenisKabak)              |                  |                  |                  |5        |
 | 4  | Карагодин Даниил Любомирович   |[DanikKaragodin](https://github.com/DanikKaragodin)      |                  |                  |                  |5        |
