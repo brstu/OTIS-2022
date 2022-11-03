@@ -273,3 +273,4 @@ main()
 52.967635796626
 ```
 График:
+![plot1](https://user-images.githubusercontent.com/45300214/199728412-c620562b-cb12-4ca1-8d5a-55708594dd86.png)
