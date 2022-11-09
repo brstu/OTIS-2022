@@ -44,48 +44,57 @@ Task is to write program (**Julia**), which simulates this object temperature.
 
 ``` julia
 using Plots
-function LINEAR(y, a, b, u)
-    y = a * y + b * u
+function CALC_LINEAR_MODEL(y, kf_a, kf_b, u)
+    y = kf_a * y + kf_b * u
     return y
 end
 
-function UNLINEAR(y, a, b, PrevY, c, u, d, PrevU)
-    y = a * y - b * PrevY^2 + c * u + d * sin(PrevU)
+function CALC_UNLINEAR_MODEL(y, kf_a, kf_b, PrevY, kf_c, u, kf_d, PrevU)
+    y = kf_a * y - kf_b * PrevY^2 + kf_c * u + kf_d * sin(PrevU)
     return y
+end
+
+count = 45
+
+#LINEAR MODEL
+function LINEAR_M()
+    arr_LinY = []
+    kf_a = 0.8
+    kf_b = 0.3
+    y = 0.0
+    u = 2.3
+
+    for i in 1:count
+        push!(arr_LinY, y)
+        y = CALC_LINEAR_MODEL(y, kf_a, kf_b, u)
+    end
+    plot(1:count, arr_LinY, title = "Model", label = "Linear model", lw = 3, color = :green)
+end
+
+#UNLINEAR MODEL
+function UNLINEAR_M()
+    arr_UnLinY = []
+    kf_a = 0.7
+    kf_b = 0.1
+    kf_c = 0.8
+    kf_d = 0.5
+    y = 0.0
+    u = 3.0
+    NextY = 0.0
+    PrevY = 0.0
+
+    for i in 1:count
+        PrevY = y
+        y = NextY
+        NextY = CALC_UNLINEAR_MODEL(y, kf_a, kf_b, PrevY, kf_c, u, kf_d, u)
+        push!(arr_UnLinY, y)
+    end
+    plot!(1:count, arr_UnLinY, label = "Unlinear model", lw = 3, color = :red)
 end
 
 function main()
-    n = 45
-    #LINEAR MODEL
-    LinY = []
-    a = 0.8
-    b = 0.3
-    y = 0
-    u = 1.8
-    for i in 1:n 
-        y = LINEAR(y, a, b, u)
-        push!(LinY, y)
-    end
-
-    #UNLINEAR MODEL
-    UnLinY = []
-    a = 0.7
-    b = 0.1
-    c = 0.8
-    d = 0.5
-    y = 0.0
-    u = 3
-    NextY = 0
-    PrevY = 0.0
-    for i in 1:n
-        PrevY = y
-        y = NextY
-        NextY = UNLINEAR(y, a, b, PrevY, c, u, d, u)
-        push!(UnLinY, y)
-    end
-
-    plot(1:n, LinY, title = "Model", label = "Linear", lw = 3, color = :green)
-    plot!(1:n, UnLinY, label = "Unlinear", lw = 3, color = :red)
+    LINEAR_M()
+    UNLINEAR_M()
 end
 main()
 ```
