@@ -85,7 +85,7 @@ Enter desired temperature: 580
 580.1946541844599
 579.7205169664829
 580.0677100507542
-```!
-[nonlin](https://user-images.githubusercontent.com/113106342/200797270-6cbcf3ef-a7fe-43ea-9fb0-5072021eda56.png)
+```
+![nonlin](https://user-images.githubusercontent.com/113106342/200797270-6cbcf3ef-a7fe-43ea-9fb0-5072021eda56.png)
 
 
