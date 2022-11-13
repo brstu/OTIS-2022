@@ -37,12 +37,12 @@ end
 # init start values 
 for i in 1:time - 1
     if (i < 4)
-        push!(e, round(required_temp - y[i], digits = 1)) 
+        push!(e, round(required_temp - y[i], digits=1)) 
         push!(u, 1.0) 
         push!(y, round(a * y[i] + b * room_warm, digits = 1))
-        println("i = ", i , " y: ", y[i], " u: ", u[i], " e: ", e[i])
+        println("t = ", i , " y: ", y[i], " u: ", u[i], " e: ", e[i])
     else 
-        push!(y, round(PID(i) + a * y[i] + b * room_warm, digits = 1))
+        push!(y, round(PID(i) + a * y[i] + b * room_warm, digits=1))
     end
 end
 
@@ -52,7 +52,7 @@ for i in 1:time
     push!(required_temp_arr, required_temp)
 end
 push!(e, round(required_temp - y[time], digits = 1)) 
-push!(u, 0.0) 
+push!(u, u[time - 1]) 
 plot(time_points, y, color="red", label="y", lw=2)
 plot!(time_points, required_temp_arr, color="green", label="y0", lw=2)
 plot!(time_points, u, color="blue", label="u", lw=2)
