@@ -1,38 +1,38 @@
 using Plots
 
-function Linear_model(y_curr, u, t)
-    a = 0.925
+function Linear_model(у_curr, u, t)
+    а = 0.925
     b = 0.75
-    Arr1 = []
-    push!(Arr1,y_curr)
+    Аrr1 = []
+    push!(Аrr1,у_curr)
     for i in 1:t
-        y_next = a * y_curr + b * u
-        push!(Arr1,y_next)
-        y_curr = y_next
+        у_next = а * у_curr + b * u
+        push!(Аrr1,у_next)
+        у_curr = у_next
     end
-    println(Arr1)
-    plot([1:(t+1)], Arr1, color = :green , label = "Linear_model")
+    println(Аrr1)
+    plot([1:(t+1)], Аrr1, color = :green , label = "Linear_model")
 end
 
-function Unlinear_model(y_curr, u_curr, t)
-    a = 1.37
+function Unlinear_model(у_curr, u_curr, t)
+    а = 1.37
     b = 0.0043
     c = 0.45
     d = 0.75
-    y_prev = 0
+    у_prev = 0
     u_prev = 0
-    Arr2 = []
-    push!(Arr2,y_curr)
+    Аrr2 = []
+    push!(Аrr2,у_curr)
     for i in 1:t
-        y_next= a * y_curr - b * y_prev^2 + c * u_curr + d * sin(u_prev)
-        push!(Arr2,y_next)
-        y_prev = y_curr
-        y_curr = y_next
+        у_next= а * у_curr - b * у_prev^2 + c * u_curr + d * sin(u_prev)
+        push!(Аrr2,у_next)
+        у_prev = у_curr
+        у_curr = у_next
         u_prev = u_curr
         u_curr = u_curr + 0.035
     end
-    println(Arr2)
-    plot!([1:(t+1)], Arr2, color = :red , label = "Unlinear_model")
+    println(Аrr2)
+    plot!([1:(t+1)], Аrr2, color = :red , label = "Unlinear_model")
 end
 
 function getInt()
