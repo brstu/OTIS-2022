@@ -10,7 +10,7 @@ function Linear_model(у_curr, u, t)
         push!(Аrr1,у_next)
         у_curr = у_next
     end
-    println(Аrr1)
+    println("Linear: ",Аrr1)
     plot([1:(t+1)], Аrr1, color = :green , label = "Linear_model")
 end
 
@@ -31,7 +31,7 @@ function Unlinear_model(у_curr, u_curr, t)
         u_prev = u_curr
         u_curr = u_curr + 0.035
     end
-    println(Аrr2)
+    println("Unlinear: ",Аrr2)
     plot!([1:(t+1)], Аrr2, color = :red , label = "Unlinear_model")
 end
 
