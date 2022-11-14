@@ -119,4 +119,4 @@ Unlinear: [0, 4.5, 10.272734166832974, 18.088283728566683, 28.42339182751542, 41
 
 ---
 ## График: ##
-![image](D:\Repositories\OTIS-2022\trunk\ii02201\task_01\doc\plot_task_01.png)
+![image](https://raw.githubusercontent.com/psijikk/OTIS-2022/main/trunk/ii02201/task_01/doc/plot_task_01.png)
