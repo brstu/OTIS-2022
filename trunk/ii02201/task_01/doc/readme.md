@@ -1,4 +1,4 @@
-<p style="text-align: center;">Министерство образования Республики Беларусь<br/>
+<p style="text-align: center;">Министерство образования Республики Беларусь</p>
 <p style="text-align: center;">Учреждение образования</p>
 <p style="text-align: center;">“Брестский Государственный Технический Университет”</p>
 <p style="text-align: center;">Кафедра ИИТ</p>
