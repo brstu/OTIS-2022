@@ -1,41 +1,42 @@
 using Plots
 
-yt = 1 # input temperature
-ut = 9 # input warm
-t = 15 # time
-a = 5  # constant
-b = 6  # constant
-c = 8  # constant
-d = 11 # constant
-i = 1  # iteratio
+ut = 0.5 # input warm
+time = 15 # time
+this_is_a_constant_a = 1.2  # constant
+this_is_a_constant_b = 0.7  # constant
+this_is_a_constant_c = -0.32  # constant
+this_is_a_constant_d = 0.53 # constant
 
-arr_yt_lin = []  #array for linear dependency
-arr_yt_not_lin = [] #array for non-linear dependency
+arr_yt_linear = []  #array for linear dependency
+arr_yt_not_linear = [] #array for non-linear dependency
 
 #function for linear dependence
 function f1()
     println("linear model")
-    x = 1 : t # graph variable
-    for i in i:t
+    yt = 1 # input temperature
+    for i in 1 : time
+        yt = this_is_a_constant_a * yt + this_is_a_constant_b * ut
         println(yt)
-        push!(arr_yt_lin, yt)
-        global yt = a * yt + b * ut
+        push!(arr_yt_linear, yt)
     end
-    plot!(x,arr_yt_lin, title = "Temperature dependence",  label = "linear dependence",  lw = 3)
 end
 
 #function for non-linear dependence
 function f2()
-    x = 1 : t
+    yt = 1.5 # input temperature
+    yt_prev = 0 # input temperature
     println("non-linear model")
-    for i in i:t
+    for i in 1 : time
+        temp = yt_prev
+        yt = this_is_a_constant_a * yt - this_is_a_constant_b * yt_prev ^ 2 + this_is_a_constant_c * ut + this_is_a_constant_d * sin(ut)
+        yt_previous = temp
         println(yt)
-        push!(arr_yt_lin, yt)
-        global yt = a*yt - b*y^2 + c*ut + d*sin(ut)
+        push!(arr_yt_not_linear, yt)
     end
-    plot!(x,arr_yt_not_lin, label = "non-linear dependence",  lw = 3)
-    
 end
 
 f1()
 f2()
+x = 1 : time
+plot(x,arr_yt_linear, title = "Temperature dependence",  label = "linear dependence",  lw = 3)
+plot!(x,arr_yt_not_linear, label = "non-linear dependence",  lw = 3)
