@@ -8,10 +8,10 @@
 По дисциплине: «Общая теория интеллектуальных систем» <br/>
 Тема: «Modeling controlled object» <br/>
 
-Выполнила: <br/>
-Студент 2 курса <br/>
-Группы ИИ-22(I) <br/>
-Леваневская Н.И. <br/>
+Выполнил: <br/>
+Студент 1 курса <br/>
+Группы ИИ-21(II) <br/>
+Корпач Д.Р.<br/>
 
 Проверил: <br/>
 Иванюк Д.С. <br/>
@@ -41,83 +41,48 @@ Task is to write program (**Julia**), which simulates this object temperature.
 
 ## Код программы ##
 
+
 ``` julia
 using Plots
 
-ut = 0.5 # input warm
-t = 15 # time
-a = 1.2  # constant
-b = 0.7  # constant
-c = -0.32  # constant
-d = 0.53 # constant
-
-arr_yt_lin = []  #array for linear dependency
-arr_yt_not_lin = [] #array for non-linear dependency
-
-#function for linear dependence
-function f1()
-    println("linear model")
-    yt = 1 # input temperature
-    for i in 1 : t
-        yt = a * yt + b * ut
-        println(yt)
-        push!(arr_yt_lin, yt)
+function lin_model(a,b,u,y,t)
+    x=1:t
+    arr_y=[]
+    for i in 1:t
+        push!(arr_y,y)
+        println(y)
+        y = a*y + b*u
     end
+    plot(x,arr_y,label="liner_model")
+
+end
+function not_liner_model(a,b,c,d,y,u,t)
+    x=1:t
+    arr_y1=[]
+    println("not_liner_model")
+    for i in 1:t
+        println(y)
+        y=a*y - b*y^2 + c*u + d*sin(u)
+        push!(arr_y1,y)
+    end
+    plot!(x,arr_y1,label="not_liner_model")
 end
 
-#function for non-linear dependence
-function f2()
-    yt = 1.5 # input temperature
-    yt_prev = 0 # input temperature
-    println("non-linear model")
-    for i in 1 : t
-        temp = yt_prev
-        yt = a * yt - b * yt_prev ^ 2 + c * ut + d * sin(ut)
-        yt_prev = temp
-        println(yt)
-        push!(arr_yt_not_lin, yt)
-    end
-end
 
-f1()
-f2()
-x = 1 : t
-plot(x,arr_yt_lin, title = "Temperature dependence",  label = "linear dependence",  lw = 3)
-plot!(x,arr_yt_not_lin, label = "non-linear dependence",  lw = 3)
+a=0.5
+b=0.6
+c=0.7
+d=0.8
+t=20
+y=0.0
+u=1.0
+
+
+lin_model(a,b,u,y,t)
+not_liner_model(a,b,c,d,y,u,t) 
 ```
 
-## График зависимости ##
-![](https://github.com/neonchikCallMe/OTIS-2022/blob/Lab1/trunk/ii02212/task_01/doc/photo_2022-10-27_20-59-24.jpg?raw=true) 
-## Результат работы программы ##
-linear model\
-1.5499999999999998\
-2.2099999999999995\
-3.0019999999999993\
-3.952399999999999\
-5.092879999999998\
-6.461455999999997\
-8.103747199999997\
-10.074496639999996\
-12.439395967999994\
-15.277275161599992\
-18.68273019391999\
-22.76927623270399\
-27.67313147924479\
-33.55775777509375\
-40.6193093301125\
-non-linear model\
-1.8940955354602276\
-2.3670101780125004\
-2.934507749075228\
-3.615504834350501\
-4.432701336680829\
-5.413337139477222\
-6.590100102832894\
-8.002215658859699\
-9.696754326091865\
-11.730200726770464\
-14.170336407584783\
-17.098499224561966\
-20.612294604934586\
-24.828849061381728\
-29.8887144091183
+![image](https://user-images.githubusercontent.com/102619109/195599220-5bbf53d5-68fb-4b51-a4a4-61df18fc12cd.png)
+
+
+![image](https://user-images.githubusercontent.com/102619109/195598427-341ff985-ecfb-4604-b0f1-15e8ad4f6b2d.png)

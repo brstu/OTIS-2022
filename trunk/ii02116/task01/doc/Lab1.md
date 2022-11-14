@@ -8,10 +8,10 @@
 По дисциплине: «Общая теория интеллектуальных систем» <br/>
 Тема: «Modeling controlled object» <br/>
 
-Выполнила: <br/>
+Выполнил: <br/>
 Студент 2 курса <br/>
-Группы ИИ-22(I) <br/>
-Леваневская Н.И. <br/>
+Группы ИИ-21(II) <br/>
+Шнур А.А.  <br/>
 
 Проверил: <br/>
 Иванюк Д.С. <br/>
@@ -41,83 +41,36 @@ Task is to write program (**Julia**), which simulates this object temperature.
 
 ## Код программы ##
 
+
 ``` julia
-using Plots
-
-ut = 0.5 # input warm
-t = 15 # time
-a = 1.2  # constant
-b = 0.7  # constant
-c = -0.32  # constant
-d = 0.53 # constant
-
-arr_yt_lin = []  #array for linear dependency
-arr_yt_not_lin = [] #array for non-linear dependency
-
-#function for linear dependence
-function f1()
-    println("linear model")
-    yt = 1 # input temperature
-    for i in 1 : t
-        yt = a * yt + b * ut
-        println(yt)
-        push!(arr_yt_lin, yt)
-    end
-end
-
-#function for non-linear dependence
-function f2()
-    yt = 1.5 # input temperature
-    yt_prev = 0 # input temperature
-    println("non-linear model")
-    for i in 1 : t
-        temp = yt_prev
-        yt = a * yt - b * yt_prev ^ 2 + c * ut + d * sin(ut)
-        yt_prev = temp
-        println(yt)
-        push!(arr_yt_not_lin, yt)
-    end
-end
-
-f1()
-f2()
-x = 1 : t
-plot(x,arr_yt_lin, title = "Temperature dependence",  label = "linear dependence",  lw = 3)
-plot!(x,arr_yt_not_lin, label = "non-linear dependence",  lw = 3)
+function main() 
+    # для первой линейной модели 
+    a=0.11; b=1.5 # константы a и b 
+    y_lin=20; u_lin=15 #входящая температура и тепло 
+    i=0 # счётчик 
+    t=12 # время 
+    
+    println("Linear model") 
+    for i in i:t # цикл 
+        println(y_lin)# вывод значений 
+        y_lin=a * y_lin + b * u_lin # формула линейной модели 
+    end 
+    # нелинейная модель 
+    an=0.001; bn=0.009; c=20.5; d=-0.005 # константы 
+    y_nonlin1=10; y_nonlin2=12
+    u_nonlin=1
+    u_nonlin_1=0 
+    println("\n\n","Nonlinear model") 
+    for i in i:t 
+        y_nonlin3=an * y_nonlin2 - bn * abs2(y_nonlin1)+ c * u_nonlin + d * sin(u_nonlin_1)# формула нелинейной модели 
+        println(y_nonlin3) # вывод значений 
+        y_nonlin1=y_nonlin2 
+        y_nonlin2=y_nonlin3 
+        u_nonlin_1=u_nonlin 
+    end 
+     
+end 
+main()  
 ```
+![image](https://user-images.githubusercontent.com/113057337/191751952-970781f2-009f-4359-927c-05418be8fb75.png)
 
-## График зависимости ##
-![](https://github.com/neonchikCallMe/OTIS-2022/blob/Lab1/trunk/ii02212/task_01/doc/photo_2022-10-27_20-59-24.jpg?raw=true) 
-## Результат работы программы ##
-linear model\
-1.5499999999999998\
-2.2099999999999995\
-3.0019999999999993\
-3.952399999999999\
-5.092879999999998\
-6.461455999999997\
-8.103747199999997\
-10.074496639999996\
-12.439395967999994\
-15.277275161599992\
-18.68273019391999\
-22.76927623270399\
-27.67313147924479\
-33.55775777509375\
-40.6193093301125\
-non-linear model\
-1.8940955354602276\
-2.3670101780125004\
-2.934507749075228\
-3.615504834350501\
-4.432701336680829\
-5.413337139477222\
-6.590100102832894\
-8.002215658859699\
-9.696754326091865\
-11.730200726770464\
-14.170336407584783\
-17.098499224561966\
-20.612294604934586\
-24.828849061381728\
-29.8887144091183
