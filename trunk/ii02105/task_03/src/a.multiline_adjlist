@@ -1,0 +1,28 @@
+#/home/arsbrest/Downloads/sage-9.7/local/var/lib/sage/venv-python3.10.5/lib/python3.10/site-packages/ipykernel_launcher.py -f /home/arsbrest/.local/share/jupyter/runtime/kernel-409d0142-955f-4f04-a8d3-b14931a7cc4d.json
+# GMT Mon Nov 21 10:07:11 2022
+# Petersen graph
+0 3
+1 {}
+4 {}
+5 {}
+1 2
+2 {}
+6 {}
+2 2
+3 {}
+7 {}
+3 2
+4 {}
+8 {}
+4 1
+9 {}
+5 2
+7 {}
+8 {}
+6 2
+8 {}
+9 {}
+7 1
+9 {}
+8 0
+9 0
