@@ -1,7 +1,6 @@
 class Graph:
     def __init__(self) -> None:
         self.vertexes_count = 0
-        self.vertexes = {}
         self.adjacency_matrix = []
         self.edges = []
         self.edges_count = 0
@@ -9,29 +8,25 @@ class Graph:
 
     # CREATE GRAPH ============================================================
 
-    def add_vertex(self, vertex_name):
-        self.vertexes[self.vertexes_count] = vertex_name
+    def add_vertex(self):
         self.vertexes_count += 1
         for i in range(self.vertexes_count-1):
             self.adjacency_matrix[i].append(0)
         self.adjacency_matrix.append([0 for i in range(self.vertexes_count)])
 
-    def add_unorient_edge(self, vertex1, vertex2, weight=1):
+    def add_unorient_edge(self, vertex1: int, vertex2: int, weight=1):
         self.edges.append((vertex1, vertex2, weight))
+        self.edges.append((vertex2, vertex1, weight))
         self.adjacency_matrix[vertex1][vertex2] = weight
         self.adjacency_matrix[vertex2][vertex1] = weight
-        self.edges_count += 1
+        self.edges_count += 2
 
-    def add_orient_edge(self, vertex1, vertex2, weight=1):
+    def add_orient_edge(self, vertex1: int, vertex2: int, weight=1):
         self.edges.append((vertex1, vertex2, weight))
         self.adjacency_matrix[vertex1][vertex2] = weight
         self.edges_count += 1
 
-    def del_vertex(self, vertex):
-        for i,name in enumerate(self.vertexes.values())[::-1]:
-            if i > vertex:
-                self.vertexes[i-1] = name
-        del self.vertexes[self.vertexes_count-1]
+    def del_vertex(self, vertex: int):
         self.vertexes_count -= 1
         self.adjacency_matrix.pop(vertex)
         for i in range(self.vertexes_count):
@@ -52,12 +47,28 @@ class Graph:
                 degree += 1
         return degree
     
-    def get_incidence_matrix(self):
+    def get_incidence_matrix(self): # TODO
         incidence_matrix = [[0 for i in range(self.edges_count)] for j in range(self.vertexes_count)]
         for i, edge in enumerate(self.edges):
             incidence_matrix[edge[0]][i] = self.edges[2]
             incidence_matrix[edge[1]][i] = self.edges[2]
         return incidence_matrix
+
+    def show_adj_matr(self):
+        adj_matr = ''
+        for i in range(self.vertexes_count):
+            for j in range(self.vertexes_count):
+                adj_matr += str(self.adjacency_matrix[i][j]) + ' '
+            adj_matr += '\n'
+        return adj_matr
+    
+    def show_inc_matr(self):
+        inc_matr = ''
+        for i in range(self.vertexes_count):
+            for j in range(self.edges_count):
+                inc_matr += str(self.incidence_matrix[i][j]) + ' '
+            inc_matr += '\n'
+        return inc_matr
 
 
     # ALGORITHMS ================================================================
@@ -209,14 +220,14 @@ class Graph:
 
 def main():
     a = Graph()
-    a.add_vertex("A")
-    a.add_vertex("B")
-    a.add_vertex("C")
-    # a.add_vertex("D")
+    a.add_vertex()
+    a.add_vertex()
+    a.add_vertex()
+    # a.add_vertex()
 
-    a.add_unorient_edge(0, 1, 4)
-    a.add_unorient_edge(0, 2, 3)
-    a.add_unorient_edge(1, 2, 5)
+    a.add_orient_edge(0, 1, 4)
+    a.add_orient_edge(0, 2, 3)
+    a.add_orient_edge(1, 2, 5)
 
     print(a.adjacency_matrix)
     print(a.get_degree(0))
@@ -225,4 +236,4 @@ def main():
 
     print(a.get_eulerian_cycle())
 
-main()
+# main()
