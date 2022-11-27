@@ -1,7 +1,7 @@
 from customtkinter import *
-from tkinter import *
-from  graphs import *
+from tkinter import Menu, PhotoImage
 from  random import  randint
+from  graphs import *
 
 
 
@@ -55,7 +55,8 @@ class Edge:
 
 
 class Workspace:
-    def __init__(self) -> None:
+    def __init__(self, name: str) -> None:
+        self.name = name
         self.graph = Graph()
         self.vertexes = []
         self.edges = []
@@ -107,14 +108,14 @@ def main():
     root.title('Graphs Editor Pro')
     root.geometry("1600x900+150+100")
     root.resizable(False, False)
-    # root['bg'] = black
-    # root.set_appearance_mode('dark')
+    root.set_appearance_mode('dark')
 
     # Раздел меню
-    mainmenu = Menu(root)
+    mainmenu = Menu(root, background=black)
     root.config(menu=mainmenu)
 
     filemenu = Menu(mainmenu, tearoff=0)
+    filemenu.add_command(label="Новый", command=lambda: print('Открыть')) # <====================================================
     filemenu.add_command(label="Открыть", command=lambda: print('Открыть')) # <====================================================
     filemenu.add_command(label="Сохранить", command=lambda: print('Сохранить')) # <====================================================
     filemenu.add_separator()
@@ -150,16 +151,22 @@ def main():
     del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=black) # <====================================================
     del_edge_btn = CTkButton(root, text='Удалить ребро', command=lambda: print('Удалить ребро'), bg_color=black) # <====================================================
 
-    add_vert_btn.pack(anchor='ne', padx=10, pady=10)
-    add_edge_btn.pack(anchor='ne', padx=10, pady=10)
-    del_vert_btn.pack(anchor='ne', padx=10, pady=10)
-    del_edge_btn.pack(anchor='ne', padx=10, pady=10)
+    add_vert_btn.place(anchor='ne', relx=0.997, rely=0.01)
+    add_edge_btn.place(anchor='ne', relx=0.997, rely=0.05)
+    del_vert_btn.place(anchor='ne', relx=0.997, rely=0.09)
+    del_edge_btn.place(anchor='ne', relx=0.997, rely=0.13)
 
-    canvas = CTkCanvas(root, width=1440, height=1755, bg='#D3D3D3')
+    canvas = CTkCanvas(root, width=1445, height=1755, bg='#D3D3D3')
     canvas.place(anchor='w')
 
 
 
+    create_new_graph_btn = CTkButton(root, text='', bg_color=black, fg_color='green',
+                                    image=PhotoImage(file='E:\Studing\OTIS\lab3\icons\icon_for_newgraph.png'), 
+                                    corner_radius=5)
+    create_new_graph_btn.place(anchor='e', relx=0.997, rely=0.3)
+
     root.mainloop()
+
 
 main()
