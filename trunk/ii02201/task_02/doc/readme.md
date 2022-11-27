@@ -108,4 +108,4 @@ Current value: Any[0, 42.605500000000006, 49.372713697500004, 60.84743089311165,
 
 ---
 ## График: ##
-![image](D:\Repositories\OTIS-2022\trunk\ii02201\task_02\doc\plot_task_02.png)
+![image](https://raw.githubusercontent.com/psijikk/OTIS-2022/main/trunk/ii02201/task_02/doc/plot_task_02.png)
