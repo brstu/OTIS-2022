@@ -4,19 +4,40 @@ from random import  randint
 from graphs import *
 from config import *
 
-
+def create_circle(canvas, x, y, r, **kwargs):
+    return canvas.create_oval(x-r, y-r, x+r, y+r, **kwargs)
 
 class Vertex:
-    def __init__(self, name: str) -> None:
-        self.name = name
-        self.x = randint(0, 1000)#поменять на нормальные значения
-        self.y = randint(0, 1000)#поменять на нормальные значения
+    def __init__(self, canvas, name: int | str, x: int, y: int) -> None:
+        self.name = str(name)
+        self.x = x
+        self.y = y
         self.radius = 15
         self.color = 'black'
+
+        self.canvas = canvas
+
+        self.circle = create_circle(self.canvas, self.x, self.y, self.radius, fill=self.color)
+        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill='white')
+
+    
+    def show_properties(self, event):
+        props = CTk()
+        props.title(f'Vertex: {self.name} properties')
+        props.geometry(f'300x300+{event.x-250}+{event.y-800}')
+
+        name_entry = CTkEntry(props, text='Enter name')
+        name_entry.insert(0, self.name)
+        name_entry.pack()
+        name_entry.bind('<Return>', lambda event: self.rename(name_entry.get()))
+
+        props.mainloop()
 
 
     def rename(self, name):
         self.name = name
+        self.canvas.delete(self.text)
+        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill='white')
         '''перерисовать вершину''' # <====================================================
 
     def move(self, x, y):
@@ -32,7 +53,7 @@ class Edge:
         self.vertex2x, self.vertex2y = vertex2
 
         self.is_oriented = oriented
-        self.is_loop = True if self.vertex1x == self.vertex2x and self.vertex1y == self.vertex2y else False
+        self.is_loop = self.vertex1x == self.vertex2x and self.vertex1y == self.vertex2y
 
         self.color = 'black'
         self.thickness = 2
@@ -61,10 +82,17 @@ class Workspace:
         self.graph = Graph()
         self.vertexes = []
         self.edges = []
+        self.id_vert = 0
+
+        self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex, bg_color=btns_color) # <====================================================
+        self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=lambda: print('Добавить ребро'), bg_color=btns_color) # <====================================================
+        self.del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=btns_color) # <====================================================
+        self.del_edge_btn = CTkButton(root, text='Удалить ребро', command=lambda: print('Удалить ребро'), bg_color=btns_color) # <====================================================
+
+        
 
         self.is_tab_opened = True
         self.canvas = CTkCanvas(root, width=1445, height=1755, bg='#D3D3D3')
-        self.canvas.place(anchor='w')
 
 
         self.tab_btn = CTkButton(root, text=self.name[0:12], command=self.SHOW, bg_color=btns_color,
@@ -75,25 +103,46 @@ class Workspace:
         self.tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*len(workspaces), width=110)
         self.close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*len(workspaces), width=30)
 
+        self.canvas.bind('<Button-3>', self.show_properties)
+
+        self.SHOW()
         '''рисовать все канвасы и т.д.''' # <====================================================
 
+    def exit(self, event):
+        print(6567)
+
+    def show_properties(self, event):
+        x, y = event.x, event.y
+        for vertex in self.vertexes:
+            if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
+                vertex.show_properties(event)
+                break
+        else:
+            print('Свойства ребра')
     
-    def add_vertex(self, name):
+    def add_vertex(self):
+        # operation = 'add_vertex'
         """при нажатии на кнопку будет вылезать окно и спрашивать имя вершины"""
-        self.graph.add_vertex()
-        self.vertexes.append(Vertex(name))
+        self.canvas.bind('<Button-1>', self.add_vertex_click)
         '''после добавления вершины надо ее отрисовать''' # <========================================================
 
+    def add_vertex_click(self, event):
+        self.graph.add_vertex()
+        self.vertexes.append(Vertex(self.canvas, self.id_vert, event.x, event.y))
+        self.id_vert += 1
+        
+
     def add_edge(self, vertex1: int, vertex2: int, weight=1, oriented: bool = False):
-        """при нажатии на кнопку будет вылезать окно и спрашивать вес ребра и ориентированность"""
-        if oriented:
-            self.graph.add_orient_edge(vertex1, vertex2, weight)
-        else:
-            self.graph.add_unorient_edge(vertex1, vertex2, weight)
-        vertex1_coords = (self.vertexes[vertex1].x, self.vertexes[vertex1].y)
-        vertex2_coords = (self.vertexes[vertex2].x, self.vertexes[vertex2].y)
-        self.edges.append(Edge(vertex1_coords, vertex2_coords, weight, oriented))
-        '''после добавления ребра надо его отрисовать(линию и стрелку(если надо))''' # <=========================================================
+        operation = 'add_edge'
+        # """при нажатии на кнопку будет вылезать окно и спрашивать вес ребра и ориентированность"""
+        # if oriented:
+        #     self.graph.add_orient_edge(vertex1, vertex2, weight)
+        # else:
+        #     self.graph.add_unorient_edge(vertex1, vertex2, weight)
+        # vertex1_coords = (self.vertexes[vertex1].x, self.vertexes[vertex1].y)
+        # vertex2_coords = (self.vertexes[vertex2].x, self.vertexes[vertex2].y)
+        # self.edges.append(Edge(vertex1_coords, vertex2_coords, weight, oriented))
+        # '''после добавления ребра надо его отрисовать(линию и стрелку(если надо))''' # <=========================================================
 
 
     def save(self):
@@ -110,13 +159,22 @@ class Workspace:
         self.canvas.place_forget()
         self.tab_btn.configure(fg_color=default_btn_clr)
 
+        self.add_vert_btn.place_forget()
+        self.add_edge_btn.place_forget()
+        self.del_vert_btn.place_forget()
+        self.del_edge_btn.place_forget()
+
     def SHOW(self):
         for workspace in workspaces:
             workspace.HIDE()
         self.canvas.place(anchor='w')
 
         self.tab_btn.configure(fg_color=selected_tab_clr)
-        print(self.name.upper())
+        
+        self.add_vert_btn.place(anchor='ne', relx=0.997, rely=0.01)
+        self.add_edge_btn.place(anchor='ne', relx=0.997, rely=0.05)
+        self.del_vert_btn.place(anchor='ne', relx=0.997, rely=0.09)
+        self.del_edge_btn.place(anchor='ne', relx=0.997, rely=0.13)
 
     def DEL(self):
         self.canvas.destroy()
@@ -177,17 +235,6 @@ def main():
 
 
     # Раздел редактора
-    add_vert_btn = CTkButton(root, text='Добавить вершину', command=lambda: print('Добавить вершину'), bg_color=btns_color) # <====================================================
-    add_edge_btn = CTkButton(root, text='Добавить ребро', command=lambda: print('Добавить ребро'), bg_color=btns_color) # <====================================================
-    del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=btns_color) # <====================================================
-    del_edge_btn = CTkButton(root, text='Удалить ребро', command=lambda: print('Удалить ребро'), bg_color=btns_color) # <====================================================
-
-    add_vert_btn.place(anchor='ne', relx=0.997, rely=0.01)
-    add_edge_btn.place(anchor='ne', relx=0.997, rely=0.05)
-    del_vert_btn.place(anchor='ne', relx=0.997, rely=0.09)
-    del_edge_btn.place(anchor='ne', relx=0.997, rely=0.13)
-
-
 
 
     create_new_graph_btn = CTkButton(root, text='', bg_color=btns_color, fg_color=add_tab_button,
@@ -195,6 +242,7 @@ def main():
                                     corner_radius=5, command=add_new_tab)
     create_new_graph_btn.place(anchor='w', relx=0.9097, rely=0.3)
 
+    root.bind('q', ex)
     root.mainloop()
 
 
@@ -207,6 +255,9 @@ def add_new_tab():
 
 
 workspaces = []
-
+operation = ''
+def ex(event):
+    global root
+    root.destroy()
 
 main()
