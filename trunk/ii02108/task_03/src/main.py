@@ -67,6 +67,14 @@ class Workspace:
         self.canvas.place(anchor='w')
 
 
+        self.tab_btn = CTkButton(root, text=self.name[0:12], command=self.SHOW, bg_color=btns_color,
+                                 fg_color='white')
+        self.close_tab_btn = CTkButton(root, image=PhotoImage(file=path_to_img_close_tab), 
+                                    text='', bg_color=btns_color, fg_color=close_tab_button, hover_color='darkred',
+                                    command=self.DEL)
+        self.tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*len(workspaces), width=110)
+        self.close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*len(workspaces), width=30)
+
         '''рисовать все канвасы и т.д.''' # <====================================================
 
     
@@ -100,12 +108,24 @@ class Workspace:
 
     def HIDE(self):
         self.canvas.place_forget()
+        self.tab_btn.configure(fg_color=default_btn_clr)
 
     def SHOW(self):
         for workspace in workspaces:
             workspace.HIDE()
         self.canvas.place(anchor='w')
+
+        self.tab_btn.configure(fg_color=selected_tab_clr)
         print(self.name.upper())
+
+    def DEL(self):
+        self.canvas.destroy()
+        self.tab_btn.destroy()
+        self.close_tab_btn.destroy()
+        workspaces.remove(self)
+        for i in range(len(workspaces)):
+            workspaces[i].tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*i, width=110)
+            workspaces[i].close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*i, width=30)
 
 
 
@@ -113,9 +133,6 @@ def main():
 
     global workspaces
     workspaces = []
-
-    global tab_btns
-    tab_btns = []
 
     global root
     root = CTk()
@@ -170,12 +187,11 @@ def main():
     del_vert_btn.place(anchor='ne', relx=0.997, rely=0.09)
     del_edge_btn.place(anchor='ne', relx=0.997, rely=0.13)
 
-    canvas = []
 
 
 
     create_new_graph_btn = CTkButton(root, text='', bg_color=btns_color, fg_color=add_tab_button,
-                                    image=PhotoImage(file='E:\Studing\OTIS\lab3\icons\icon_for_newgraph.png'), 
+                                    image=PhotoImage(file=path_to_img_create_new_tab), 
                                     corner_radius=5, command=add_new_tab)
     create_new_graph_btn.place(anchor='w', relx=0.9097, rely=0.3)
 
@@ -183,20 +199,14 @@ def main():
 
 
 def add_new_tab():
-    for workaspace in workspaces:
-        workaspace.is_tab_opened = False
-    graph = Workspace()#input())
+    for workspace in workspaces:
+        workspace.is_tab_opened = False
+        workspace.tab_btn.configure(fg_color=default_btn_clr)
+    graph = Workspace()
     workspaces.append(graph)
-
-    tab_btns.append(CTkButton(root, text=graph.name[0:12], command=graph.SHOW, bg_color=btns_color))
-    close_tab_btns.append(CTkButton(root, image=PhotoImage(file='E:\Studing\OTIS\lab3\icons\icon_for_close_tab.png'), 
-                                text='', bg_color=btns_color, fg_color=close_tab_button, hover_color='darkred'))
-    tab_btns[-1].place(anchor='w', relx = 0.9097, rely=0.3+0.04*len(tab_btns), width=110)
-    close_tab_btns[-1].place(anchor='e', relx = 0.998, rely=0.3+0.04*len(tab_btns), width=30)
 
 
 workspaces = []
-tab_btns = []
-close_tab_btns = []
+
 
 main()
