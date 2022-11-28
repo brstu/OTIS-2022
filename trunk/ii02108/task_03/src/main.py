@@ -1,5 +1,5 @@
 from customtkinter import *
-from tkinter import Menu, PhotoImage, font
+from tkinter import Menu, PhotoImage
 from random import  randint
 from graphs import *
 from config import *
@@ -7,22 +7,22 @@ from config import *
 
 
 class Vertex:
-        def __init__(self, name: str) -> None:
-            self.name = name
-            self.x = randint(0, 1000)#поменять на нормальные значения
-            self.y = randint(0, 1000)#поменять на нормальные значения
-            self.radius = 15
-            self.color = 'black'
+    def __init__(self, name: str) -> None:
+        self.name = name
+        self.x = randint(0, 1000)#поменять на нормальные значения
+        self.y = randint(0, 1000)#поменять на нормальные значения
+        self.radius = 15
+        self.color = 'black'
 
 
-        def rename(self, name):
-            self.name = name
-            '''перерисовать вершину''' # <====================================================
+    def rename(self, name):
+        self.name = name
+        '''перерисовать вершину''' # <====================================================
 
-        def move(self, x, y):
-            self.x = x
-            self.y = y
-            '''перерисовать вершину''' # <====================================================
+    def move(self, x, y):
+        self.x = x
+        self.y = y
+        '''перерисовать вершину''' # <====================================================
 
 
 class Edge:
