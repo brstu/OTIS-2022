@@ -1,6 +1,5 @@
 from customtkinter import *
 from tkinter import Menu, PhotoImage
-from random import  randint
 from graphs import *
 from config import *
 
@@ -14,31 +13,66 @@ class Vertex:
         self.y = y
         self.radius = 15
         self.color = 'black'
+        self.text_color = 'white'
 
         self.canvas = canvas
 
         self.circle = create_circle(self.canvas, self.x, self.y, self.radius, fill=self.color)
-        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill='white')
+        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill=self.text_color)
 
     
     def show_properties(self, event):
-        props = CTk()
-        props.title(f'Vertex: {self.name} properties')
-        props.geometry(f'300x300+{event.x-250}+{event.y-800}')
+        props_vert = CTk()
+        props_vert.wm_attributes('-topmost', '1')
+        props_vert.title(f'Vertex: {self.name} properties')
+        props_vert.geometry(f'300x300+{event.x-250}+{event.y-800}')
 
-        name_entry = CTkEntry(props, text='Enter name')
+        name_entry = CTkEntry(props_vert, text='Enter name', justify='center')
         name_entry.insert(0, self.name)
-        name_entry.pack()
+        name_entry.place(anchor='n', relx=0.5, rely=0.1)
         name_entry.bind('<Return>', lambda event: self.rename(name_entry.get()))
 
-        props.mainloop()
+        clrbtn_1 = CTkButton(props_vert, corner_radius=0, fg_color='red', text='', command=lambda: self.change_color('red'))
+        clrbtn_2 = CTkButton(props_vert, corner_radius=0, fg_color='purple', text='', command=lambda: self.change_color('purple'))
+        clrbtn_3 = CTkButton(props_vert, corner_radius=0, fg_color='blue', text='', command=lambda: self.change_color('blue'))
+        clrbtn_4 = CTkButton(props_vert, corner_radius=0, fg_color='green', text='', command=lambda: self.change_color('green'))
+        clrbtn_5 = CTkButton(props_vert, corner_radius=0, fg_color='yellow', text='', command=lambda: self.change_color('yellow'))
+        clrbtn_6 = CTkButton(props_vert, corner_radius=0, fg_color='orange', text='', command=lambda: self.change_color('orange'))
+        clrbtn_7 = CTkButton(props_vert, corner_radius=0, fg_color='brown', text='', command=lambda: self.change_color('brown'))
+        clrbtn_8 = CTkButton(props_vert, corner_radius=0, fg_color='black', text='', command=lambda: self.change_color('black'))
+        clrbtn_9 = CTkButton(props_vert, corner_radius=0, fg_color='#FF00FF', text='', command=lambda: self.change_color('#FF00FF'))
+        clrbtn_10= CTkButton(props_vert, corner_radius=0, fg_color='#00FF00', text='', command=lambda: self.change_color('#00FF00'))
+
+        clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relheight=0.2)
+        clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relheight=0.2)
+        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relheight=0.2)
+        clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relheight=0.2)
+        clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relheight=0.2)
+        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relheight=0.2)
+        clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relheight=0.2)
+        clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relheight=0.2)
+        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relheight=0.2)
+        clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
+        
+        props_vert.mainloop()
 
 
     def rename(self, name):
         self.name = name
         self.canvas.delete(self.text)
-        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill='white')
+        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill=self.text_color)
         '''перерисовать вершину''' # <====================================================
+
+    def change_color(self, color):
+        self.color = color
+        self.canvas.delete(self.circle)
+        self.canvas.delete(self.text)
+        self.circle = create_circle(self.canvas, self.x, self.y, self.radius, fill=self.color)
+        if color in ['red', 'purple', 'blue', 'brown', 'black', 'green']:
+            self.text_color = 'white'
+        else:
+            self.text_color = 'black'
+        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill=self.text_color)
 
     def move(self, x, y):
         self.x = x
