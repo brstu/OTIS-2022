@@ -1,7 +1,8 @@
 from customtkinter import *
-from tkinter import Menu, PhotoImage
-from  random import  randint
-from  graphs import *
+from tkinter import Menu, PhotoImage, font
+from random import  randint
+from graphs import *
+from config import *
 
 
 
@@ -55,14 +56,18 @@ class Edge:
 
 
 class Workspace:
-    def __init__(self, name: str) -> None:
+    def __init__(self, name: str = 'Безымянный') -> None:
         self.name = name
         self.graph = Graph()
         self.vertexes = []
         self.edges = []
 
         self.is_tab_opened = True
-        '''рисовать все меню, кнопки, канвасы и т.д.''' # <====================================================
+        self.canvas = CTkCanvas(root, width=1445, height=1755, bg='#D3D3D3')
+        self.canvas.place(anchor='w')
+
+
+        '''рисовать все канвасы и т.д.''' # <====================================================
 
     
     def add_vertex(self, name):
@@ -94,24 +99,33 @@ class Workspace:
 
 
     def HIDE(self):
-        pass
+        self.canvas.place_forget()
 
     def SHOW(self):
-        pass
+        for workspace in workspaces:
+            workspace.HIDE()
+        self.canvas.place(anchor='w')
+        print(self.name.upper())
 
 
 
 def main():
-    black = 'black'
 
+    global workspaces
+    workspaces = []
+
+    global tab_btns
+    tab_btns = []
+
+    global root
     root = CTk()
     root.title('Graphs Editor Pro')
     root.geometry("1600x900+150+100")
     root.resizable(False, False)
-    root.set_appearance_mode('dark')
+    root.set_appearance_mode(main_theme)
 
     # Раздел меню
-    mainmenu = Menu(root, background=black)
+    mainmenu = Menu(root)
     root.config(menu=mainmenu)
 
     filemenu = Menu(mainmenu, tearoff=0)
@@ -146,27 +160,43 @@ def main():
 
 
     # Раздел редактора
-    add_vert_btn = CTkButton(root, text='Добавить вершину', command=lambda: print('Добавить вершину'), bg_color=black) # <====================================================
-    add_edge_btn = CTkButton(root, text='Добавить ребро', command=lambda: print('Добавить ребро'), bg_color=black) # <====================================================
-    del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=black) # <====================================================
-    del_edge_btn = CTkButton(root, text='Удалить ребро', command=lambda: print('Удалить ребро'), bg_color=black) # <====================================================
+    add_vert_btn = CTkButton(root, text='Добавить вершину', command=lambda: print('Добавить вершину'), bg_color=btns_color) # <====================================================
+    add_edge_btn = CTkButton(root, text='Добавить ребро', command=lambda: print('Добавить ребро'), bg_color=btns_color) # <====================================================
+    del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=btns_color) # <====================================================
+    del_edge_btn = CTkButton(root, text='Удалить ребро', command=lambda: print('Удалить ребро'), bg_color=btns_color) # <====================================================
 
     add_vert_btn.place(anchor='ne', relx=0.997, rely=0.01)
     add_edge_btn.place(anchor='ne', relx=0.997, rely=0.05)
     del_vert_btn.place(anchor='ne', relx=0.997, rely=0.09)
     del_edge_btn.place(anchor='ne', relx=0.997, rely=0.13)
 
-    canvas = CTkCanvas(root, width=1445, height=1755, bg='#D3D3D3')
-    canvas.place(anchor='w')
+    canvas = []
 
 
 
-    create_new_graph_btn = CTkButton(root, text='', bg_color=black, fg_color='green',
+    create_new_graph_btn = CTkButton(root, text='', bg_color=btns_color, fg_color=add_tab_button,
                                     image=PhotoImage(file='E:\Studing\OTIS\lab3\icons\icon_for_newgraph.png'), 
-                                    corner_radius=5)
-    create_new_graph_btn.place(anchor='e', relx=0.997, rely=0.3)
+                                    corner_radius=5, command=add_new_tab)
+    create_new_graph_btn.place(anchor='w', relx=0.9097, rely=0.3)
 
     root.mainloop()
 
+
+def add_new_tab():
+    for workaspace in workspaces:
+        workaspace.is_tab_opened = False
+    graph = Workspace()#input())
+    workspaces.append(graph)
+
+    tab_btns.append(CTkButton(root, text=graph.name[0:12], command=graph.SHOW, bg_color=btns_color))
+    close_tab_btns.append(CTkButton(root, image=PhotoImage(file='E:\Studing\OTIS\lab3\icons\icon_for_close_tab.png'), 
+                                text='', bg_color=btns_color, fg_color=close_tab_button, hover_color='darkred'))
+    tab_btns[-1].place(anchor='w', relx = 0.9097, rely=0.3+0.04*len(tab_btns), width=110)
+    close_tab_btns[-1].place(anchor='e', relx = 0.998, rely=0.3+0.04*len(tab_btns), width=30)
+
+
+workspaces = []
+tab_btns = []
+close_tab_btns = []
 
 main()
