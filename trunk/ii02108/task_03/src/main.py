@@ -1,32 +1,35 @@
 from customtkinter import *
-from tkinter import Menu, PhotoImage
+from tkinter import Menu, PhotoImage, filedialog
 from graphs import *
 from config import *
-import os
 
-def create_circle(canvas, x, y, r, **kwargs):
+import dill, json
+
+def create_circle(canvas: CTkCanvas, x, y, r, **kwargs):
     return canvas.create_oval(x-r, y-r, x+r, y+r, **kwargs)
 
 class Vertex:
-    def __init__(self, canvas, name: int | str, x: int, y: int) -> None:
+    def __init__(self, canvas, name: int | str, x: int, y: int, color: str = 'black') -> None:
         self.name = str(name)
         self.x = x
         self.y = y
-        self.radius = 15
-        self.color = 'black'
-        self.text_color = 'white'
+        self.radius = 30
+        self.color = color
 
         self.canvas = canvas
+        
+        # сделать выделение вершин (добавить окантовку)
+        self.is_selected = False
 
         self.circle = create_circle(self.canvas, self.x, self.y, self.radius, fill=self.color)
-        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill=self.text_color)
+        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font=f'Arial {self.radius-5}', fill='white')
 
     
     def show_properties(self, event):
         props_vert = CTk()
         props_vert.wm_attributes('-topmost', '1')
         props_vert.title(f'Vertex: {self.name} properties')
-        props_vert.geometry(f'300x300+{event.x-250}+{event.y-800}')
+        props_vert.geometry(f'300x300+{event.x+250}+{event.y}')
 
         name_entry = CTkEntry(props_vert, text='Enter name', justify='center')
         name_entry.insert(0, self.name)
@@ -60,24 +63,30 @@ class Vertex:
 
     def rename(self, name):
         self.name = name
-        self.canvas.delete(self.text)
-        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill=self.text_color)
+        self.canvas.itemconfig(self.text, text=self.name)
         '''перерисовать вершину''' # <====================================================
 
     def change_color(self, color):
         self.color = color
-        self.canvas.delete(self.circle)
-        self.canvas.delete(self.text)
-        self.circle = create_circle(self.canvas, self.x, self.y, self.radius, fill=self.color)
-        if color in ['red', 'purple', 'blue', 'brown', 'black', 'green']:
-            self.text_color = 'white'
+        self.canvas.itemconfig(self.circle, fill=self.color)
+        if self.color in ('red', 'purple', 'blue', 'brown', 'black', 'green'):
+            self.canvas.itemconfig(self.text, fill='white')
         else:
-            self.text_color = 'black'
-        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font='Arial 10', fill=self.text_color)
+            self.canvas.itemconfig(self.text, fill='black')
 
     def move(self, x, y):
         self.x = x
         self.y = y
+        if self.x < self.radius:
+            self.x = self.radius
+        elif self.x > 1445 - self.radius:
+            self.x = 1445 - self.radius
+        if self.y < self.radius:
+            self.y = self.radius
+        elif self.y > 875 - self.radius:
+            self.y = 875 - self.radius
+        self.canvas.coords(self.circle, self.x-self.radius, self.y-self.radius, self.x+self.radius, self.y+self.radius)
+        self.canvas.coords(self.text, self.x, self.y)
         '''перерисовать вершину''' # <====================================================
 
 
@@ -103,10 +112,10 @@ class Edge:
         self.color = color
         '''перерисовать ребро''' # <====================================================
     
-    def move(self, vertex1: tuple, vertex2: tuple):
+    """def move(self, x: int, y: int):
         self.vertex1x, self.vertex1y = vertex1
         self.vertex2x, self.vertex2y = vertex2
-        '''перерисовать ребро''' # <====================================================
+        '''перерисовать ребро''' # <===================================================="""
 
     
 
@@ -119,6 +128,7 @@ class Workspace:
         self.edges = []
         self.id_vert = 0
 
+
         self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex, bg_color=btns_color) # <====================================================
         self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=lambda: print('Добавить ребро'), bg_color=btns_color) # <====================================================
         self.del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=btns_color) # <====================================================
@@ -127,7 +137,7 @@ class Workspace:
         
 
         self.is_tab_opened = True
-        self.canvas = CTkCanvas(root, width=1445, height=1755, bg='#D3D3D3')
+        self.canvas = CTkCanvas(root, width=1445, height=875, bg='#D3D3D3')
 
 
         self.tab_btn = CTkButton(root, text=self.name[0:12], command=self.SHOW, bg_color=btns_color,
@@ -138,10 +148,27 @@ class Workspace:
         self.tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*len(workspaces), width=110)
         self.close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*len(workspaces), width=30)
 
+        self.canvas.bind('<B2-Motion>', self.move_vertex)
         self.canvas.bind('<Button-3>', self.show_properties)
 
         self.SHOW()
         '''рисовать все канвасы и т.д.''' # <====================================================
+
+    def __getstate__(self):
+        dict = {}
+        dict['name'] = []
+        dict['graph'] = self.graph
+        dict['coords'] = []
+        dict['color'] = []
+        dict['edges'] = []
+        dict['id_vert'] = self.id_vert
+
+        for vertex in self.vertexes:
+            dict['name'].append(vertex.name)
+            dict['coords'].append((vertex.x, vertex.y))
+            dict['color'].append(vertex.color)
+        return dict
+
 
     def exit(self, event):
         print(6567)
@@ -155,6 +182,13 @@ class Workspace:
         else:
             print('Свойства ребра')
     
+    def move_vertex(self, event):
+        x, y = event.x, event.y
+        for vertex in self.vertexes:
+            if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
+                vertex.move(event.x, event.y)
+                break
+    
     def add_vertex(self):
         # operation = 'add_vertex'
         """при нажатии на кнопку будет вылезать окно и спрашивать имя вершины"""
@@ -165,10 +199,16 @@ class Workspace:
         self.graph.add_vertex()
         self.vertexes.append(Vertex(self.canvas, self.id_vert, event.x, event.y))
         self.id_vert += 1
-        
+    
+    def add_vertex_from_file(self, name: str, x: int, y: int, color: str):
+        self.graph.add_vertex()
+        self.vertexes.append(Vertex(self.canvas, name, x, y, color))
+        self.id_vert += 1
+    # def 
 
     def add_edge(self, vertex1: int, vertex2: int, weight=1, oriented: bool = False):
         operation = 'add_edge'
+
         # """при нажатии на кнопку будет вылезать окно и спрашивать вес ребра и ориентированность"""
         # if oriented:
         #     self.graph.add_orient_edge(vertex1, vertex2, weight)
@@ -179,9 +219,34 @@ class Workspace:
         # self.edges.append(Edge(vertex1_coords, vertex2_coords, weight, oriented))
         # '''после добавления ребра надо его отрисовать(линию и стрелку(если надо))''' # <=========================================================
 
+    def recovery_from_dict(self, dict):
+        self.name = dict['graph_name']
+        self.tab_btn.configure(text=self.name)
+        for vertex in range(len(dict['name'])):
+            self.add_vertex_from_file(dict['name'][vertex], dict['coords'][vertex][0], dict['coords'][vertex][1], dict['color'][vertex])
+        
 
-    def save(self):
-        pass
+
+    def save_graph(self):
+        path = filedialog.asksaveasfilename(defaultextension='.graph', filetypes=(('Графы', '*.graph'), ('Все файлы', '*.')), initialdir=get_script_dir())
+        if path:
+            self.name = path.split('/')[-1].replace('.graph', '')
+            self.tab_btn.configure(text=self.name)
+
+            dict = {}
+            dict['graph_name'] = self.name
+            dict['name'] = []
+            dict['coords'] = []
+            dict['color'] = []
+            dict['edges'] = []
+
+            for vertex in self.vertexes:
+                dict['name'].append(vertex.name)
+                dict['coords'].append((vertex.x, vertex.y))
+                dict['color'].append(vertex.color)
+            
+            with open(path, 'w') as file:
+                file.write(json.dumps(dict))
 
     def export_to_text(self):
         pass
@@ -202,7 +267,7 @@ class Workspace:
     def SHOW(self):
         for workspace in workspaces:
             workspace.HIDE()
-        self.canvas.place(anchor='w')
+        self.canvas.place(anchor='nw')
 
         self.tab_btn.configure(fg_color=selected_tab_clr)
         
@@ -216,6 +281,7 @@ class Workspace:
         self.tab_btn.destroy()
         self.close_tab_btn.destroy()
         workspaces.remove(self)
+
         for i in range(len(workspaces)):
             workspaces[i].tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*i, width=110)
             workspaces[i].close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*i, width=30)
@@ -240,8 +306,8 @@ def main():
 
     filemenu = Menu(mainmenu, tearoff=0)
     filemenu.add_command(label="Новый", command=lambda: print('Открыть')) # <====================================================
-    filemenu.add_command(label="Открыть", command=lambda: print('Открыть')) # <====================================================
-    filemenu.add_command(label="Сохранить", command=lambda: print('Сохранить')) # <====================================================
+    filemenu.add_command(label="Открыть", command=open_file) # <====================================================
+    filemenu.add_command(label="Сохранить", command=save_file) # <====================================================
     filemenu.add_separator()
     filemenu.add_command(label="Экспорт в текст", command=lambda: print('Экспорт в текст')) # <====================================================
     filemenu.add_command(label="Импорт из текста", command=lambda: print('Импорт из текста')) # <====================================================
@@ -287,7 +353,20 @@ def add_new_tab():
         workspace.tab_btn.configure(fg_color=default_btn_clr)
     graph = Workspace()
     workspaces.append(graph)
+    return graph
 
+def open_file():
+    graph = add_new_tab()
+    path = filedialog.askopenfilename(initialdir=get_script_dir(), filetypes=(('Графы', '*.graph'), ('Все файлы', '*.')), title='Открыть граф')
+    if path:
+        with open(path, 'r') as file:
+            dict = json.load(file)
+        graph.recovery_from_dict(dict)
+
+def save_file():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.save_graph()
 
 workspaces = []
 operation = ''
