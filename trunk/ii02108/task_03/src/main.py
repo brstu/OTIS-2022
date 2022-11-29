@@ -2,6 +2,7 @@ from customtkinter import *
 from tkinter import Menu, PhotoImage
 from graphs import *
 from config import *
+import os
 
 def create_circle(canvas, x, y, r, **kwargs):
     return canvas.create_oval(x-r, y-r, x+r, y+r, **kwargs)
