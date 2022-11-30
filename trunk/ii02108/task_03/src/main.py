@@ -9,6 +9,16 @@ import json
 def create_circle(canvas: CTkCanvas, x, y, r, **kwargs):
     return canvas.create_oval(x-r, y-r, x+r, y+r, **kwargs)
 
+def line_intersect_circle(x1, y1, x2, y2):
+    '''Возвращает координаты точек пересечения прямой и двух окружностей'''
+    main_gipotenusa = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    main_dx = x2 - x1
+    main_dy = y2 - y1
+    dx = (main_gipotenusa - vertex_radius) * main_dx / main_gipotenusa
+    dy = (main_gipotenusa - vertex_radius) * main_dy / main_gipotenusa
+
+    return x2 - dx, y2 - dy, x1 + dx, y1 + dy
+    
 class Vertex:
     def __init__(self, canvas, name: int | str, x: int, y: int, id_vert: int, color: str = 'black') -> None:
         self.name = str(name)
@@ -114,15 +124,14 @@ class Edge:
             if self.is_loop:
                 pass
             else:
-                xc1, yc1 = self.x1 + sqrt((self.x2-self.x1)**2+(self.y2-self.y1)**2)
-                self.line = self.canvas.create_line(self.x1, self.y1, self.x2, self.y2, fill=self.color, width=self.thickness, arrow='last', arrowshape=(20, 15, 5))
+                self.line = self.canvas.create_line(*line_intersect_circle(self.x1, self.y1, self.x2, self.y2), fill=self.color, width=self.thickness, arrow='last', arrowshape=(20, 15, 5))
                 self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
                 self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black', )
         else:
             if self.is_loop:
                 pass
             else:
-                self.line = self.canvas.create_line(self.x1, self.y1, self.x2, self.y2, fill=self.color, width=self.thickness)
+                self.line = self.canvas.create_line(*line_intersect_circle(self.x1, self.y1, self.x2, self.y2), fill=self.color, width=self.thickness)
                 self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
                 self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black')
         
@@ -147,7 +156,7 @@ class Edge:
     def move(self):
         self.x1, self.y1 = self.vertex1.x, self.vertex1.y
         self.x2, self.y2 = self.vertex2.x, self.vertex2.y
-        self.canvas.coords(self.line, self.x1, self.y1, self.x2, self.y2)
+        self.canvas.coords(self.line, line_intersect_circle(self.x1, self.y1, self.x2, self.y2))
         self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
         self.canvas.coords(self.text, (self.x1+self.x2)/2, (self.y1+self.y2)/2)
 
