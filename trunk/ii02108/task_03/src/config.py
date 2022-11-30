@@ -20,3 +20,5 @@ selected_tab_clr = '#388fd1'
 
 path_to_img_create_new_tab = get_script_dir() + '/icons/icon_for_newgraph.png'
 path_to_img_close_tab = get_script_dir() + '/icons/icon_for_close_tab.png'
+
+vertex_radius = 30

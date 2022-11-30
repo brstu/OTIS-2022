@@ -3,17 +3,18 @@ from tkinter import Menu, PhotoImage, filedialog
 from graphs import *
 from config import *
 
-import dill, json
+import json
 
 def create_circle(canvas: CTkCanvas, x, y, r, **kwargs):
     return canvas.create_oval(x-r, y-r, x+r, y+r, **kwargs)
 
 class Vertex:
-    def __init__(self, canvas, name: int | str, x: int, y: int, color: str = 'black') -> None:
+    def __init__(self, canvas, name: int | str, x: int, y: int, id_vert: int, color: str = 'black') -> None:
         self.name = str(name)
+        self.id_vert = id_vert
         self.x = x
         self.y = y
-        self.radius = 30
+        self.radius = vertex_radius
         self.color = color
 
         self.canvas = canvas
@@ -31,7 +32,7 @@ class Vertex:
         props_vert.title(f'Vertex: {self.name} properties')
         props_vert.geometry(f'300x300+{event.x+250}+{event.y}')
 
-        name_entry = CTkEntry(props_vert, text='Enter name', justify='center')
+        name_entry = CTkEntry(props_vert, text='Введите имя', justify='center')
         name_entry.insert(0, self.name)
         name_entry.place(anchor='n', relx=0.5, rely=0.1)
         name_entry.bind('<Return>', lambda event: self.rename(name_entry.get()))
@@ -91,16 +92,33 @@ class Vertex:
 
 
 class Edge:
-    def __init__(self, vertex1: tuple, vertex2: tuple, weight: int, oriented: bool) -> None:
+    def __init__(self, canvas, weight: int, vertex1: tuple, vertex2: tuple, oriented: bool) -> None:
         self.weight = weight
-        self.vertex1x, self.vertex1y = vertex1
-        self.vertex2x, self.vertex2y = vertex2
+        self.x1, self.y1 = vertex1
+        self.x2, self.y2 = vertex2
 
         self.is_oriented = oriented
-        self.is_loop = self.vertex1x == self.vertex2x and self.vertex1y == self.vertex2y
+        self.is_loop = self.x1 == self.x2 and self.y1 == self.y2
 
         self.color = 'black'
-        self.thickness = 2
+        self.thickness = 6
+
+        self.canvas = canvas
+
+        
+        if self.is_oriented:
+            if self.is_loop:
+                pass
+            else:
+                self.line = self.canvas.create_line(self.x1, self.y1, self.x2, self.y2, fill=self.color, width=self.thickness, arrow='last')
+                self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2+15, text=self.weight, font=('Arial', 18))
+        else:
+            if self.is_loop:
+                pass
+            else:
+                self.line = self.canvas.create_line(self.x1, self.y1, self.x2, self.y2, fill=self.color, width=self.thickness)
+                self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2+15, text=self.weight, font=('Arial', 18))
+        
 
 
 
@@ -130,7 +148,7 @@ class Workspace:
 
 
         self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex, bg_color=btns_color) # <====================================================
-        self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=lambda: print('Добавить ребро'), bg_color=btns_color) # <====================================================
+        self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=self.add_edge, bg_color=btns_color) # <====================================================
         self.del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=btns_color) # <====================================================
         self.del_edge_btn = CTkButton(root, text='Удалить ребро', command=lambda: print('Удалить ребро'), bg_color=btns_color) # <====================================================
 
@@ -154,20 +172,20 @@ class Workspace:
         self.SHOW()
         '''рисовать все канвасы и т.д.''' # <====================================================
 
-    def __getstate__(self):
-        dict = {}
-        dict['name'] = []
-        dict['graph'] = self.graph
-        dict['coords'] = []
-        dict['color'] = []
-        dict['edges'] = []
-        dict['id_vert'] = self.id_vert
+    # def __getstate__(self):
+    #     dict = {}
+    #     dict['name'] = []
+    #     dict['graph'] = self.graph
+    #     dict['coords'] = []
+    #     dict['color'] = []
+    #     dict['edges'] = []
+    #     dict['id_vert'] = self.id_vert
 
-        for vertex in self.vertexes:
-            dict['name'].append(vertex.name)
-            dict['coords'].append((vertex.x, vertex.y))
-            dict['color'].append(vertex.color)
-        return dict
+    #     for vertex in self.vertexes:
+    #         dict['name'].append(vertex.name)
+    #         dict['coords'].append((vertex.x, vertex.y))
+    #         dict['color'].append(vertex.color)
+    #     return dict
 
 
     def exit(self, event):
@@ -185,9 +203,13 @@ class Workspace:
     def move_vertex(self, event):
         x, y = event.x, event.y
         for vertex in self.vertexes:
-            if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
+            if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2 * 2:
                 vertex.move(event.x, event.y)
                 break
+            # elif event.x < 0 or event.x > 1445:
+            #     vertex.move(0, event.y)
+            # elif event.y < 0 or event.y > 900:
+            #     vertex.move(event.x, 0)
     
     def add_vertex(self):
         # operation = 'add_vertex'
@@ -197,7 +219,7 @@ class Workspace:
 
     def add_vertex_click(self, event):
         self.graph.add_vertex()
-        self.vertexes.append(Vertex(self.canvas, self.id_vert, event.x, event.y))
+        self.vertexes.append(Vertex(self.canvas, self.id_vert, event.x, event.y, id_vert=self.id_vert))
         self.id_vert += 1
     
     def add_vertex_from_file(self, name: str, x: int, y: int, color: str):
@@ -206,18 +228,59 @@ class Workspace:
         self.id_vert += 1
     # def 
 
-    def add_edge(self, vertex1: int, vertex2: int, weight=1, oriented: bool = False):
-        operation = 'add_edge'
+    def add_edge(self):
+        self.canvas.bind('<Button-1>', self.add_edge_click)
 
-        # """при нажатии на кнопку будет вылезать окно и спрашивать вес ребра и ориентированность"""
-        # if oriented:
-        #     self.graph.add_orient_edge(vertex1, vertex2, weight)
-        # else:
-        #     self.graph.add_unorient_edge(vertex1, vertex2, weight)
-        # vertex1_coords = (self.vertexes[vertex1].x, self.vertexes[vertex1].y)
-        # vertex2_coords = (self.vertexes[vertex2].x, self.vertexes[vertex2].y)
-        # self.edges.append(Edge(vertex1_coords, vertex2_coords, weight, oriented))
-        # '''после добавления ребра надо его отрисовать(линию и стрелку(если надо))''' # <=========================================================
+    def add_edge_click(self, event):
+        x, y = event.x, event.y
+        for vertex in self.vertexes:
+            if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
+                self.edge_vertex1 = vertex
+                break
+        else:
+            return
+        self.canvas.bind('<Button-1>', self.add_edge_click2)
+    
+    def add_edge_click2(self, event):
+        x, y = event.x, event.y
+        for vertex in self.vertexes:
+            if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
+                self.edge_vertex2 = vertex
+                break
+        else:
+            return
+        props = CTk()
+        props.geometry('300x200')
+        props.title('Свойства ребра')
+            
+
+        def create_edge(weight: int, is_oriented: bool):
+            weight = entry.get()
+            if weight.isdigit():
+                weight = int(weight)
+
+            if is_oriented:
+                self.graph.add_orient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
+            else:
+                self.graph.add_unorient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
+            self.edges.append(Edge(self.canvas, weight, (self.edge_vertex1.x, self.edge_vertex1.y), (self.edge_vertex2.x, self.edge_vertex2.y), is_oriented))
+            props.destroy()
+
+
+        weight = 1
+        entry = CTkEntry(props, text='Введите вес', justify='center')
+        entry.place(anchor='n', relx=0.5, rely=0.1)
+        
+        btn_or = CTkButton(props, text='Ориентированное', command=lambda: create_edge(weight, True))
+        btn_unor = CTkButton(props, text='Неориентированное', command=lambda: create_edge(weight, False))
+        btn_or.place(anchor='n', relx=0.5, rely=0.5)
+        btn_unor.place(anchor='n', relx=0.5, rely=0.7)
+
+        props.mainloop()
+
+        self.canvas.bind('<Button-1>', self.add_edge_click)
+
+    
 
     def recovery_from_dict(self, dict):
         self.name = dict['graph_name']
