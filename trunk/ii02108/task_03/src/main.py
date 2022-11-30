@@ -65,7 +65,6 @@ class Vertex:
     def rename(self, name):
         self.name = name
         self.canvas.itemconfig(self.text, text=self.name)
-        '''перерисовать вершину''' # <====================================================
 
     def change_color(self, color):
         self.color = color
@@ -88,19 +87,23 @@ class Vertex:
             self.y = 875 - self.radius
         self.canvas.coords(self.circle, self.x-self.radius, self.y-self.radius, self.x+self.radius, self.y+self.radius)
         self.canvas.coords(self.text, self.x, self.y)
-        '''перерисовать вершину''' # <====================================================
+
+        
 
 
 class Edge:
-    def __init__(self, canvas, weight: int, vertex1: tuple, vertex2: tuple, oriented: bool) -> None:
+    def __init__(self, canvas, weight: int, vertex1: Vertex, vertex2: Vertex, oriented: bool) -> None:
+        self.vertex1 = vertex1
+        self.vertex2 = vertex2
+
         self.weight = weight
-        self.x1, self.y1 = vertex1
-        self.x2, self.y2 = vertex2
+        self.x1, self.y1 = vertex1.x, vertex1.y
+        self.x2, self.y2 = vertex2.x, vertex2.y
 
         self.is_oriented = oriented
         self.is_loop = self.x1 == self.x2 and self.y1 == self.y2
 
-        self.color = 'black'
+        self.color = 'green'
         self.thickness = 6
 
         self.canvas = canvas
@@ -130,10 +133,12 @@ class Edge:
         self.color = color
         '''перерисовать ребро''' # <====================================================
     
-    """def move(self, x: int, y: int):
-        self.vertex1x, self.vertex1y = vertex1
-        self.vertex2x, self.vertex2y = vertex2
-        '''перерисовать ребро''' # <===================================================="""
+    def move(self):
+        self.x1, self.y1 = self.vertex1.x, self.vertex1.y
+        self.x2, self.y2 = self.vertex2.x, self.vertex2.y
+        self.canvas.coords(self.line, self.x1, self.y1, self.x2, self.y2)
+        self.canvas.coords(self.text, (self.x1+self.x2)/2, (self.y1+self.y2)/2+15)
+        '''перерисовать ребро''' # <====================================================
 
     
 
@@ -147,10 +152,11 @@ class Workspace:
         self.id_vert = 0
 
 
-        self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex, bg_color=btns_color) # <====================================================
+        self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex_mode, bg_color=btns_color) # <====================================================
         self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=self.add_edge, bg_color=btns_color) # <====================================================
         self.del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=btns_color) # <====================================================
         self.del_edge_btn = CTkButton(root, text='Удалить ребро', command=lambda: print('Удалить ребро'), bg_color=btns_color) # <====================================================
+        self.default_btn = CTkButton(root, text='По умолчанию', command=self.default_mode, bg_color=btns_color) # <====================================================
 
         
 
@@ -166,30 +172,21 @@ class Workspace:
         self.tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*len(workspaces), width=110)
         self.close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*len(workspaces), width=30)
 
-        self.canvas.bind('<B2-Motion>', self.move_vertex)
+        
         self.canvas.bind('<Button-3>', self.show_properties)
 
         self.SHOW()
-        '''рисовать все канвасы и т.д.''' # <====================================================
-
-    # def __getstate__(self):
-    #     dict = {}
-    #     dict['name'] = []
-    #     dict['graph'] = self.graph
-    #     dict['coords'] = []
-    #     dict['color'] = []
-    #     dict['edges'] = []
-    #     dict['id_vert'] = self.id_vert
-
-    #     for vertex in self.vertexes:
-    #         dict['name'].append(vertex.name)
-    #         dict['coords'].append((vertex.x, vertex.y))
-    #         dict['color'].append(vertex.color)
-    #     return dict
 
 
-    def exit(self, event):
-        print(6567)
+    def default_mode(self):
+        self.canvas.bind('<Button-1>', lambda e: True)
+        self.canvas.bind('<B1-Motion>', self.move_vertex)
+
+    def add_vertex_mode(self):
+        self.canvas.bind('<Button-1>', self.add_vertex_click)
+        self.canvas.bind('<B1-Motion>', lambda e: True)
+        self.add_vertex()
+
 
     def show_properties(self, event):
         x, y = event.x, event.y
@@ -204,7 +201,11 @@ class Workspace:
         x, y = event.x, event.y
         for vertex in self.vertexes:
             if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2 * 2:
-                vertex.move(event.x, event.y)
+                vertex.move(x, y)
+                
+                for edge in self.edges:
+                    if edge.vertex1 is vertex or edge.vertex2 is vertex:
+                        edge.move()
                 break
             # elif event.x < 0 or event.x > 1445:
             #     vertex.move(0, event.y)
@@ -212,10 +213,7 @@ class Workspace:
             #     vertex.move(event.x, 0)
     
     def add_vertex(self):
-        # operation = 'add_vertex'
-        """при нажатии на кнопку будет вылезать окно и спрашивать имя вершины"""
         self.canvas.bind('<Button-1>', self.add_vertex_click)
-        '''после добавления вершины надо ее отрисовать''' # <========================================================
 
     def add_vertex_click(self, event):
         self.graph.add_vertex()
@@ -224,9 +222,8 @@ class Workspace:
     
     def add_vertex_from_file(self, name: str, x: int, y: int, color: str):
         self.graph.add_vertex()
-        self.vertexes.append(Vertex(self.canvas, name, x, y, color))
+        self.vertexes.append(Vertex(self.canvas, name, x, y, self.id_vert, color))
         self.id_vert += 1
-    # def 
 
     def add_edge(self):
         self.canvas.bind('<Button-1>', self.add_edge_click)
@@ -263,7 +260,7 @@ class Workspace:
                 self.graph.add_orient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
             else:
                 self.graph.add_unorient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
-            self.edges.append(Edge(self.canvas, weight, (self.edge_vertex1.x, self.edge_vertex1.y), (self.edge_vertex2.x, self.edge_vertex2.y), is_oriented))
+            self.edges.append(Edge(self.canvas, weight, self.edge_vertex1, self.edge_vertex2, is_oriented))
             props.destroy()
 
 
@@ -280,13 +277,16 @@ class Workspace:
 
         self.canvas.bind('<Button-1>', self.add_edge_click)
 
-    
+    def add_edge_from_file(self, vertex1: int, vertex2: int, weight: int, is_oriented: bool):
+        self.graph.add_edge(vertex1, vertex2, weight, is_oriented)
+        self.edges.append(Edge(self.canvas, weight, self.vertexes[vertex1], self.vertexes[vertex2], is_oriented))
 
     def recovery_from_dict(self, dict):
         self.name = dict['graph_name']
         self.tab_btn.configure(text=self.name)
         for vertex in range(len(dict['name'])):
             self.add_vertex_from_file(dict['name'][vertex], dict['coords'][vertex][0], dict['coords'][vertex][1], dict['color'][vertex])
+        
         
 
 
@@ -307,7 +307,9 @@ class Workspace:
                 dict['name'].append(vertex.name)
                 dict['coords'].append((vertex.x, vertex.y))
                 dict['color'].append(vertex.color)
-            
+            for edge in self.edges:
+                dict['edges'].append((edge.vertex1.id_vert, edge.vertex2.id_vert, edge.weight, edge.is_oriented))
+
             with open(path, 'w') as file:
                 file.write(json.dumps(dict))
 
@@ -338,6 +340,7 @@ class Workspace:
         self.add_edge_btn.place(anchor='ne', relx=0.997, rely=0.05)
         self.del_vert_btn.place(anchor='ne', relx=0.997, rely=0.09)
         self.del_edge_btn.place(anchor='ne', relx=0.997, rely=0.13)
+        self.default_btn.place(anchor='ne', relx=0.997, rely=0.17)
 
     def DEL(self):
         self.canvas.destroy()
@@ -399,8 +402,6 @@ def main():
 
 
     # Раздел редактора
-
-
     create_new_graph_btn = CTkButton(root, text='', bg_color=btns_color, fg_color=add_tab_button,
                                     image=PhotoImage(file=path_to_img_create_new_tab), 
                                     corner_radius=5, command=add_new_tab)
@@ -432,7 +433,6 @@ def save_file():
             workspace.save_graph()
 
 workspaces = []
-operation = ''
 def ex(event):
     global root
     root.destroy()
