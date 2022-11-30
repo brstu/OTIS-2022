@@ -2,6 +2,7 @@ from customtkinter import *
 from tkinter import Menu, PhotoImage, filedialog
 from graphs import *
 from config import *
+from math import sqrt
 
 import json
 
@@ -92,7 +93,7 @@ class Vertex:
 
 
 class Edge:
-    def __init__(self, canvas, weight: int, vertex1: Vertex, vertex2: Vertex, oriented: bool) -> None:
+    def __init__(self, canvas, weight: int, vertex1: Vertex, vertex2: Vertex, oriented: bool, color='black') -> None:
         self.vertex1 = vertex1
         self.vertex2 = vertex2
 
@@ -103,8 +104,8 @@ class Edge:
         self.is_oriented = oriented
         self.is_loop = self.x1 == self.x2 and self.y1 == self.y2
 
-        self.color = 'green'
-        self.thickness = 6
+        self.color = color
+        self.thickness = vertex_radius // 5
 
         self.canvas = canvas
 
@@ -113,33 +114,77 @@ class Edge:
             if self.is_loop:
                 pass
             else:
-                self.line = self.canvas.create_line(self.x1, self.y1, self.x2, self.y2, fill=self.color, width=self.thickness, arrow='last')
-                self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2+15, text=self.weight, font=('Arial', 18))
+                xc1, yc1 = self.x1 + sqrt((self.x2-self.x1)**2+(self.y2-self.y1)**2)
+                self.line = self.canvas.create_line(self.x1, self.y1, self.x2, self.y2, fill=self.color, width=self.thickness, arrow='last', arrowshape=(20, 15, 5))
+                self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
+                self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black', )
         else:
             if self.is_loop:
                 pass
             else:
                 self.line = self.canvas.create_line(self.x1, self.y1, self.x2, self.y2, fill=self.color, width=self.thickness)
-                self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2+15, text=self.weight, font=('Arial', 18))
+                self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
+                self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black')
         
 
 
 
     def change_weight(self, weight):
         self.weight = weight
-        '''перерисовать ребро''' # <====================================================
+        self.canvas.itemconfig(self.text, text=self.weight)
     
     def change_color(self, color):
         self.color = color
-        '''перерисовать ребро''' # <====================================================
+        self.canvas.itemconfig(self.line, fill=self.color)
+        if self.color in ('red', 'purple', 'blue', 'brown', 'black', 'green'):
+            self.canvas.itemconfig(self.rect, fill='balck')
+            self.canvas.itemconfig(self.text, fill='white')
+        else:
+            self.canvas.itemconfig(self.rect, fill='white')
+            self.canvas.itemconfig(self.text, fill='black')
+            
     
     def move(self):
         self.x1, self.y1 = self.vertex1.x, self.vertex1.y
         self.x2, self.y2 = self.vertex2.x, self.vertex2.y
         self.canvas.coords(self.line, self.x1, self.y1, self.x2, self.y2)
-        self.canvas.coords(self.text, (self.x1+self.x2)/2, (self.y1+self.y2)/2+15)
-        '''перерисовать ребро''' # <====================================================
+        self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
+        self.canvas.coords(self.text, (self.x1+self.x2)/2, (self.y1+self.y2)/2)
 
+    def show_properties(self, event):
+        props_edge = CTkToplevel()
+        props_edge.wm_attributes('-topmost', '1')
+        props_edge.title(f'Edge properties')
+        props_edge.geometry(f'300x300+{event.x+250}+{event.y}')
+
+        name_entry = CTkEntry(props_edge, text='Введите вес', justify='center')
+        name_entry.insert(0, str(self.weight))
+        name_entry.place(anchor='n', relx=0.5, rely=0.1)
+        name_entry.bind('<Return>', lambda event: self.change_weight(int(name_entry.get())))
+
+        clrbtn_1 = CTkButton(props_edge, corner_radius=0, fg_color='red', text='', command=lambda: self.change_color('red'))
+        clrbtn_2 = CTkButton(props_edge, corner_radius=0, fg_color='purple', text='', command=lambda: self.change_color('purple'))
+        clrbtn_3 = CTkButton(props_edge, corner_radius=0, fg_color='blue', text='', command=lambda: self.change_color('blue'))
+        clrbtn_4 = CTkButton(props_edge, corner_radius=0, fg_color='green', text='', command=lambda: self.change_color('green'))
+        clrbtn_5 = CTkButton(props_edge, corner_radius=0, fg_color='yellow', text='', command=lambda: self.change_color('yellow'))
+        clrbtn_6 = CTkButton(props_edge, corner_radius=0, fg_color='orange', text='', command=lambda: self.change_color('orange'))
+        clrbtn_7 = CTkButton(props_edge, corner_radius=0, fg_color='brown', text='', command=lambda: self.change_color('brown'))
+        clrbtn_8 = CTkButton(props_edge, corner_radius=0, fg_color='black', text='', command=lambda: self.change_color('black'))
+        clrbtn_9 = CTkButton(props_edge, corner_radius=0, fg_color='#FF00FF', text='', command=lambda: self.change_color('#FF00FF'))
+        clrbtn_10= CTkButton(props_edge, corner_radius=0, fg_color='#00FF00', text='', command=lambda: self.change_color('#00FF00'))
+
+        clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relheight=0.2)
+        clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relheight=0.2)
+        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relheight=0.2)
+        clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relheight=0.2)
+        clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relheight=0.2)
+        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relheight=0.2)
+        clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relheight=0.2)
+        clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relheight=0.2)
+        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relheight=0.2)
+        clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
+
+        props_edge.mainloop()
     
 
 
@@ -195,7 +240,12 @@ class Workspace:
                 vertex.show_properties(event)
                 break
         else:
-            print('Свойства ребра')
+            for edge in self.edges:
+                # проверить попадает ли курсор в линию
+                if (edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2+20 >= (x - edge.x1)**2 + (y - edge.y1)**2 + (x - edge.x2)**2 + (y - edge.y2)**2:
+                    edge.show_properties(event)
+                    break
+
     
     def move_vertex(self, event):
         x, y = event.x, event.y
@@ -277,16 +327,26 @@ class Workspace:
 
         self.canvas.bind('<Button-1>', self.add_edge_click)
 
-    def add_edge_from_file(self, vertex1: int, vertex2: int, weight: int, is_oriented: bool):
-        self.graph.add_edge(vertex1, vertex2, weight, is_oriented)
-        self.edges.append(Edge(self.canvas, weight, self.vertexes[vertex1], self.vertexes[vertex2], is_oriented))
+    def add_edge_from_file(self, weight: int, vertex1: Vertex, vertex2: Vertex, is_oriented: bool, color: str):
+        if is_oriented:
+            self.graph.add_orient_edge(vertex1.id_vert, vertex2.id_vert, weight)
+        else:
+            self.graph.add_unorient_edge(vertex1.id_vert, vertex2.id_vert, weight)
+        self.edges.append(Edge(self.canvas, weight, vertex1, vertex2, is_oriented, color))
+
 
     def recovery_from_dict(self, dict):
         self.name = dict['graph_name']
         self.tab_btn.configure(text=self.name)
         for vertex in range(len(dict['name'])):
             self.add_vertex_from_file(dict['name'][vertex], dict['coords'][vertex][0], dict['coords'][vertex][1], dict['color'][vertex])
-        
+        for edge in dict['edges']:
+            for vertex in self.vertexes:
+                if vertex.x == edge[0][0] and vertex.y == edge[0][1]:
+                    vertex1 = vertex
+                elif vertex.x == edge[1][0] and vertex.y == edge[1][1]:
+                    vertex2 = vertex
+            self.add_edge_from_file(edge[2], vertex1, vertex2, edge[3, edge[4]])
         
 
 
@@ -308,7 +368,7 @@ class Workspace:
                 dict['coords'].append((vertex.x, vertex.y))
                 dict['color'].append(vertex.color)
             for edge in self.edges:
-                dict['edges'].append((edge.vertex1.id_vert, edge.vertex2.id_vert, edge.weight, edge.is_oriented))
+                dict['edges'].append(((edge.x1,edge.y1), (edge.x2, edge.y2), edge.weight, edge.is_oriented, edge.color))
 
             with open(path, 'w') as file:
                 file.write(json.dumps(dict))
