@@ -120,12 +120,13 @@ AUTHORS:
 # ***********************************************************************
 
 from ipycanvas import MultiCanvas, hold_canvas
-from ipywidgets import (Label, BoundedIntText, VBox, HBox, Output, Button,
+from ipywidgets import (Label, BoundedIntText, Text, VBox, HBox, Output, Button,
                         Dropdown, ColorPicker, ToggleButton,
                         Layout, ToggleButtons)
 from random import randint, randrange
 from math import pi, sqrt, atan2
 from copy import copy
+import pickle as p
 
 from sage.graphs.all import Graph
 from sage.modules.free_module_element import vector
@@ -287,19 +288,19 @@ class GraphEditor():
         self._tool_selector = ToggleButtons(
             options=['select / move',
                      'add vertex or edge',
-                     'delete vertex or edge',
-                     'add walk',
-                     'add clique',
-                     'add star'],
+                     'delete vertex or edge'],
+#                     'add walk',
+#                     'add clique',
+#                     'add star'],
             description='',
             disabled=False,
             button_style='',
             tooltips=['Move vertices or the canvas',
                       'Add vertices or edges',
-                      'Delete vertices or edges',
-                      'Add a walk through new or existing vertices',
-                      'Add a clique through new or existing vertices',
-                      'Add a star through new or existing vertices'],
+                      'Delete vertices or edges'],
+#                      'Add a walk through new or existing vertices',
+#                      'Add a clique through new or existing vertices',
+#                      'Add a star through new or existing vertices'],
             icons=['']*5,
             layout={'width': '150px', "margin": "0px 2px 0px auto"}
         )
@@ -434,6 +435,44 @@ class GraphEditor():
         )
         self._edge_label_toggle.observe(lambda _: self.refresh())
 
+        self._vertex_label_box = Text(
+            value='',
+            placeholder='Vertex label',
+            description='',
+            disabled=False,
+            layout={'width': '150px', "margin": "0px 2px 0px auto"}
+        )
+        self._set_vertex_label_button = Button(
+            description='OK',
+            disabled=False,
+            button_style='',
+            tooltip='Set the label of the selected vertex',
+            icon='pencil',
+            layout={"width": "150px", "margin": "1px 2px 1px auto"}
+        )
+        self._set_vertex_label_button.on_click(
+            lambda x: self._set_vertex_label_button_clbk())
+
+        self._edge_label_box = BoundedIntText(
+            value=1,
+            min=None,
+            max=None,
+            step=1,
+            description="",
+            disabled=False,
+            layout={'width': '150px', "margin": "0px 2px 0px auto"}
+        )
+        self._set_edge_label_button = Button(
+            description='OK',
+            disabled=False,
+            button_style='',
+            tooltip='Set the label of the selected edge',
+            icon='pencil',
+            layout={"width": "150px", "margin": "1px 2px 1px auto"}
+        )
+        self._set_edge_label_button.on_click(
+            lambda x: self._set_edge_label_button_clbk())
+
         # The final widget, which contains all the parts defined above
         self._widget = HBox([VBox([self._multi_canvas,
                                    HBox([self._text_graph, self._text_output]),
@@ -460,7 +499,11 @@ class GraphEditor():
                                       layout=Layout(margin=('1px 2px '
                                                             '1px auto'))),
                                  self._vertex_label_toggle,
-                                 self._edge_label_toggle],
+                                 self._edge_label_toggle,
+                                 self._vertex_label_box,
+                                 self._set_vertex_label_button,
+                                 self._edge_label_box,
+                                 self._set_edge_label_button],
                                   layout=Layout(min_width='160px',
                                                 width="160px"))
                              ], layout=Layout(width='100%',
@@ -2306,3 +2349,49 @@ class GraphEditor():
         self._select_vertex(redraw=None)
         self.refresh()
         self.output_text("Cleared drawing.")
+
+    def _set_vertex_label_button_clbk(self):
+        """
+        Callback for the ``set_vertex_label_button``.
+
+        Sets the label of the selected vertex to the value of the
+        ``vertex_label_box``.
+
+        TESTS::
+
+            sage: from phitigra import GraphEditor
+            sage: ed = GraphEditor(Graph(2))
+            sage: ed._select_vertex(0)
+            sage: ed._vertex_label_box.value = 'a'
+            sage: ed._set_vertex_label_button_clbk()
+            sage: ed.get_vertex_label(0)
+            'a'
+        """
+        label = self._vertex_label_box.value
+        self.dist = {v: self.get_vertex_label(v) for v in self.graph}
+        for v in self._selected_vertices:
+            self.dist[v] = label
+        self.get_vertex_label = lambda v: str(self.dist[v])
+        self.refresh()
+
+    def _set_edge_label_button_clbk(self):
+        """
+        Callback for the ``set_edge_label_button``.
+
+        Sets the label of the selected edge to the value of the
+        ``edge_label_box``.
+
+        TESTS::
+
+            sage: from phitigra import GraphEditor
+            sage: ed = GraphEditor(Graph(2))
+            sage: ed._select_edge((0, 1))
+            sage: ed._edge_label_box.value = 'a'
+            sage: ed._set_edge_label_button_clbk()
+            sage: ed.get_edge_label((0, 1))
+            'a'
+        """
+        label = self._edge_label_box.value
+        self.graph.set_edge_label(list(self._selected_vertices)[0], \
+            list(self._selected_vertices)[1], label)
+        self.refresh()
