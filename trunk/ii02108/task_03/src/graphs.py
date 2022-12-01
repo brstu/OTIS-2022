@@ -1,10 +1,13 @@
 class Graph:
-    def __init__(self) -> None:
-        self.vertexes_count = 0
-        self.adjacency_matrix = []
+    def __init__(self, adj_matr=[]) -> None:
+        self.adjacency_matrix = adj_matr
+        self.vertexes_count = len(adj_matr)
         self.edges = []
+        for i in range(self.vertexes_count):
+            for j in range(self.vertexes_count):
+                if self.adjacency_matrix[i][j]:
+                    self.edges.append((i, j, self.adjacency_matrix[i][j]))
         self.edges_count = 0
-        self.number = 0
 
     # CREATE GRAPH ============================================================
 
@@ -47,14 +50,18 @@ class Graph:
                 degree += 1
         return degree
     
-    def get_incidence_matrix(self): # TODO
+    def get_adj_matrix(self):
+        print(self.adjacency_matrix)
+        return self.adjacency_matrix
+
+    def get_inc_matrix(self): # TODO
         incidence_matrix = [[0 for i in range(self.edges_count)] for j in range(self.vertexes_count)]
         for i, edge in enumerate(self.edges):
             incidence_matrix[edge[0]][i] = self.edges[2]
             incidence_matrix[edge[1]][i] = self.edges[2]
         return incidence_matrix
 
-    def show_adj_matr(self):
+    def show_adj_matrix(self):
         adj_matr = ''
         for i in range(self.vertexes_count):
             for j in range(self.vertexes_count):
@@ -62,7 +69,7 @@ class Graph:
             adj_matr += '\n'
         return adj_matr
     
-    def show_inc_matr(self):
+    def show_inc_matrix(self):
         inc_matr = ''
         for i in range(self.vertexes_count):
             for j in range(self.edges_count):

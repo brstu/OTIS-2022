@@ -1,8 +1,11 @@
+from random import randint
 from customtkinter import *
-from tkinter import Menu, PhotoImage, filedialog
+from tkinter import Menu, PhotoImage, filedialog, Text
 from graphs import *
+# from algorithms import *
 from config import *
 from math import sqrt
+
 
 import json
 
@@ -145,12 +148,6 @@ class Edge:
     def change_color(self, color):
         self.color = color
         self.canvas.itemconfig(self.line, fill=self.color)
-        if self.color in ('red', 'purple', 'blue', 'brown', 'black', 'green'):
-            self.canvas.itemconfig(self.rect, fill='balck')
-            self.canvas.itemconfig(self.text, fill='white')
-        else:
-            self.canvas.itemconfig(self.rect, fill='white')
-            self.canvas.itemconfig(self.text, fill='black')
             
     
     def move(self):
@@ -231,14 +228,27 @@ class Workspace:
 
         self.SHOW()
 
+    def update_from_adj(self, adj: list) -> None:
+        self.graph = Graph(adj)
+        self.canvas.delete('all')
+        self.vertexes.clear()
+        self.edges.clear()
+        self.id_vert = 0
+        print(f'{adj} >======')
+        for i in range(len(adj)):
+            self.add_vertex_from_adj(x=randint(0, 1445-vertex_radius), y=randint(0, 875-vertex_radius))
+        for i in range(len(adj)):
+            for j in range(len(adj)):
+                if adj[i][j] != 0:
+                    self.add_edge_from_matr(self.vertexes[i], self.vertexes[j], adj[i][j], adj[i][j] != adj[j][i])
 
     def default_mode(self):
-        self.canvas.bind('<Button-1>', lambda e: True)
+        self.canvas.bind('<Button-1>', None)
         self.canvas.bind('<B1-Motion>', self.move_vertex)
 
     def add_vertex_mode(self):
         self.canvas.bind('<Button-1>', self.add_vertex_click)
-        self.canvas.bind('<B1-Motion>', lambda e: True)
+        self.canvas.bind('<B1-Motion>', None)
         self.add_vertex()
 
 
@@ -266,23 +276,24 @@ class Workspace:
                     if edge.vertex1 is vertex or edge.vertex2 is vertex:
                         edge.move()
                 break
-            # elif event.x < 0 or event.x > 1445:
-            #     vertex.move(0, event.y)
-            # elif event.y < 0 or event.y > 900:
-            #     vertex.move(event.x, 0)
-    
-    def add_vertex(self):
-        self.canvas.bind('<Button-1>', self.add_vertex_click)
+
+    def add_vertex_from_adj(self, x, y):
+        self.vertexes.append(Vertex(self.canvas, self.id_vert, x, y, self.id_vert))
+        self.id_vert += 1
 
     def add_vertex_click(self, event):
+        x, y = event.x, event.y
         self.graph.add_vertex()
-        self.vertexes.append(Vertex(self.canvas, self.id_vert, event.x, event.y, id_vert=self.id_vert))
+        self.vertexes.append(Vertex(self.canvas, name=self.id_vert, x=x, y=y, id_vert=self.id_vert))
         self.id_vert += 1
     
     def add_vertex_from_file(self, name: str, x: int, y: int, color: str):
         self.graph.add_vertex()
         self.vertexes.append(Vertex(self.canvas, name, x, y, self.id_vert, color))
         self.id_vert += 1
+
+    def add_edge_from_matr(self, vertex1: Vertex, vertex2: Vertex, weight: int, is_oriented: bool=False):
+        self.edges.append(Edge(self.canvas, weight, vertex1, vertex2, is_oriented))
 
     def add_edge(self):
         self.canvas.bind('<Button-1>', self.add_edge_click)
@@ -440,7 +451,7 @@ def main():
     root.config(menu=mainmenu)
 
     filemenu = Menu(mainmenu, tearoff=0)
-    filemenu.add_command(label="Новый", command=lambda: print('Открыть')) # <====================================================
+    filemenu.add_command(label="Новый", command=add_new_tab) # <====================================================
     filemenu.add_command(label="Открыть", command=open_file) # <====================================================
     filemenu.add_command(label="Сохранить", command=save_file) # <====================================================
     filemenu.add_separator()
@@ -448,9 +459,10 @@ def main():
     filemenu.add_command(label="Импорт из текста", command=lambda: print('Импорт из текста')) # <====================================================
 
     algsmenu = Menu(mainmenu, tearoff=0)
-    algsmenu.add_command(label="Кол-во вершин", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Степени вершин", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Матрица смежности", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+    algsmenu.add_command(label="Кол-во вершин", command=vertexes_count) # <====================================================
+    algsmenu.add_command(label="Кол-во вершин", command=edges_count) # <====================================================
+    algsmenu.add_command(label="Степени вершин", command=edges_count) # <====================================================
+    algsmenu.add_command(label="Матрица смежности", command=get_adj_matrix) # <====================================================
     algsmenu.add_command(label="Матрица инцидентности", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
     algsmenu.add_command(label="Граф - дерево?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
     algsmenu.add_command(label="Граф полный?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
@@ -500,6 +512,62 @@ def save_file():
     for workspace in workspaces:
         if workspace.is_tab_opened:
             workspace.save_graph()
+
+
+def vertexes_count():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            print( len(workspace.vertexes))
+
+def edges_count():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            print(len(workspace.edges))
+
+def get_adj_matrix():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            matrix = workspace.graph.get_adj_matrix()
+            sring = ''
+            for i in range(len(matrix)):
+                for j in range(len(matrix[i])):
+                    sring += str(matrix[i][j]) + ' '
+                sring += '\n'
+            win = CTk()
+            win.title('Матрица смежности')
+            win.geometry('300x300')
+            win.resizable(False, False)
+            text = Text(win, width=30, height=15)
+            text.insert(1.0, sring[0:-1])
+            text.place(anchor='center', relx=0.5, rely=0.5)
+
+
+            # считать матрицу смежности и построить граф
+            def read_matrix():
+                matrix = []
+                strings = text.get(1.0, END).split('\n')
+                for i in range(len(strings)):
+                    matrix.append(strings[i].split(' '))
+                for i in matrix:
+                    if i == ['']:
+                        matrix.remove(i)
+                    for j in i:
+                        if j == '':
+                            i.remove(j)
+                for i in range(len(matrix)):
+                    for j in range(len(matrix[i])):
+                        matrix[i][j] = int(matrix[i][j])
+                win.destroy()
+                print(f'{matrix} <====================')
+                workspace.update_from_adj(matrix) 
+
+            CTkButton(win, text='Построить граф', bg_color=btns_color, fg_color=add_tab_button,
+                        corner_radius=5, command=read_matrix).place(anchor='center', relx=0.5, rely=0.9)
+            
+
+
+            win.mainloop()
+
 
 workspaces = []
 def ex(event):
