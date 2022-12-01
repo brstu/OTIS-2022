@@ -51,7 +51,6 @@ class Graph:
         return degree
     
     def get_adj_matrix(self):
-        print(self.adjacency_matrix)
         return self.adjacency_matrix
 
     def get_inc_matrix(self): # TODO

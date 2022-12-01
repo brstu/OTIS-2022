@@ -234,13 +234,14 @@ class Workspace:
         self.vertexes.clear()
         self.edges.clear()
         self.id_vert = 0
-        print(f'{adj} >======')
         for i in range(len(adj)):
             self.add_vertex_from_adj(x=randint(0, 1445-vertex_radius), y=randint(0, 875-vertex_radius))
         for i in range(len(adj)):
             for j in range(len(adj)):
                 if adj[i][j] != 0:
                     self.add_edge_from_matr(self.vertexes[i], self.vertexes[j], adj[i][j], adj[i][j] != adj[j][i])
+                    if adj[i][j] == adj[j][i]:
+                        adj[j][i] = 0
 
     def default_mode(self):
         self.canvas.bind('<Button-1>', None)
@@ -366,7 +367,7 @@ class Workspace:
                     vertex1 = vertex
                 elif vertex.x == edge[1][0] and vertex.y == edge[1][1]:
                     vertex2 = vertex
-            self.add_edge_from_file(edge[2], vertex1, vertex2, edge[3, edge[4]])
+            self.add_edge_from_file(edge[2], vertex1, vertex2, edge[3], edge[4])
         
 
 
@@ -558,7 +559,6 @@ def get_adj_matrix():
                     for j in range(len(matrix[i])):
                         matrix[i][j] = int(matrix[i][j])
                 win.destroy()
-                print(f'{matrix} <====================')
                 workspace.update_from_adj(matrix) 
 
             CTkButton(win, text='Построить граф', bg_color=btns_color, fg_color=add_tab_button,
