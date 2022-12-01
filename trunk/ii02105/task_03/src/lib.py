@@ -126,7 +126,6 @@ from ipywidgets import (Label, BoundedIntText, Text, VBox, HBox, Output, Button,
 from random import randint, randrange
 from math import pi, sqrt, atan2
 from copy import copy
-import pickle as p
 
 from sage.graphs.all import Graph
 from sage.modules.free_module_element import vector
