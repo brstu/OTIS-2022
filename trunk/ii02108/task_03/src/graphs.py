@@ -35,10 +35,14 @@ class Graph:
         for i in range(self.vertexes_count):
             self.adjacency_matrix[i].pop(vertex)
     
-    def del_edge(self, edge : tuple):
-        self.edges.remove(edge)
-        self.adjacency_matrix[edge[0]][edge[1]] = 0
-        self.adjacency_matrix[edge[1]][edge[0]] = 0
+    def del_edge(self, vertex1: int, vertex2: int):
+        for i, edge in enumerate(self.edges):
+            if edge[0] == vertex1 and edge[1] == vertex2:
+                self.edges.pop(i)
+                self.edges_count -= 1
+                break
+        self.adjacency_matrix[vertex1][vertex2] = 0
+        self.adjacency_matrix[vertex2][vertex1] = 0
 
     def get_vertexes_count(self):
         return self.vertexes_count

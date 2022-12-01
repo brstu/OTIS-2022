@@ -1,198 +1,10 @@
-from random import randint
 from customtkinter import *
 from tkinter import Menu, PhotoImage, filedialog, Text
+from main_components import *
 from graphs import *
-# from algorithms import *
-from config import *
-from math import sqrt
-
+from random import randint
 
 import json
-
-def create_circle(canvas: CTkCanvas, x, y, r, **kwargs):
-    return canvas.create_oval(x-r, y-r, x+r, y+r, **kwargs)
-
-def line_intersect_circle(x1, y1, x2, y2):
-    '''Возвращает координаты точек пересечения прямой и двух окружностей'''
-    main_gipotenusa = sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
-    main_dx = x2 - x1
-    main_dy = y2 - y1
-    dx = (main_gipotenusa - vertex_radius) * main_dx / main_gipotenusa
-    dy = (main_gipotenusa - vertex_radius) * main_dy / main_gipotenusa
-
-    return x2 - dx, y2 - dy, x1 + dx, y1 + dy
-    
-class Vertex:
-    def __init__(self, canvas, name: int | str, x: int, y: int, id_vert: int, color: str = 'black') -> None:
-        self.name = str(name)
-        self.id_vert = id_vert
-        self.x = x
-        self.y = y
-        self.radius = vertex_radius
-        self.color = color
-
-        self.canvas = canvas
-        
-        # сделать выделение вершин (добавить окантовку)
-        self.is_selected = False
-
-        self.circle = create_circle(self.canvas, self.x, self.y, self.radius, fill=self.color)
-        self.text = self.canvas.create_text(self.x, self.y, text=self.name, font=f'Arial {self.radius-5}', fill='white')
-
-    
-    def show_properties(self, event):
-        props_vert = CTk()
-        props_vert.wm_attributes('-topmost', '1')
-        props_vert.title(f'Vertex: {self.name} properties')
-        props_vert.geometry(f'300x300+{event.x+250}+{event.y}')
-
-        name_entry = CTkEntry(props_vert, text='Введите имя', justify='center')
-        name_entry.insert(0, self.name)
-        name_entry.place(anchor='n', relx=0.5, rely=0.1)
-        name_entry.bind('<Return>', lambda event: self.rename(name_entry.get()))
-
-        clrbtn_1 = CTkButton(props_vert, corner_radius=0, fg_color='red', text='', command=lambda: self.change_color('red'))
-        clrbtn_2 = CTkButton(props_vert, corner_radius=0, fg_color='purple', text='', command=lambda: self.change_color('purple'))
-        clrbtn_3 = CTkButton(props_vert, corner_radius=0, fg_color='blue', text='', command=lambda: self.change_color('blue'))
-        clrbtn_4 = CTkButton(props_vert, corner_radius=0, fg_color='green', text='', command=lambda: self.change_color('green'))
-        clrbtn_5 = CTkButton(props_vert, corner_radius=0, fg_color='yellow', text='', command=lambda: self.change_color('yellow'))
-        clrbtn_6 = CTkButton(props_vert, corner_radius=0, fg_color='orange', text='', command=lambda: self.change_color('orange'))
-        clrbtn_7 = CTkButton(props_vert, corner_radius=0, fg_color='brown', text='', command=lambda: self.change_color('brown'))
-        clrbtn_8 = CTkButton(props_vert, corner_radius=0, fg_color='black', text='', command=lambda: self.change_color('black'))
-        clrbtn_9 = CTkButton(props_vert, corner_radius=0, fg_color='#FF00FF', text='', command=lambda: self.change_color('#FF00FF'))
-        clrbtn_10= CTkButton(props_vert, corner_radius=0, fg_color='#00FF00', text='', command=lambda: self.change_color('#00FF00'))
-
-        clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relheight=0.2)
-        clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relheight=0.2)
-        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relheight=0.2)
-        clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relheight=0.2)
-        clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relheight=0.2)
-        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relheight=0.2)
-        clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relheight=0.2)
-        clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relheight=0.2)
-        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relheight=0.2)
-        clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
-        
-        props_vert.mainloop()
-
-
-    def rename(self, name):
-        self.name = name
-        self.canvas.itemconfig(self.text, text=self.name)
-
-    def change_color(self, color):
-        self.color = color
-        self.canvas.itemconfig(self.circle, fill=self.color)
-        if self.color in ('red', 'purple', 'blue', 'brown', 'black', 'green'):
-            self.canvas.itemconfig(self.text, fill='white')
-        else:
-            self.canvas.itemconfig(self.text, fill='black')
-
-    def move(self, x, y):
-        self.x = x
-        self.y = y
-        if self.x < self.radius:
-            self.x = self.radius
-        elif self.x > 1445 - self.radius:
-            self.x = 1445 - self.radius
-        if self.y < self.radius:
-            self.y = self.radius
-        elif self.y > 875 - self.radius:
-            self.y = 875 - self.radius
-        self.canvas.coords(self.circle, self.x-self.radius, self.y-self.radius, self.x+self.radius, self.y+self.radius)
-        self.canvas.coords(self.text, self.x, self.y)
-
-        
-
-
-class Edge:
-    def __init__(self, canvas, weight: int, vertex1: Vertex, vertex2: Vertex, oriented: bool, color='black') -> None:
-        self.vertex1 = vertex1
-        self.vertex2 = vertex2
-
-        self.weight = weight
-        self.x1, self.y1 = vertex1.x, vertex1.y
-        self.x2, self.y2 = vertex2.x, vertex2.y
-
-        self.is_oriented = oriented
-        self.is_loop = self.x1 == self.x2 and self.y1 == self.y2
-
-        self.color = color
-        self.thickness = vertex_radius // 5
-
-        self.canvas = canvas
-
-        
-        if self.is_oriented:
-            if self.is_loop:
-                pass
-            else:
-                self.line = self.canvas.create_line(*line_intersect_circle(self.x1, self.y1, self.x2, self.y2), fill=self.color, width=self.thickness, arrow='last', arrowshape=(20, 15, 5))
-                self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
-                self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black', )
-        else:
-            if self.is_loop:
-                pass
-            else:
-                self.line = self.canvas.create_line(*line_intersect_circle(self.x1, self.y1, self.x2, self.y2), fill=self.color, width=self.thickness)
-                self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
-                self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black')
-        
-
-
-
-    def change_weight(self, weight):
-        self.weight = weight
-        self.canvas.itemconfig(self.text, text=self.weight)
-    
-    def change_color(self, color):
-        self.color = color
-        self.canvas.itemconfig(self.line, fill=self.color)
-            
-    
-    def move(self):
-        self.x1, self.y1 = self.vertex1.x, self.vertex1.y
-        self.x2, self.y2 = self.vertex2.x, self.vertex2.y
-        self.canvas.coords(self.line, line_intersect_circle(self.x1, self.y1, self.x2, self.y2))
-        self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
-        self.canvas.coords(self.text, (self.x1+self.x2)/2, (self.y1+self.y2)/2)
-
-    def show_properties(self, event):
-        props_edge = CTkToplevel()
-        props_edge.wm_attributes('-topmost', '1')
-        props_edge.title(f'Edge properties')
-        props_edge.geometry(f'300x300+{event.x+250}+{event.y}')
-
-        name_entry = CTkEntry(props_edge, text='Введите вес', justify='center')
-        name_entry.insert(0, str(self.weight))
-        name_entry.place(anchor='n', relx=0.5, rely=0.1)
-        name_entry.bind('<Return>', lambda event: self.change_weight(int(name_entry.get())))
-
-        clrbtn_1 = CTkButton(props_edge, corner_radius=0, fg_color='red', text='', command=lambda: self.change_color('red'))
-        clrbtn_2 = CTkButton(props_edge, corner_radius=0, fg_color='purple', text='', command=lambda: self.change_color('purple'))
-        clrbtn_3 = CTkButton(props_edge, corner_radius=0, fg_color='blue', text='', command=lambda: self.change_color('blue'))
-        clrbtn_4 = CTkButton(props_edge, corner_radius=0, fg_color='green', text='', command=lambda: self.change_color('green'))
-        clrbtn_5 = CTkButton(props_edge, corner_radius=0, fg_color='yellow', text='', command=lambda: self.change_color('yellow'))
-        clrbtn_6 = CTkButton(props_edge, corner_radius=0, fg_color='orange', text='', command=lambda: self.change_color('orange'))
-        clrbtn_7 = CTkButton(props_edge, corner_radius=0, fg_color='brown', text='', command=lambda: self.change_color('brown'))
-        clrbtn_8 = CTkButton(props_edge, corner_radius=0, fg_color='black', text='', command=lambda: self.change_color('black'))
-        clrbtn_9 = CTkButton(props_edge, corner_radius=0, fg_color='#FF00FF', text='', command=lambda: self.change_color('#FF00FF'))
-        clrbtn_10= CTkButton(props_edge, corner_radius=0, fg_color='#00FF00', text='', command=lambda: self.change_color('#00FF00'))
-
-        clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relheight=0.2)
-        clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relheight=0.2)
-        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relheight=0.2)
-        clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relheight=0.2)
-        clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relheight=0.2)
-        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relheight=0.2)
-        clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relheight=0.2)
-        clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relheight=0.2)
-        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relheight=0.2)
-        clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
-
-        props_edge.mainloop()
-    
-
 
 class Workspace:
     def __init__(self, name: str = 'Безымянный') -> None:
@@ -200,16 +12,15 @@ class Workspace:
         self.graph = Graph()
         self.vertexes = []
         self.edges = []
+        self.selected_vertexes = []
         self.id_vert = 0
 
 
         self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex_mode, bg_color=btns_color) # <====================================================
         self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=self.add_edge, bg_color=btns_color) # <====================================================
-        self.del_vert_btn = CTkButton(root, text='Удалить вершину', command=lambda: print('Удалить вершину'), bg_color=btns_color) # <====================================================
-        self.del_edge_btn = CTkButton(root, text='Удалить ребро', command=lambda: print('Удалить ребро'), bg_color=btns_color) # <====================================================
+        self.del_comp_btn = CTkButton(root, text='Удалить компонент', command=self.delete_comp, bg_color=btns_color) # <====================================================
         self.default_btn = CTkButton(root, text='По умолчанию', command=self.default_mode, bg_color=btns_color) # <====================================================
 
-        
 
         self.is_tab_opened = True
         self.canvas = CTkCanvas(root, width=1445, height=875, bg='#D3D3D3')
@@ -227,6 +38,15 @@ class Workspace:
         self.canvas.bind('<Button-3>', self.show_properties)
 
         self.SHOW()
+        self.default_mode()
+    
+    def __del__(self):
+        del self.graph
+        del self.edges
+        del self.vertexes
+        del self.selected_vertexes
+        self.DEL()
+
 
     def update_from_adj(self, adj: list) -> None:
         self.graph = Graph(adj)
@@ -244,14 +64,24 @@ class Workspace:
                         adj[j][i] = 0
 
     def default_mode(self):
-        self.canvas.bind('<Button-1>', None)
+        self.canvas.bind('<Button-1>', lambda event: None)
         self.canvas.bind('<B1-Motion>', self.move_vertex)
+        self.canvas.bind('<Control-Button-1>', self.select_vertex)
 
     def add_vertex_mode(self):
         self.canvas.bind('<Button-1>', self.add_vertex_click)
-        self.canvas.bind('<B1-Motion>', None)
-        self.add_vertex()
+        self.canvas.bind('<B1-Motion>', lambda event: None)
 
+    def select_vertex(self, event):
+        for vertex in self.vertexes:
+            if (vertex.x - event.x)**2 + (vertex.y - event.y)**2 <= vertex.radius**2:
+                if vertex not in self.selected_vertexes:
+                    self.selected_vertexes.append(vertex)
+                    vertex.select()
+                else:
+                    self.selected_vertexes.remove(vertex)
+                    vertex.unselect()
+                break
 
     def show_properties(self, event):
         x, y = event.x, event.y
@@ -261,8 +91,7 @@ class Workspace:
                 break
         else:
             for edge in self.edges:
-                # проверить попадает ли курсор в линию
-                if (edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2+20 >= (x - edge.x1)**2 + (y - edge.y1)**2 + (x - edge.x2)**2 + (y - edge.y2)**2:
+                if (x - edge.x1)**2 + (y - edge.y1)**2 + (x - edge.x2)**2 + (y - edge.y2)**2 <= (edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2:
                     edge.show_properties(event)
                     break
 
@@ -320,6 +149,8 @@ class Workspace:
         props = CTk()
         props.geometry('300x200')
         props.title('Свойства ребра')
+        props.resizable(False, False)
+        props.bind('<Escape>', lambda event: props.destroy())
             
 
         def create_edge(weight: int, is_oriented: bool):
@@ -354,6 +185,44 @@ class Workspace:
         else:
             self.graph.add_unorient_edge(vertex1.id_vert, vertex2.id_vert, weight)
         self.edges.append(Edge(self.canvas, weight, vertex1, vertex2, is_oriented, color))
+
+    def delete_selected_vertexes(self):
+        for vertex in self.selected_vertexes:
+            self.graph.del_vertex(vertex.id_vert)
+            for _ in range(len(self.vertexes)):
+                for edge in self.edges:
+                    if vertex in (edge.vertex1, edge.vertex2):
+                        self.edges.remove(edge)
+            self.vertexes.remove(vertex)
+            for vert in self.vertexes:
+                if vert.id_vert > vertex.id_vert:  
+                    vert.id_vert -= 1
+        self.selected_vertexes.clear()
+
+    def delete_comp(self):
+        self.canvas.bind('<Button-1>', self.delete_comp_click)
+        self.canvas.bind('<B1-Motion>', self.delete_comp_click)
+    
+    def delete_comp_click(self, event):
+        x, y = event.x, event.y
+        for vertex in self.vertexes:
+            if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
+                self.graph.del_vertex(vertex.id_vert)
+                for _ in range(len(self.vertexes)):
+                    for edge in self.edges:
+                        if vertex in (edge.vertex1, edge.vertex2):
+                            self.edges.remove(edge)
+                self.vertexes.remove(vertex)
+                for vert in self.vertexes:
+                    if vert.id_vert > vertex.id_vert:  
+                        vert.id_vert -= 1
+                break
+        else:
+            for edge in self.edges:
+                if (x - edge.x1)**2 + (y - edge.y1)**2 + (x - edge.x2)**2 + (y - edge.y2)**2 <= (edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2-500:
+                    self.edges.remove(edge)
+                    self.graph.del_edge(edge.vertex1.id_vert, edge.vertex2.id_vert)
+                    break
 
 
     def recovery_from_dict(self, dict):
@@ -392,7 +261,7 @@ class Workspace:
                 dict['edges'].append(((edge.x1,edge.y1), (edge.x2, edge.y2), edge.weight, edge.is_oriented, edge.color))
 
             with open(path, 'w') as file:
-                file.write(json.dumps(dict))
+                file.write(json.dumps(dict, indent=4))
 
     def export_to_text(self):
         pass
@@ -400,6 +269,10 @@ class Workspace:
     def import_from_text(self):
         pass
 
+    def vertexes_degree(self):
+        degrees = []
+        for vertex in self.vertexes:
+            pass
 
     def HIDE(self):
         self.canvas.place_forget()
@@ -419,9 +292,8 @@ class Workspace:
         
         self.add_vert_btn.place(anchor='ne', relx=0.997, rely=0.01)
         self.add_edge_btn.place(anchor='ne', relx=0.997, rely=0.05)
-        self.del_vert_btn.place(anchor='ne', relx=0.997, rely=0.09)
-        self.del_edge_btn.place(anchor='ne', relx=0.997, rely=0.13)
-        self.default_btn.place(anchor='ne', relx=0.997, rely=0.17)
+        self.del_comp_btn.place(anchor='ne', relx=0.997, rely=0.09)
+        self.default_btn.place(anchor='ne', relx=0.997, rely=0.13)
 
     def DEL(self):
         self.canvas.destroy()
@@ -447,6 +319,8 @@ def main():
     root.resizable(False, False)
     root.set_appearance_mode(main_theme)
 
+    root.bind('<Delete>', delete_selected_vertexes)
+
     # Раздел меню
     mainmenu = Menu(root)
     root.config(menu=mainmenu)
@@ -461,8 +335,8 @@ def main():
 
     algsmenu = Menu(mainmenu, tearoff=0)
     algsmenu.add_command(label="Кол-во вершин", command=vertexes_count) # <====================================================
-    algsmenu.add_command(label="Кол-во вершин", command=edges_count) # <====================================================
-    algsmenu.add_command(label="Степени вершин", command=edges_count) # <====================================================
+    algsmenu.add_command(label="Кол-во ребер", command=edges_count) # <====================================================
+    algsmenu.add_command(label="Степени вершин", command=vertexes_degree) # <====================================================
     algsmenu.add_command(label="Матрица смежности", command=get_adj_matrix) # <====================================================
     algsmenu.add_command(label="Матрица инцидентности", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
     algsmenu.add_command(label="Граф - дерево?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
@@ -514,16 +388,25 @@ def save_file():
         if workspace.is_tab_opened:
             workspace.save_graph()
 
+def delete_selected_vertexes(event):
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.delete_selected_vertexes()
 
 def vertexes_count():
     for workspace in workspaces:
         if workspace.is_tab_opened:
-            print( len(workspace.vertexes))
+            print(len(workspace.vertexes))
 
 def edges_count():
     for workspace in workspaces:
         if workspace.is_tab_opened:
             print(len(workspace.edges))
+
+def vertexes_degree():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.vertexes_degree()
 
 def get_adj_matrix():
     for workspace in workspaces:
@@ -538,6 +421,8 @@ def get_adj_matrix():
             win.title('Матрица смежности')
             win.geometry('300x300')
             win.resizable(False, False)
+            win.bind('<Escape>', lambda event: win.destroy())
+
             text = Text(win, width=30, height=15)
             text.insert(1.0, sring[0:-1])
             text.place(anchor='center', relx=0.5, rely=0.5)
@@ -563,15 +448,15 @@ def get_adj_matrix():
 
             CTkButton(win, text='Построить граф', bg_color=btns_color, fg_color=add_tab_button,
                         corner_radius=5, command=read_matrix).place(anchor='center', relx=0.5, rely=0.9)
-            
-
 
             win.mainloop()
+
 
 
 workspaces = []
 def ex(event):
     global root
+    workspaces.clear()
     root.destroy()
 
 main()
