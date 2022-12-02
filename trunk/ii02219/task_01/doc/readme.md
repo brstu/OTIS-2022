@@ -10,7 +10,7 @@
 
 Выполнил: <br/>
 Студент 2 курса <br/>
-Группы ИИ-22(I) <br/>
+Группы ИИ-22 <br/>
 Сидоренко А.А. <br/>
 
 Проверил: <br/>
@@ -63,6 +63,9 @@ end
 x = range(0,time,length=time)
 plot(x,[y_linear,y_nonlinear],label = ["linear" "nonlinear"])
 savefig("plot.png")
+```
 
 ###График###
+
+!(https://github.com/6mashina/OTIS-2022/blob/lab-1/trunk/ii02219/task_01/doc/plot.png)
 
