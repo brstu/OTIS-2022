@@ -63,7 +63,7 @@ end
 x = range(0,time,length=time)
 plot(x,[y_linear,y_nonlinear],label = ["linear" "nonlinear"])
 savefig("plot.png")
-```
+~~~
 
 ###График###
 
