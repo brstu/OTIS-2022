@@ -5,6 +5,7 @@ from graphs import Graph, inc_to_adj
 from random import randint
 
 import json
+import pyperclip
 
 class Workspace:
     def __init__(self, name: str = 'Безымянный') -> None:
@@ -63,7 +64,6 @@ class Workspace:
                     self.edges.append(Edge(self.canvas, adj[i][j], self.vertexes[i], self.vertexes[j], adj[i][j] != adj[j][i]))
                     if adj[i][j] == adj[j][i]:
                         adj[j][i] = 0
-        print(self.graph.adjacency_matrix)
 
     def default_mode(self):
         self.canvas.bind('<Button-1>', lambda event: None)
@@ -113,7 +113,6 @@ class Workspace:
         x, y = event.x, event.y
         self.graph.add_vertex()
         self.vertexes.append(Vertex(self.canvas, name=self.id_vert, x=x, y=y, id_vert=self.id_vert))
-        print(f'id: {self.id_vert}')
         self.id_vert += 1
 
     def add_edge(self):
@@ -138,7 +137,7 @@ class Workspace:
         else:
             return
         props = CTk()
-        props.geometry('300x200')
+        props.geometry(f'300x200+{event.x_root}+{event.y_root}')
         props.title('Свойства ребра')
         props.resizable(False, False)
         props.bind('<Escape>', lambda event: props.destroy())
@@ -167,7 +166,6 @@ class Workspace:
         btn_unor.place(anchor='n', relx=0.5, rely=0.7)
 
         props.mainloop()
-
         self.canvas.bind('<Button-1>', self.add_edge_click)
 
     def delete_selected_vertexes(self):
@@ -187,8 +185,6 @@ class Workspace:
                     self.id_vert -= 1
             self.graph.del_vertex(vertex.id_vert)
             vertex.delete()
-        for vertex in self.vertexes:
-            print(vertex.id_vert)
         self.selected_vertexes.clear()
 
     def delete_comp(self):
@@ -218,10 +214,18 @@ class Workspace:
         else:
             for edge in self.edges:
                 if sqrt((x - edge.x1)**2 + (y - edge.y1)**2) + sqrt((x - edge.x2)**2 + (y - edge.y2)**2) <= sqrt((edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2)+5:
+                    self.graph.del_edge(edge.vertex1.id_vert, edge.vertex2.id_vert)
                     edge.delete()
                     self.edges.remove(edge)
-                    self.graph.del_edge(edge.vertex1.id_vert, edge.vertex2.id_vert)
                     break
+
+        
+        def copy_to_clipboard(self):
+            for vertex1 in self.selected_vertexes:
+                for vertex2 in self.selected_vertexes:
+                    if vertex1 != vertex2:
+                        pass
+
 
 
     def recovery_from_dict(self, dict):
@@ -245,7 +249,6 @@ class Workspace:
             else:
                 self.graph.add_unorient_edge(vertex1.id_vert, vertex2.id_vert, edge[2])
             self.edges.append(Edge(self.canvas, edge[2], vertex1, vertex2, edge[3], edge[4]))
-        print(self.graph.adjacency_matrix)
         
 
 
@@ -323,7 +326,7 @@ def main():
     global root
     root = CTk()
     root.title('Graphs Editor Pro')
-    root.geometry("1600x900+150+100")
+    root.geometry("1600x900+150+70")
     root.resizable(False, False)
     root.set_appearance_mode(main_theme)
 
@@ -334,9 +337,9 @@ def main():
     root.config(menu=mainmenu)
 
     filemenu = Menu(mainmenu, tearoff=0)
-    filemenu.add_command(label="Новый", command=add_new_tab) # <====================================================
-    filemenu.add_command(label="Открыть", command=open_file) # <====================================================
-    filemenu.add_command(label="Сохранить", command=save_file) # <====================================================
+    filemenu.add_command(label="Новый", command=add_new_tab)
+    filemenu.add_command(label="Открыть", command=open_file)
+    filemenu.add_command(label="Сохранить", command=save_file)
     filemenu.add_separator()
     filemenu.add_command(label="Экспорт в текст", command=lambda: print('Экспорт в текст')) # <====================================================
     filemenu.add_command(label="Импорт из текста", command=lambda: print('Импорт из текста')) # <====================================================

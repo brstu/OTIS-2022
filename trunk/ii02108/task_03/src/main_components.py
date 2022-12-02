@@ -56,13 +56,13 @@ class Vertex:
 
         clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relwidth=0.333, relheight=0.2)
         clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relwidth=0.333, relheight=0.2)
-        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relwidth=0.335, relheight=0.2)
+        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relwidth=0.35, relheight=0.2)
         clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relwidth=0.333, relheight=0.2)
         clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relwidth=0.333, relheight=0.2)
-        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relwidth=0.335, relheight=0.2)
+        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relwidth=0.35, relheight=0.2)
         clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relwidth=0.333, relheight=0.2)
         clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relwidth=0.333, relheight=0.2)
-        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relwidth=0.335, relheight=0.2)
+        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relwidth=0.35, relheight=0.2)
         clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
         
         props_vert.mainloop()
@@ -180,13 +180,13 @@ class Edge:
 
         clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relwidth=0.333, relheight=0.2)
         clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relwidth=0.333, relheight=0.2)
-        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relwidth=0.335, relheight=0.2)
+        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relwidth=0.35, relheight=0.2)
         clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relwidth=0.333, relheight=0.2)
         clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relwidth=0.333, relheight=0.2)
-        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relwidth=0.335, relheight=0.2)
+        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relwidth=0.35, relheight=0.2)
         clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relwidth=0.333, relheight=0.2)
         clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relwidth=0.333, relheight=0.2)
-        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relwidth=0.335, relheight=0.2)
+        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relwidth=0.35, relheight=0.2)
         clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
 
         props_edge.mainloop()
