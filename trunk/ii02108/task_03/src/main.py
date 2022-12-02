@@ -220,12 +220,35 @@ class Workspace:
                     break
 
         
-        def copy_to_clipboard(self):
-            for vertex1 in self.selected_vertexes:
-                for vertex2 in self.selected_vertexes:
-                    if vertex1 != vertex2:
-                        pass
+    def copy_to_clipboard(self):
+        dict = {}
+        dict['vertexes'] = []
+        dict['edges'] = []
 
+        for i, vertex1 in enumerate(self.selected_vertexes):
+            dict['vertexes'].append((vertex1.name, vertex1.x, vertex1.y, vertex1.color))
+            for j, vertex2 in enumerate(self.selected_vertexes):
+                if vertex1 != vertex2:
+                    for edge in self.edges:
+                        if edge.vertex1 == vertex1 and edge.vertex2 == vertex2 or edge.vertex1 == vertex2 and edge.vertex2 == vertex1:
+                            dict['edges'].append((i, j, edge.weight, edge.is_oriented, edge.color)) # i, j - индексы вершин в списке dict['vertexes']
+                            break
+        pyperclip.copy(json.dumps(dict))
+
+    def paste_from_clipboard(self):
+        dict = json.loads(pyperclip.paste())
+        length = len(dict['vertexes'])
+        for vertex in dict['vertexes']:
+            self.vertexes.append(Vertex(self.canvas, vertex[0], vertex[1], vertex[2], self.id_vert, vertex[3]))
+            self.graph.add_vertex()
+            self.id_vert += 1
+        for edge in dict['edges']:
+
+            self.edges.append(Edge(self.canvas, edge[2], self.vertexes[-length + edge[0]], self.vertexes[-length + edge[1]], edge[3], edge[4]))
+            if edge[3]:
+                self.graph.add_orient_edge(self.edges[-1].vertex1.id_vert, self.edges[-1].vertex2.id_vert, edge[2])
+            else:
+                self.graph.add_unorient_edge(self.edges[-1].vertex1.id_vert, self.edges[-1].vertex2.id_vert, edge[2])
 
 
     def recovery_from_dict(self, dict):
@@ -308,9 +331,12 @@ class Workspace:
         self.default_btn.place(anchor='ne', relx=0.997, rely=0.13)
 
     def DEL(self):
-        self.canvas.destroy()
-        self.tab_btn.destroy()
-        self.close_tab_btn.destroy()
+        try:
+            self.canvas.destroy()
+            self.tab_btn.destroy()
+            self.close_tab_btn.destroy()
+        except:
+            pass
         workspaces.remove(self)
 
         for i in range(len(workspaces)):
@@ -331,6 +357,8 @@ def main():
     root.set_appearance_mode(main_theme)
 
     root.bind('<Delete>', delete_selected_vertexes)
+    root.bind('<Control-c>', copy_selected_vertexes)
+    root.bind('<Control-v>', paste_selected_vertexes)
 
     # Раздел меню
     mainmenu = Menu(root)
@@ -394,15 +422,23 @@ def open_file():
             dict = json.load(file)
         graph.recovery_from_dict(dict)
 
-def save_file():
+
+def activate_func(func):
     for workspace in workspaces:
         if workspace.is_tab_opened:
-            workspace.save_graph()
+            exec(f'workspace.{func}()')
+
+def save_file():
+    activate_func('save_graph')
 
 def delete_selected_vertexes(event):
-    for workspace in workspaces:
-        if workspace.is_tab_opened:
-            workspace.delete_selected_vertexes()
+    activate_func('delete_selected_vertexes')
+
+def copy_selected_vertexes(event):
+    activate_func('copy_to_clipboard')
+
+def paste_selected_vertexes(event):
+    activate_func('paste_from_clipboard')
 
 def vertexes_count():
     for workspace in workspaces:
