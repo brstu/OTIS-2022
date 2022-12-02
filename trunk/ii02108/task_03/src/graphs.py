@@ -1,14 +1,18 @@
 class Graph:
-    def __init__(self, adj_matr=[]) -> None:
-        self.adjacency_matrix = adj_matr
-        self.vertexes_count = len(adj_matr)
-        self.edges = []
-        for i in range(self.vertexes_count):
-            for j in range(self.vertexes_count):
-                if self.adjacency_matrix[i][j]:
-                    self.edges.append((i, j, self.adjacency_matrix[i][j]))
-        self.edges_count = 0
+    def __init__(self, adj_matr: list=[]) -> None:
+        self.adjacency_matrix = [i.copy() for i in adj_matr]
 
+        self.vertexes_count = len(self.adjacency_matrix)
+        self.edges = []
+        self.edges_count = 0
+        if adj_matr:
+            for i in range(self.vertexes_count):
+                for j in range(self.vertexes_count):
+                    if self.adjacency_matrix[i][j]:
+                        self.edges.append((i, j, self.adjacency_matrix[i][j], self.adjacency_matrix[i][j]!=self.adjacency_matrix[j][i]))
+                        self.edges_count += 1
+                        if self.adjacency_matrix[i][j] == self.adjacency_matrix[j][i]:
+                            self.adjacency_matrix[j][i] = 0
     # CREATE GRAPH ============================================================
 
     def add_vertex(self):
@@ -18,14 +22,13 @@ class Graph:
         self.adjacency_matrix.append([0 for i in range(self.vertexes_count)])
 
     def add_unorient_edge(self, vertex1: int, vertex2: int, weight=1):
-        self.edges.append((vertex1, vertex2, weight))
-        self.edges.append((vertex2, vertex1, weight))
+        self.edges.append([vertex1, vertex2, weight, False])
         self.adjacency_matrix[vertex1][vertex2] = weight
         self.adjacency_matrix[vertex2][vertex1] = weight
-        self.edges_count += 2
+        self.edges_count += 1
 
     def add_orient_edge(self, vertex1: int, vertex2: int, weight=1):
-        self.edges.append((vertex1, vertex2, weight))
+        self.edges.append([vertex1, vertex2, weight, True])
         self.adjacency_matrix[vertex1][vertex2] = weight
         self.edges_count += 1
 
@@ -34,11 +37,20 @@ class Graph:
         self.adjacency_matrix.pop(vertex)
         for i in range(self.vertexes_count):
             self.adjacency_matrix[i].pop(vertex)
+        for edge in self.edges:
+            if edge[0] == vertex or edge[1] == vertex:
+                self.edges.remove(edge)
+                self.edges_count -= 1
+        for edge in self.edges:
+            if edge[0] > vertex:
+                edge[0] -= 1
+            if edge[1] > vertex:
+                edge[1] -= 1
     
     def del_edge(self, vertex1: int, vertex2: int):
         for i, edge in enumerate(self.edges):
             if edge[0] == vertex1 and edge[1] == vertex2:
-                self.edges.pop(i)
+                self.edges.remove(edge)
                 self.edges_count -= 1
                 break
         self.adjacency_matrix[vertex1][vertex2] = 0
@@ -57,11 +69,20 @@ class Graph:
     def get_adj_matrix(self):
         return self.adjacency_matrix
 
-    def get_inc_matrix(self): # TODO
+    def get_inc_matrix(self):
+        adj_matr = self.get_adj_matrix()
         incidence_matrix = [[0 for i in range(self.edges_count)] for j in range(self.vertexes_count)]
-        for i, edge in enumerate(self.edges):
-            incidence_matrix[edge[0]][i] = self.edges[2]
-            incidence_matrix[edge[1]][i] = self.edges[2]
+        for i in range(self.vertexes_count):
+            for j in range(self.vertexes_count):
+                if adj_matr[i][j]:
+                    for k in range(self.edges_count):
+                        if self.edges[k][0] == i and self.edges[k][1] == j:
+                            if adj_matr[i][j] != adj_matr[j][i]:
+                                incidence_matrix[i][k] = adj_matr[i][j]
+                                incidence_matrix[j][k] = adj_matr[i][j]
+                            else:
+                                incidence_matrix[i][k] = adj_matr[i][j]
+                                incidence_matrix[j][k] = -adj_matr[i][j]
         return incidence_matrix
 
     def show_adj_matrix(self):
@@ -73,12 +94,13 @@ class Graph:
         return adj_matr
     
     def show_inc_matrix(self):
-        inc_matr = ''
+        inc_matr = self.get_inc_matrix()
+        string = ''
         for i in range(self.vertexes_count):
             for j in range(self.edges_count):
-                inc_matr += str(self.incidence_matrix[i][j]) + ' '
-            inc_matr += '\n'
-        return inc_matr
+                string += str(inc_matr[i][j]) + ' '
+            string += '\n'
+        return string
 
 
     # ALGORITHMS ================================================================
@@ -226,7 +248,30 @@ class Graph:
         '''Является ли граф Гамильтоновым'''
         return all(self.get_degree(i) >= 2 for i in range(self.vertexes_count))
     
-
+def inc_to_adj(incidence_matrix):
+    '''Перевод инцидентной матрицы в матрицу смежности'''
+    vertexes_count = len(incidence_matrix)
+    edges_count = len(incidence_matrix[0])
+    adjacency_matrix = [[0 for i in range(vertexes_count)] for j in range(vertexes_count)]
+    for i in range(vertexes_count):
+        for j in range(edges_count):
+            if incidence_matrix[i][j] > 0:
+                for k in range(vertexes_count):
+                    if incidence_matrix[k][j] > 0 and k != i:
+                        adjacency_matrix[i][k] = incidence_matrix[i][j]
+                        adjacency_matrix[k][i] = incidence_matrix[i][j]
+                    elif incidence_matrix[k][j] < 0 and k != i:
+                        adjacency_matrix[i][k] = incidence_matrix[i][j]
+                        adjacency_matrix[k][i] = 0
+            elif incidence_matrix[i][j] < 0:
+                for k in range(vertexes_count):
+                    if incidence_matrix[k][j] > 0 and k != i:
+                        adjacency_matrix[i][k] = 0
+                        adjacency_matrix[k][i] = incidence_matrix[i][j]
+                    elif incidence_matrix[k][j] < 0 and k != i:
+                        adjacency_matrix[i][k] = incidence_matrix[i][j]
+                        adjacency_matrix[k][i] = incidence_matrix[i][j]
+    return adjacency_matrix
 
 def main():
     a = Graph()
@@ -247,3 +292,17 @@ def main():
     print(a.get_eulerian_cycle())
 
 # main()
+
+# matr = [[0, 1, 1, 1, 0, 0, 0, 0, ],
+# [1, 0, 1, 0, 0, 1, 0, 1, ],
+# [1, 1, 0, 1, 1, 0, 0, 1, ],
+# [1, 0, 1, 0, 1, 0, 0, 0, ],
+# [0, 0, 1, 1, 0, 0, 1, 1, ],
+# [0, 1, 0, 0, 0, 0, 1, 1, ],
+# [0, 0, 0, 0, 1, 1, 0, 1, ],
+# [0, 1, 1, 0, 1, 1, 1, 0, ]]
+# a = Graph(matr)
+# d = (inc_to_adj(a.get_inc_matrix()))
+
+# for i in d:
+#     print(i)

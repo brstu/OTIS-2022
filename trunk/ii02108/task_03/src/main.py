@@ -1,7 +1,7 @@
 from customtkinter import *
 from tkinter import Menu, PhotoImage, filedialog, Text
 from main_components import *
-from graphs import *
+from graphs import Graph, inc_to_adj
 from random import randint
 
 import json
@@ -55,13 +55,15 @@ class Workspace:
         self.edges.clear()
         self.id_vert = 0
         for i in range(len(adj)):
-            self.add_vertex_from_adj(x=randint(0, 1445-vertex_radius), y=randint(0, 875-vertex_radius))
+            self.vertexes.append(Vertex(self.canvas, self.id_vert, randint(0, 1445-vertex_radius), randint(0, 875-vertex_radius), self.id_vert))
+            self.id_vert += 1
         for i in range(len(adj)):
             for j in range(len(adj)):
                 if adj[i][j] != 0:
-                    self.add_edge_from_matr(self.vertexes[i], self.vertexes[j], adj[i][j], adj[i][j] != adj[j][i])
+                    self.edges.append(Edge(self.canvas, adj[i][j], self.vertexes[i], self.vertexes[j], adj[i][j] != adj[j][i]))
                     if adj[i][j] == adj[j][i]:
                         adj[j][i] = 0
+        print(self.graph.adjacency_matrix)
 
     def default_mode(self):
         self.canvas.bind('<Button-1>', lambda event: None)
@@ -91,7 +93,7 @@ class Workspace:
                 break
         else:
             for edge in self.edges:
-                if (x - edge.x1)**2 + (y - edge.y1)**2 + (x - edge.x2)**2 + (y - edge.y2)**2 <= (edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2:
+                if sqrt((x - edge.x1)**2 + (y - edge.y1)**2) + sqrt((x - edge.x2)**2 + (y - edge.y2)**2) <= sqrt((edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2)+5:
                     edge.show_properties(event)
                     break
 
@@ -107,23 +109,12 @@ class Workspace:
                         edge.move()
                 break
 
-    def add_vertex_from_adj(self, x, y):
-        self.vertexes.append(Vertex(self.canvas, self.id_vert, x, y, self.id_vert))
-        self.id_vert += 1
-
     def add_vertex_click(self, event):
         x, y = event.x, event.y
         self.graph.add_vertex()
         self.vertexes.append(Vertex(self.canvas, name=self.id_vert, x=x, y=y, id_vert=self.id_vert))
+        print(f'id: {self.id_vert}')
         self.id_vert += 1
-    
-    def add_vertex_from_file(self, name: str, x: int, y: int, color: str):
-        self.graph.add_vertex()
-        self.vertexes.append(Vertex(self.canvas, name, x, y, self.id_vert, color))
-        self.id_vert += 1
-
-    def add_edge_from_matr(self, vertex1: Vertex, vertex2: Vertex, weight: int, is_oriented: bool=False):
-        self.edges.append(Edge(self.canvas, weight, vertex1, vertex2, is_oriented))
 
     def add_edge(self):
         self.canvas.bind('<Button-1>', self.add_edge_click)
@@ -179,24 +170,25 @@ class Workspace:
 
         self.canvas.bind('<Button-1>', self.add_edge_click)
 
-    def add_edge_from_file(self, weight: int, vertex1: Vertex, vertex2: Vertex, is_oriented: bool, color: str):
-        if is_oriented:
-            self.graph.add_orient_edge(vertex1.id_vert, vertex2.id_vert, weight)
-        else:
-            self.graph.add_unorient_edge(vertex1.id_vert, vertex2.id_vert, weight)
-        self.edges.append(Edge(self.canvas, weight, vertex1, vertex2, is_oriented, color))
-
     def delete_selected_vertexes(self):
         for vertex in self.selected_vertexes:
-            self.graph.del_vertex(vertex.id_vert)
             for _ in range(len(self.vertexes)):
                 for edge in self.edges:
                     if vertex in (edge.vertex1, edge.vertex2):
+                        vertex1 = edge.vertex1.id_vert
+                        vertex2 = edge.vertex2.id_vert
                         self.edges.remove(edge)
+                        self.graph.del_edge(vertex1, vertex2)
+                        edge.delete()
             self.vertexes.remove(vertex)
             for vert in self.vertexes:
                 if vert.id_vert > vertex.id_vert:  
                     vert.id_vert -= 1
+                    self.id_vert -= 1
+            self.graph.del_vertex(vertex.id_vert)
+            vertex.delete()
+        for vertex in self.vertexes:
+            print(vertex.id_vert)
         self.selected_vertexes.clear()
 
     def delete_comp(self):
@@ -207,19 +199,26 @@ class Workspace:
         x, y = event.x, event.y
         for vertex in self.vertexes:
             if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
-                self.graph.del_vertex(vertex.id_vert)
+                vertex.delete()
                 for _ in range(len(self.vertexes)):
                     for edge in self.edges:
                         if vertex in (edge.vertex1, edge.vertex2):
+                            vertex1 = edge.vertex1.id_vert
+                            vertex2 = edge.vertex2.id_vert
+                            edge.delete()
                             self.edges.remove(edge)
+                            self.graph.del_edge(vertex1, vertex2)
                 self.vertexes.remove(vertex)
                 for vert in self.vertexes:
                     if vert.id_vert > vertex.id_vert:  
                         vert.id_vert -= 1
+                        self.id_vert -= 1
+                self.graph.del_vertex(vertex.id_vert)
                 break
         else:
             for edge in self.edges:
-                if (x - edge.x1)**2 + (y - edge.y1)**2 + (x - edge.x2)**2 + (y - edge.y2)**2 <= (edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2-500:
+                if sqrt((x - edge.x1)**2 + (y - edge.y1)**2) + sqrt((x - edge.x2)**2 + (y - edge.y2)**2) <= sqrt((edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2)+5:
+                    edge.delete()
                     self.edges.remove(edge)
                     self.graph.del_edge(edge.vertex1.id_vert, edge.vertex2.id_vert)
                     break
@@ -228,15 +227,25 @@ class Workspace:
     def recovery_from_dict(self, dict):
         self.name = dict['graph_name']
         self.tab_btn.configure(text=self.name)
+        self.id_vert = 0
+        self.graph = Graph()
         for vertex in range(len(dict['name'])):
-            self.add_vertex_from_file(dict['name'][vertex], dict['coords'][vertex][0], dict['coords'][vertex][1], dict['color'][vertex])
+            self.graph.add_vertex()
+            self.vertexes.append(Vertex(self.canvas, dict['name'][vertex], dict['coords'][vertex][0], dict['coords'][vertex][1], self.id_vert, dict['color'][vertex]))
+            self.id_vert += 1
         for edge in dict['edges']:
             for vertex in self.vertexes:
                 if vertex.x == edge[0][0] and vertex.y == edge[0][1]:
                     vertex1 = vertex
                 elif vertex.x == edge[1][0] and vertex.y == edge[1][1]:
                     vertex2 = vertex
-            self.add_edge_from_file(edge[2], vertex1, vertex2, edge[3], edge[4])
+            
+            if edge[3]:
+                self.graph.add_orient_edge(vertex1.id_vert, vertex2.id_vert, edge[2])
+            else:
+                self.graph.add_unorient_edge(vertex1.id_vert, vertex2.id_vert, edge[2])
+            self.edges.append(Edge(self.canvas, edge[2], vertex1, vertex2, edge[3], edge[4]))
+        print(self.graph.adjacency_matrix)
         
 
 
@@ -280,8 +289,8 @@ class Workspace:
 
         self.add_vert_btn.place_forget()
         self.add_edge_btn.place_forget()
-        self.del_vert_btn.place_forget()
-        self.del_edge_btn.place_forget()
+        self.del_comp_btn.place_forget()
+        self.default_btn.place_forget()
 
     def SHOW(self):
         for workspace in workspaces:
@@ -304,7 +313,6 @@ class Workspace:
         for i in range(len(workspaces)):
             workspaces[i].tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*i, width=110)
             workspaces[i].close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*i, width=30)
-
 
 
 def main():
@@ -338,7 +346,7 @@ def main():
     algsmenu.add_command(label="Кол-во ребер", command=edges_count) # <====================================================
     algsmenu.add_command(label="Степени вершин", command=vertexes_degree) # <====================================================
     algsmenu.add_command(label="Матрица смежности", command=get_adj_matrix) # <====================================================
-    algsmenu.add_command(label="Матрица инцидентности", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+    algsmenu.add_command(label="Матрица инцидентности", command=get_inc_matrix) # <====================================================
     algsmenu.add_command(label="Граф - дерево?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
     algsmenu.add_command(label="Граф полный?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
     algsmenu.add_command(label="Граф эйлеров?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
@@ -396,12 +404,12 @@ def delete_selected_vertexes(event):
 def vertexes_count():
     for workspace in workspaces:
         if workspace.is_tab_opened:
-            print(len(workspace.vertexes))
+            print(len(workspace.vertexes), workspace.graph.vertexes_count)
 
 def edges_count():
     for workspace in workspaces:
         if workspace.is_tab_opened:
-            print(len(workspace.edges))
+            print(len(workspace.edges), workspace.graph.edges_count)
 
 def vertexes_degree():
     for workspace in workspaces:
@@ -411,21 +419,16 @@ def vertexes_degree():
 def get_adj_matrix():
     for workspace in workspaces:
         if workspace.is_tab_opened:
-            matrix = workspace.graph.get_adj_matrix()
-            sring = ''
-            for i in range(len(matrix)):
-                for j in range(len(matrix[i])):
-                    sring += str(matrix[i][j]) + ' '
-                sring += '\n'
+            string = workspace.graph.show_adj_matrix()
+
             win = CTk()
             win.title('Матрица смежности')
-            win.geometry('300x300')
-            win.resizable(False, False)
+            win.geometry('500x500')
             win.bind('<Escape>', lambda event: win.destroy())
 
-            text = Text(win, width=30, height=15)
-            text.insert(1.0, sring[0:-1])
-            text.place(anchor='center', relx=0.5, rely=0.5)
+            text = Text(win)
+            text.insert(1.0, string[0:-1])
+            text.place(anchor='nw', relx=0, rely=0, relwidth=1, relheight=0.9)
 
 
             # считать матрицу смежности и построить граф
@@ -445,6 +448,48 @@ def get_adj_matrix():
                         matrix[i][j] = int(matrix[i][j])
                 win.destroy()
                 workspace.update_from_adj(matrix) 
+
+            CTkButton(win, text='Построить граф', bg_color=btns_color, fg_color=add_tab_button,
+                        corner_radius=5, command=read_matrix).place(anchor='center', relx=0.5, rely=0.9)
+
+            win.mainloop()
+
+def get_inc_matrix():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            sring = workspace.graph.show_inc_matrix()
+
+            win = CTk()
+            win.title('Матрица инцидентности')
+            win.geometry('500x500')
+            win.bind('<Escape>', lambda event: win.destroy())
+
+            text = Text(win, width=30, height=15)
+            text.insert(1.0, sring[0:-1])
+            text.place(anchor='center', relx=0.5, rely=0.5)
+
+
+            # считать матрицу инцидентности и построить граф
+            def read_matrix():
+                matrix = []
+                string = text.get(1.0, END).replace(',', '')
+                if string:
+                    strings = string.split('\n')
+                    for i in range(len(strings)):
+                        matrix.append(strings[i].split(' '))
+                    for i in matrix:
+                        if i == ['']:
+                            matrix.remove(i)
+                        for j in i:
+                            if j == '':
+                                i.remove(j)
+
+                    for i in range(len(matrix)):
+                        for j in range(len(matrix[i])):
+                            matrix[i][j] = int(matrix[i][j])
+                    win.destroy()
+                    adj_matrix = inc_to_adj(matrix)
+                    workspace.update_from_adj(adj_matrix) 
 
             CTkButton(win, text='Построить граф', bg_color=btns_color, fg_color=add_tab_button,
                         corner_radius=5, command=read_matrix).place(anchor='center', relx=0.5, rely=0.9)

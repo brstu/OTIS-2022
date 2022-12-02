@@ -19,7 +19,7 @@ class Vertex:
         self.circle = create_circle(self.canvas, self.x, self.y, self.radius, fill=self.color)
         self.text = self.canvas.create_text(self.x, self.y, text=self.name, font=f'Arial {self.radius-5}', fill='white')
 
-    def __del__(self):
+    def delete(self):
         self.canvas.delete(self.circle)
         self.canvas.delete(self.text)
 
@@ -54,15 +54,15 @@ class Vertex:
         clrbtn_9 = CTkButton(props_vert, corner_radius=0, fg_color='#FF00FF', text='', command=lambda: self.change_color('#FF00FF'))
         clrbtn_10= CTkButton(props_vert, corner_radius=0, fg_color='#00FF00', text='', command=lambda: self.change_color('#00FF00'))
 
-        clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relheight=0.2)
-        clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relheight=0.2)
-        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relheight=0.2)
-        clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relheight=0.2)
-        clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relheight=0.2)
-        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relheight=0.2)
-        clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relheight=0.2)
-        clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relheight=0.2)
-        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relheight=0.2)
+        clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relwidth=0.333, relheight=0.2)
+        clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relwidth=0.333, relheight=0.2)
+        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relwidth=0.335, relheight=0.2)
+        clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relwidth=0.333, relheight=0.2)
+        clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relwidth=0.333, relheight=0.2)
+        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relwidth=0.335, relheight=0.2)
+        clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relwidth=0.333, relheight=0.2)
+        clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relwidth=0.333, relheight=0.2)
+        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relwidth=0.335, relheight=0.2)
         clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
         
         props_vert.mainloop()
@@ -130,7 +130,7 @@ class Edge:
                 self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
                 self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black')
         
-    def __del__(self):
+    def delete(self):
         self.canvas.delete(self.line)
         self.canvas.delete(self.rect)
         self.canvas.delete(self.text)
@@ -178,15 +178,15 @@ class Edge:
         clrbtn_9 = CTkButton(props_edge, corner_radius=0, fg_color='#FF00FF', text='', command=lambda: self.change_color('#FF00FF'))
         clrbtn_10= CTkButton(props_edge, corner_radius=0, fg_color='#00FF00', text='', command=lambda: self.change_color('#00FF00'))
 
-        clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relheight=0.2)
-        clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relheight=0.2)
-        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relheight=0.2)
-        clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relheight=0.2)
-        clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relheight=0.2)
-        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relheight=0.2)
-        clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relheight=0.2)
-        clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relheight=0.2)
-        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relheight=0.2)
+        clrbtn_1.place(anchor='nw', relx=0, rely=0.28, relwidth=0.333, relheight=0.2)
+        clrbtn_2.place(anchor='nw', relx=0.33, rely=0.28, relwidth=0.333, relheight=0.2)
+        clrbtn_3.place(anchor='nw', relx=0.66, rely=0.28, relwidth=0.335, relheight=0.2)
+        clrbtn_4.place(anchor='nw', relx=0, rely=0.48, relwidth=0.333, relheight=0.2)
+        clrbtn_5.place(anchor='nw', relx=0.33, rely=0.48, relwidth=0.333, relheight=0.2)
+        clrbtn_6.place(anchor='nw', relx=0.66, rely=0.48, relwidth=0.335, relheight=0.2)
+        clrbtn_7.place(anchor='nw', relx=0, rely=0.68, relwidth=0.333, relheight=0.2)
+        clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relwidth=0.333, relheight=0.2)
+        clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relwidth=0.335, relheight=0.2)
         clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
 
         props_edge.mainloop()
