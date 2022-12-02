@@ -9,9 +9,9 @@
 Тема: «Modeling controlled object» <br/>
 
 Выполнил: <br/>
-Студент 1 курса <br/>
+Студент 2 курса <br/>
 Группы ИИ-22(I) <br/>
-Заречный А.О. <br/>
+Сидоренко А.А. <br/>
 
 Проверил: <br/>
 Иванюк Д.С. <br/>
@@ -62,4 +62,7 @@ for i in 1 : time
 end
 x = range(0,time,length=time)
 plot(x,[y_linear,y_nonlinear],label = ["linear" "nonlinear"])
-savefig("plot.png")~~~
+savefig("plot.png")
+
+###График###
+
