@@ -1,4 +1,5 @@
 from customtkinter import *
+from tkinter import messagebox
 from config import *
 from math import sqrt
 
@@ -42,6 +43,8 @@ class Vertex:
         name_entry.insert(0, self.name)
         name_entry.place(anchor='n', relx=0.5, rely=0.1)
         name_entry.bind('<Return>', lambda event: self.rename(name_entry.get()))
+        name_entry.focus()
+
 
         clrbtn_1 = CTkButton(props_vert, corner_radius=0, fg_color='red', text='', command=lambda: self.change_color('red'))
         clrbtn_2 = CTkButton(props_vert, corner_radius=0, fg_color='purple', text='', command=lambda: self.change_color('purple'))
@@ -138,9 +141,13 @@ class Edge:
         del self.vertex2
 
     def change_weight(self, weight):
-        self.weight = weight
-        self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
-        self.canvas.itemconfig(self.text, text=self.weight)
+        try:
+            self.weight = int(weight)
+        except ValueError:
+            messagebox.showerror('Ошибка', 'Вес должен быть числом')
+        else:
+            self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
+            self.canvas.itemconfig(self.text, text=self.weight)
     
     def change_color(self, color):
         self.color = color
@@ -165,7 +172,8 @@ class Edge:
         name_entry.delete(0, 'end')
         name_entry.insert(0, str(self.weight))
         name_entry.place(anchor='n', relx=0.5, rely=0.1)
-        name_entry.bind('<Return>', lambda event: self.change_weight(int(name_entry.get())))
+        name_entry.bind('<Return>', lambda event: self.change_weight(name_entry.get()))
+        name_entry.focus()
 
         clrbtn_1 = CTkButton(props_edge, corner_radius=0, fg_color='red', text='', command=lambda: self.change_color('red'))
         clrbtn_2 = CTkButton(props_edge, corner_radius=0, fg_color='purple', text='', command=lambda: self.change_color('purple'))

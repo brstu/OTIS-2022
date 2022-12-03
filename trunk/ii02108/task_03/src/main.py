@@ -17,10 +17,10 @@ class Workspace:
         self.id_vert = 0
 
 
-        self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex_mode, bg_color=btns_color) # <====================================================
-        self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=self.add_edge, bg_color=btns_color) # <====================================================
-        self.del_comp_btn = CTkButton(root, text='Удалить компонент', command=self.delete_comp, bg_color=btns_color) # <====================================================
-        self.default_btn = CTkButton(root, text='По умолчанию', command=self.default_mode, bg_color=btns_color) # <====================================================
+        self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex_mode, bg_color=btns_color)
+        self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=self.add_edge_mode, bg_color=btns_color)
+        self.del_comp_btn = CTkButton(root, text='Удалить компонент', command=self.delete_comp_mode, bg_color=btns_color)
+        self.default_btn = CTkButton(root, text='По умолчанию', command=self.default_mode, bg_color=btns_color)
 
 
         self.is_tab_opened = True
@@ -65,14 +65,37 @@ class Workspace:
                     if adj[i][j] == adj[j][i]:
                         adj[j][i] = 0
 
+    def add_vertex_mode(self):
+        self.add_vert_btn.configure(fg_color=active_mode_btn)
+        self.add_edge_btn.configure(fg_color=unactive_mode_btn)
+        self.del_comp_btn.configure(fg_color=unactive_mode_btn)
+        self.default_btn.configure(fg_color=unactive_mode_btn)
+        self.canvas.bind('<Button-1>', self.add_vertex_click)
+        self.canvas.bind('<B1-Motion>', lambda event: None)
+
+    def add_edge_mode(self):
+        self.add_vert_btn.configure(fg_color=unactive_mode_btn)
+        self.add_edge_btn.configure(fg_color=active_mode_btn)
+        self.del_comp_btn.configure(fg_color=unactive_mode_btn)
+        self.default_btn.configure(fg_color=unactive_mode_btn)
+        self.canvas.bind('<Button-1>', self.add_edge_click)
+
+    def delete_comp_mode(self):
+        self.add_vert_btn.configure(fg_color=unactive_mode_btn)
+        self.add_edge_btn.configure(fg_color=unactive_mode_btn)
+        self.del_comp_btn.configure(fg_color=active_mode_btn)
+        self.default_btn.configure(fg_color=unactive_mode_btn)
+        self.canvas.bind('<Button-1>', self.delete_comp_click)
+        self.canvas.bind('<B1-Motion>', self.delete_comp_click)
+
     def default_mode(self):
+        self.add_vert_btn.configure(fg_color=unactive_mode_btn)
+        self.add_edge_btn.configure(fg_color=unactive_mode_btn)
+        self.del_comp_btn.configure(fg_color=unactive_mode_btn)
+        self.default_btn.configure(fg_color=active_mode_btn)
         self.canvas.bind('<Button-1>', lambda event: None)
         self.canvas.bind('<B1-Motion>', self.move_vertex)
         self.canvas.bind('<Control-Button-1>', self.select_vertex)
-
-    def add_vertex_mode(self):
-        self.canvas.bind('<Button-1>', self.add_vertex_click)
-        self.canvas.bind('<B1-Motion>', lambda event: None)
 
     def select_vertex(self, event):
         for vertex in self.vertexes:
@@ -115,9 +138,6 @@ class Workspace:
         self.vertexes.append(Vertex(self.canvas, name=self.id_vert, x=x, y=y, id_vert=self.id_vert))
         self.id_vert += 1
 
-    def add_edge(self):
-        self.canvas.bind('<Button-1>', self.add_edge_click)
-
     def add_edge_click(self, event):
         x, y = event.x, event.y
         for vertex in self.vertexes:
@@ -144,16 +164,17 @@ class Workspace:
             
 
         def create_edge(weight: int, is_oriented: bool):
-            weight = entry.get()
-            if weight.isdigit():
-                weight = int(weight)
-
-            if is_oriented:
-                self.graph.add_orient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
+            try:
+                weight = int(entry.get())
+            except ValueError:
+                messagebox.showerror('Ошибка', 'Вес должен быть целым числом')
             else:
-                self.graph.add_unorient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
-            self.edges.append(Edge(self.canvas, weight, self.edge_vertex1, self.edge_vertex2, is_oriented))
-            props.destroy()
+                if is_oriented:
+                    self.graph.add_orient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
+                else:
+                    self.graph.add_unorient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
+                self.edges.append(Edge(self.canvas, weight, self.edge_vertex1, self.edge_vertex2, is_oriented))
+                props.destroy()
 
 
         weight = 1
@@ -186,10 +207,6 @@ class Workspace:
             self.graph.del_vertex(vertex.id_vert)
             vertex.delete()
         self.selected_vertexes.clear()
-
-    def delete_comp(self):
-        self.canvas.bind('<Button-1>', self.delete_comp_click)
-        self.canvas.bind('<B1-Motion>', self.delete_comp_click)
     
     def delete_comp_click(self, event):
         x, y = event.x, event.y
@@ -230,25 +247,32 @@ class Workspace:
             for j, vertex2 in enumerate(self.selected_vertexes):
                 if vertex1 != vertex2:
                     for edge in self.edges:
-                        if edge.vertex1 == vertex1 and edge.vertex2 == vertex2 or edge.vertex1 == vertex2 and edge.vertex2 == vertex1:
+                        if edge.vertex1 == vertex1 and edge.vertex2 == vertex2:
                             dict['edges'].append((i, j, edge.weight, edge.is_oriented, edge.color)) # i, j - индексы вершин в списке dict['vertexes']
                             break
         pyperclip.copy(json.dumps(dict))
 
     def paste_from_clipboard(self):
-        dict = json.loads(pyperclip.paste())
-        length = len(dict['vertexes'])
-        for vertex in dict['vertexes']:
-            self.vertexes.append(Vertex(self.canvas, vertex[0], vertex[1], vertex[2], self.id_vert, vertex[3]))
-            self.graph.add_vertex()
-            self.id_vert += 1
-        for edge in dict['edges']:
-
-            self.edges.append(Edge(self.canvas, edge[2], self.vertexes[-length + edge[0]], self.vertexes[-length + edge[1]], edge[3], edge[4]))
-            if edge[3]:
-                self.graph.add_orient_edge(self.edges[-1].vertex1.id_vert, self.edges[-1].vertex2.id_vert, edge[2])
+        try:
+            dict = json.loads(pyperclip.paste())
+        except json.decoder.JSONDecodeError:
+            messagebox.showerror('Ошибка', 'В буфере обмена нет данных')
+        else:
+            if not ('vertexes' in dict and 'edges' in dict):
+                messagebox.showerror('Ошибка', 'В буфере обмена нет данных')
             else:
-                self.graph.add_unorient_edge(self.edges[-1].vertex1.id_vert, self.edges[-1].vertex2.id_vert, edge[2])
+                length = len(dict['vertexes'])
+                for vertex in dict['vertexes']:
+                    self.vertexes.append(Vertex(self.canvas, vertex[0], vertex[1], vertex[2], self.id_vert, vertex[3]))
+                    self.graph.add_vertex()
+                    self.id_vert += 1
+                for edge in dict['edges']:
+
+                    self.edges.append(Edge(self.canvas, edge[2], self.vertexes[-length + edge[0]], self.vertexes[-length + edge[1]], edge[3], edge[4]))
+                    if edge[3]:
+                        self.graph.add_orient_edge(self.edges[-1].vertex1.id_vert, self.edges[-1].vertex2.id_vert, edge[2])
+                    else:
+                        self.graph.add_unorient_edge(self.edges[-1].vertex1.id_vert, self.edges[-1].vertex2.id_vert, edge[2])
 
 
     def recovery_from_dict(self, dict):
@@ -311,7 +335,7 @@ class Workspace:
 
     def HIDE(self):
         self.canvas.place_forget()
-        self.tab_btn.configure(fg_color=default_btn_clr)
+        self.tab_btn.configure(fg_color=unselected_btn_clr)
 
         self.add_vert_btn.place_forget()
         self.add_edge_btn.place_forget()
@@ -409,7 +433,7 @@ def main():
 def add_new_tab():
     for workspace in workspaces:
         workspace.is_tab_opened = False
-        workspace.tab_btn.configure(fg_color=default_btn_clr)
+        workspace.tab_btn.configure(fg_color=unselected_btn_clr)
     graph = Workspace()
     workspaces.append(graph)
     return graph
@@ -468,6 +492,7 @@ def get_adj_matrix():
             text = Text(win)
             text.insert(1.0, string[0:-1])
             text.place(anchor='nw', relx=0, rely=0, relwidth=1, relheight=0.9)
+            text.focus()
 
 
             # считать матрицу смежности и построить граф
@@ -488,8 +513,7 @@ def get_adj_matrix():
                 win.destroy()
                 workspace.update_from_adj(matrix) 
 
-            CTkButton(win, text='Построить граф', bg_color=btns_color, fg_color=add_tab_button,
-                        corner_radius=5, command=read_matrix).place(anchor='center', relx=0.5, rely=0.9)
+            CTkButton(win, text='Построить граф', command=read_matrix).place(anchor='center', relx=0.5, rely=0.95)
 
             win.mainloop()
 
@@ -505,7 +529,8 @@ def get_inc_matrix():
 
             text = Text(win, width=30, height=15)
             text.insert(1.0, sring[0:-1])
-            text.place(anchor='center', relx=0.5, rely=0.5)
+            text.place(anchor='nw', relx=0, rely=0, relwidth=1, relheight=0.9)
+            text.focus()
 
 
             # считать матрицу инцидентности и построить граф
@@ -530,8 +555,7 @@ def get_inc_matrix():
                     adj_matrix = inc_to_adj(matrix)
                     workspace.update_from_adj(adj_matrix) 
 
-            CTkButton(win, text='Построить граф', bg_color=btns_color, fg_color=add_tab_button,
-                        corner_radius=5, command=read_matrix).place(anchor='center', relx=0.5, rely=0.9)
+            CTkButton(win, text='Построить граф', command=read_matrix).place(anchor='center', relx=0.5, rely=0.95)
 
             win.mainloop()
 
@@ -544,3 +568,8 @@ def ex(event):
     root.destroy()
 
 main()
+
+
+
+
+"""делать либо алгоритмы графа, либо экспорт в текст.файл"""
