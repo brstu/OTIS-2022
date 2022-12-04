@@ -9,10 +9,12 @@ class Graph:
             for i in range(self.vertexes_count):
                 for j in range(self.vertexes_count):
                     if self.adjacency_matrix[i][j]:
-                        self.edges.append((i, j, self.adjacency_matrix[i][j], self.adjacency_matrix[i][j]!=self.adjacency_matrix[j][i]))
+                        self.edges.append([i, j, self.adjacency_matrix[i][j], self.adjacency_matrix[i][j]!=self.adjacency_matrix[j][i]])
                         self.edges_count += 1
                         if self.adjacency_matrix[i][j] == self.adjacency_matrix[j][i]:
                             self.adjacency_matrix[j][i] = 0
+            self.adjacency_matrix = [i.copy() for i in adj_matr]
+            
     # CREATE GRAPH ============================================================
 
     def add_vertex(self):
@@ -77,7 +79,7 @@ class Graph:
                 if adj_matr[i][j]:
                     for k in range(self.edges_count):
                         if self.edges[k][0] == i and self.edges[k][1] == j:
-                            if adj_matr[i][j] != adj_matr[j][i]:
+                            if adj_matr[i][j] == adj_matr[j][i]:
                                 incidence_matrix[i][k] = adj_matr[i][j]
                                 incidence_matrix[j][k] = adj_matr[i][j]
                             else:
@@ -122,7 +124,6 @@ class Graph:
                     visited[i] = True
 
     def get_components(self):
-        '''Получить компоненты связности'''
         visited = [False for i in range(self.vertexes_count)]
         components = []
         for i in range(self.vertexes_count):
@@ -136,7 +137,6 @@ class Graph:
         return components
     
     def get_eulerian_cycle(self):
-        '''Получить Эйлеров цикл'''
         if not self.is_connected():
             return None
         for i in range(self.vertexes_count):
@@ -156,7 +156,6 @@ class Graph:
         return cycle
     
     def get_hamiltonian_cycle(self):
-        '''Получить Гамильтонов цикл'''
         if not self.is_connected():
             return None
         cycle = [0]
@@ -227,29 +226,29 @@ class Graph:
     # CHECKS ====================================================================    
     
     def is_tree(self):
-        '''Является ли граф деревом'''
+        '''Is the graph a tree'''
         return self.vertexes_count == self.edges_count + 1
 
     def is_full(self):
-        '''Является ли граф полным'''
+        '''Is the graph complete'''
         return self.edges_count == self.vertexes_count * (self.vertexes_count - 1) / 2
     
     def is_connected(self):
-        '''Является ли граф связным'''
+        '''Is the graph connected?'''
         visited = [False for i in range(self.vertexes_count)]
         self.dfs(0, visited)
         return all(visited)
     
     def is_eulerian(self):
-        '''Является ли граф Эйлеровым'''
+        '''Is the graph Euler'''
         return all(self.get_degree(i) % 2 == 0 for i in range(self.vertexes_count))
 
     def is_hamiltonian(self):
-        '''Является ли граф Гамильтоновым'''
+        '''Is the graph Hamiltonian'''
         return all(self.get_degree(i) >= 2 for i in range(self.vertexes_count))
     
 def inc_to_adj(incidence_matrix):
-    '''Перевод инцидентной матрицы в матрицу смежности'''
+    '''Translating Incident Matrix to Adjacency Matrix'''
     vertexes_count = len(incidence_matrix)
     edges_count = len(incidence_matrix[0])
     adjacency_matrix = [[0 for i in range(vertexes_count)] for j in range(vertexes_count)]
@@ -267,42 +266,8 @@ def inc_to_adj(incidence_matrix):
                 for k in range(vertexes_count):
                     if incidence_matrix[k][j] > 0 and k != i:
                         adjacency_matrix[i][k] = 0
-                        adjacency_matrix[k][i] = incidence_matrix[i][j]
+                        adjacency_matrix[k][i] = -incidence_matrix[i][j]
                     elif incidence_matrix[k][j] < 0 and k != i:
                         adjacency_matrix[i][k] = incidence_matrix[i][j]
                         adjacency_matrix[k][i] = incidence_matrix[i][j]
     return adjacency_matrix
-
-def main():
-    a = Graph()
-    a.add_vertex()
-    a.add_vertex()
-    a.add_vertex()
-    # a.add_vertex()
-
-    a.add_orient_edge(0, 1, 4)
-    a.add_orient_edge(0, 2, 3)
-    a.add_orient_edge(1, 2, 5)
-
-    print(a.adjacency_matrix)
-    print(a.get_degree(0))
-    print(a.get_degree(1))
-    print(a.get_degree(2))
-
-    print(a.get_eulerian_cycle())
-
-# main()
-
-# matr = [[0, 1, 1, 1, 0, 0, 0, 0, ],
-# [1, 0, 1, 0, 0, 1, 0, 1, ],
-# [1, 1, 0, 1, 1, 0, 0, 1, ],
-# [1, 0, 1, 0, 1, 0, 0, 0, ],
-# [0, 0, 1, 1, 0, 0, 1, 1, ],
-# [0, 1, 0, 0, 0, 0, 1, 1, ],
-# [0, 0, 0, 0, 1, 1, 0, 1, ],
-# [0, 1, 1, 0, 1, 1, 1, 0, ]]
-# a = Graph(matr)
-# d = (inc_to_adj(a.get_inc_matrix()))
-
-# for i in d:
-#     print(i)

@@ -16,6 +16,8 @@ class Workspace:
         self.selected_vertexes = []
         self.id_vert = 0
 
+        self.edge_vertexes = []
+
 
         self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex_mode, bg_color=btns_color)
         self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=self.add_edge_mode, bg_color=btns_color)
@@ -35,8 +37,6 @@ class Workspace:
         self.tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*len(workspaces), width=110)
         self.close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*len(workspaces), width=30)
 
-        
-        self.canvas.bind('<Button-3>', self.show_properties)
 
         self.SHOW()
         self.default_mode()
@@ -56,6 +56,7 @@ class Workspace:
         self.edges.clear()
         self.id_vert = 0
         for i in range(len(adj)):
+            # self.graph
             self.vertexes.append(Vertex(self.canvas, self.id_vert, randint(0, 1445-vertex_radius), randint(0, 875-vertex_radius), self.id_vert))
             self.id_vert += 1
         for i in range(len(adj)):
@@ -70,32 +71,57 @@ class Workspace:
         self.add_edge_btn.configure(fg_color=unactive_mode_btn)
         self.del_comp_btn.configure(fg_color=unactive_mode_btn)
         self.default_btn.configure(fg_color=unactive_mode_btn)
+
+        for vertex in self.vertexes:
+            vertex.unselect()
+        self.selected_vertexes.clear()
+        
         self.canvas.bind('<Button-1>', self.add_vertex_click)
         self.canvas.bind('<B1-Motion>', lambda event: None)
+        self.canvas.bind('<Button-3>', self.show_properties)
 
     def add_edge_mode(self):
         self.add_vert_btn.configure(fg_color=unactive_mode_btn)
         self.add_edge_btn.configure(fg_color=active_mode_btn)
         self.del_comp_btn.configure(fg_color=unactive_mode_btn)
         self.default_btn.configure(fg_color=unactive_mode_btn)
+
+        for vertex in self.vertexes:
+            vertex.unselect()
+        self.edge_vertexes.clear()
+        self.selected_vertexes.clear()
+
         self.canvas.bind('<Button-1>', self.add_edge_click)
+        self.canvas.bind('<Button-3>', self.del_vert_from_edge)
 
     def delete_comp_mode(self):
         self.add_vert_btn.configure(fg_color=unactive_mode_btn)
         self.add_edge_btn.configure(fg_color=unactive_mode_btn)
         self.del_comp_btn.configure(fg_color=active_mode_btn)
         self.default_btn.configure(fg_color=unactive_mode_btn)
+
+        for vertex in self.vertexes:
+            vertex.unselect()
+        self.selected_vertexes.clear()
+            
         self.canvas.bind('<Button-1>', self.delete_comp_click)
         self.canvas.bind('<B1-Motion>', self.delete_comp_click)
+        self.canvas.bind('<Button-3>', self.show_properties)
 
     def default_mode(self):
         self.add_vert_btn.configure(fg_color=unactive_mode_btn)
         self.add_edge_btn.configure(fg_color=unactive_mode_btn)
         self.del_comp_btn.configure(fg_color=unactive_mode_btn)
         self.default_btn.configure(fg_color=active_mode_btn)
+
+        for vertex in self.vertexes:
+            vertex.unselect()
+        self.selected_vertexes.clear()
+
         self.canvas.bind('<Button-1>', lambda event: None)
         self.canvas.bind('<B1-Motion>', self.move_vertex)
         self.canvas.bind('<Control-Button-1>', self.select_vertex)
+        self.canvas.bind('<Button-3>', self.show_properties)
 
     def select_vertex(self, event):
         for vertex in self.vertexes:
@@ -142,52 +168,54 @@ class Workspace:
         x, y = event.x, event.y
         for vertex in self.vertexes:
             if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
-                self.edge_vertex1 = vertex
+                self.edge_vertexes.append(vertex)
+                vertex.select()
                 break
-        else:
-            return
-        self.canvas.bind('<Button-1>', self.add_edge_click2)
-    
-    def add_edge_click2(self, event):
-        x, y = event.x, event.y
-        for vertex in self.vertexes:
-            if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
-                self.edge_vertex2 = vertex
-                break
-        else:
-            return
-        props = CTk()
-        props.geometry(f'300x200+{event.x_root}+{event.y_root}')
-        props.title('Свойства ребра')
-        props.resizable(False, False)
-        props.bind('<Escape>', lambda event: props.destroy())
-            
+        if len(self.edge_vertexes) == 2:
+            props = CTk()
+            props.geometry(f'300x200+{event.x_root}+{event.y_root}')
+            props.title('Свойства ребра')
+            props.resizable(False, False)
+            props.bind('<Escape>', lambda event: props.destroy())
+                
 
-        def create_edge(weight: int, is_oriented: bool):
-            try:
-                weight = int(entry.get())
-            except ValueError:
-                messagebox.showerror('Ошибка', 'Вес должен быть целым числом')
-            else:
-                if is_oriented:
-                    self.graph.add_orient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
+            def create_edge(is_oriented: bool):
+                try:
+                    weight = int(entry.get())
+                except ValueError:
+                    messagebox.showerror('Ошибка', 'Вес должен быть целым числом')
                 else:
-                    self.graph.add_unorient_edge(self.edge_vertex1.id_vert, self.edge_vertex2.id_vert, weight)
-                self.edges.append(Edge(self.canvas, weight, self.edge_vertex1, self.edge_vertex2, is_oriented))
-                props.destroy()
+                    if is_oriented:
+                        self.graph.add_orient_edge(self.edge_vertexes[0].id_vert, self.edge_vertexes[1].id_vert, weight)
+                    else:
+                        self.graph.add_unorient_edge(self.edge_vertexes[0].id_vert, self.edge_vertexes[1].id_vert, weight)
+                    self.edges.append(Edge(self.canvas, weight, self.edge_vertexes[0], self.edge_vertexes[1], is_oriented))
+                    props.destroy()
+                    self.del_vert_from_edge(None)
 
 
-        weight = 1
-        entry = CTkEntry(props, text='Введите вес', justify='center')
-        entry.place(anchor='n', relx=0.5, rely=0.1)
-        
-        btn_or = CTkButton(props, text='Ориентированное', command=lambda: create_edge(weight, True))
-        btn_unor = CTkButton(props, text='Неориентированное', command=lambda: create_edge(weight, False))
-        btn_or.place(anchor='n', relx=0.5, rely=0.5)
-        btn_unor.place(anchor='n', relx=0.5, rely=0.7)
+            entry = CTkEntry(props, text='Введите вес', justify='center')
+            entry.place(anchor='n', relx=0.5, rely=0.1)
+            entry.focus()
+            
+            btn_or = CTkButton(props, text='Ориентированное', command=lambda: create_edge(True))
+            btn_unor = CTkButton(props, text='Неориентированное', command=lambda: create_edge(False))
+            btn_or.place(anchor='n', relx=0.5, rely=0.5)
+            btn_unor.place(anchor='n', relx=0.5, rely=0.7)
 
-        props.mainloop()
-        self.canvas.bind('<Button-1>', self.add_edge_click)
+            props.mainloop()
+
+    def del_vert_from_edge(self, event):
+        if event == None:
+            for vertex in self.edge_vertexes:
+                vertex.unselect()
+            self.edge_vertexes.clear()
+        else:
+            for vertex in self.edge_vertexes:
+                if (vertex.x - event.x)**2 + (vertex.y - event.y)**2 <= vertex.radius**2:
+                    self.edge_vertexes.remove(vertex)
+                    vertex.unselect()
+                    break
 
     def delete_selected_vertexes(self):
         for vertex in self.selected_vertexes:
@@ -236,7 +264,11 @@ class Workspace:
                     self.edges.remove(edge)
                     break
 
-        
+    
+    def cut_to_clipboard(self):
+        self.copy_to_clipboard()
+        self.delete_selected_vertexes()
+
     def copy_to_clipboard(self):
         dict = {}
         dict['vertexes'] = []
@@ -320,20 +352,69 @@ class Workspace:
                 dict['edges'].append(((edge.x1,edge.y1), (edge.x2, edge.y2), edge.weight, edge.is_oriented, edge.color))
 
             with open(path, 'w') as file:
-                file.write(json.dumps(dict, indent=4))
+                file.write(json.dumps(dict))
 
     def export_to_text(self):
-        pass
+        path = filedialog.asksaveasfilename(defaultextension='.txt', filetypes=(('Текстовые файлы', '*.txt'), ('Все файлы', '*.')), initialdir=get_script_dir())
+        if path:
+            string = self.name + '\n'
+            for edge in self.edges:
+                if edge.is_oriented:
+                    string += 'ORIENT; '
+                    is_orient = True
+                    break
+            else:
+                string += 'UNORIENT\n'
+                is_orient = False
+            
+            string += ''.join([str(i+1)+', ' for i in range(self.id_vert)])[:-2] + '\n'
 
-    def import_from_text(self):
-        pass
+            matrix = [i.copy() for i in self.graph.get_adj_matrix()]
 
+            if is_orient:
+                for i in range(len(matrix)):
+                    for j in range(len(matrix)):
+                        if matrix[i][j] != 0:
+                            string += f'{i+1} -> {j+1} {matrix[i][j]}\n'
+            else:
+                for i in range(len(matrix)):
+                    for j in range(len(matrix)):
+                        if matrix[i][j] != 0:
+                            string += f'{i+1} -- {j+1} {matrix[i][j]}\n'
+                            matrix[j][i] = 0
+
+            with open(path, 'w') as file:
+                file.write(string)
+
+    def import_from_text(self, text: str):
+        strings = text.split('\n')
+        self.name = strings[0]
+        self.tab_btn.configure(text=self.name)
+
+        length = int(strings[2].split(', ')[-1])
+        matrix = [[0 for i in range(length)] for _ in range(length)]
+
+        if strings[1] == 'ORIENT':
+            for edge in strings[3:]:
+                if edge:
+                    string = edge.split(' ')
+                    matrix[int(string[0])-1][int(string[2])-1] = int(string[3])
+        else:
+            for edge in strings[3:]:
+                if edge:
+                    string = edge.split(' ')
+                    matrix[int(string[0])-1][int(string[2])-1] = int(string[3])
+                    matrix[int(string[2])-1][int(string[0])-1] = int(string[3])
+        self.update_from_adj(matrix)
+
+        
     def vertexes_degree(self):
         degrees = []
         for vertex in self.vertexes:
             pass
 
     def HIDE(self):
+        self.is_tab_opened = False
         self.canvas.place_forget()
         self.tab_btn.configure(fg_color=unselected_btn_clr)
 
@@ -345,6 +426,7 @@ class Workspace:
     def SHOW(self):
         for workspace in workspaces:
             workspace.HIDE()
+        self.is_tab_opened = True 
         self.canvas.place(anchor='nw')
 
         self.tab_btn.configure(fg_color=selected_tab_clr)
@@ -381,6 +463,7 @@ def main():
     root.set_appearance_mode(main_theme)
 
     root.bind('<Delete>', delete_selected_vertexes)
+    root.bind('<Control-x>', cut_selected_vertexes)
     root.bind('<Control-c>', copy_selected_vertexes)
     root.bind('<Control-v>', paste_selected_vertexes)
 
@@ -393,8 +476,8 @@ def main():
     filemenu.add_command(label="Открыть", command=open_file)
     filemenu.add_command(label="Сохранить", command=save_file)
     filemenu.add_separator()
-    filemenu.add_command(label="Экспорт в текст", command=lambda: print('Экспорт в текст')) # <====================================================
-    filemenu.add_command(label="Импорт из текста", command=lambda: print('Импорт из текста')) # <====================================================
+    filemenu.add_command(label="Экспорт в текст", command=export_to_text)
+    filemenu.add_command(label="Импорт из текста", command=import_from_text)
 
     algsmenu = Menu(mainmenu, tearoff=0)
     algsmenu.add_command(label="Кол-во вершин", command=vertexes_count) # <====================================================
@@ -426,7 +509,7 @@ def main():
                                     corner_radius=5, command=add_new_tab)
     create_new_graph_btn.place(anchor='w', relx=0.9097, rely=0.3)
 
-    root.bind('q', ex)
+    root.bind('q', close_program)
     root.mainloop()
 
 
@@ -455,8 +538,22 @@ def activate_func(func):
 def save_file():
     activate_func('save_graph')
 
+def export_to_text():
+    activate_func('export_to_text')
+
+def import_from_text():
+    graph = add_new_tab()
+    path = filedialog.askopenfilename(initialdir=get_script_dir(), filetypes=(('Текстовые файлы', '*.txt'), ('Все файлы', '*.')), title='Открыть граф')
+    if path:
+        with open(path, 'r') as file:
+            text = file.read()
+        graph.import_from_text(text)
+
 def delete_selected_vertexes(event):
     activate_func('delete_selected_vertexes')
+
+def cut_selected_vertexes(event):
+    activate_func('cut_to_clipboard')
 
 def copy_selected_vertexes(event):
     activate_func('copy_to_clipboard')
@@ -495,7 +592,6 @@ def get_adj_matrix():
             text.focus()
 
 
-            # считать матрицу смежности и построить граф
             def read_matrix():
                 matrix = []
                 strings = text.get(1.0, END).split('\n')
@@ -533,7 +629,6 @@ def get_inc_matrix():
             text.focus()
 
 
-            # считать матрицу инцидентности и построить граф
             def read_matrix():
                 matrix = []
                 string = text.get(1.0, END).replace(',', '')
@@ -562,14 +657,15 @@ def get_inc_matrix():
 
 
 workspaces = []
-def ex(event):
+def close_program(event):
     global root
     workspaces.clear()
     root.destroy()
 
+input()
 main()
 
 
 
 
-"""делать либо алгоритмы графа, либо экспорт в текст.файл"""
+"""делать алгоритмы графа"""
