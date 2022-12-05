@@ -595,5 +595,5 @@ class Button
 
 ## Результаты ##
 
-![Решение](https://github.com/Adryian4ik/OTIS-2022/blob/main/trunk/ii02206/task_03/src/interface.png?raw=true)
+![Решение](interface.png)
 
