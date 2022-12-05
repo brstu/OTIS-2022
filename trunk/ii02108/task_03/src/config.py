@@ -11,6 +11,7 @@ def get_script_dir(follow_symlinks=True):
         path = os.path.realpath(path)
     return os.path.dirname(path)
 
+
 main_theme = 'dark'
 btns_color = 'black'
 add_tab_button = 'green'

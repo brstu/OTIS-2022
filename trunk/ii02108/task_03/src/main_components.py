@@ -14,7 +14,7 @@ class Vertex:
         self.color = color
 
         self.canvas = canvas
-        
+
         self.is_selected = False
 
         self.circle = create_circle(self.canvas, self.x, self.y, self.radius, fill=self.color)
@@ -24,15 +24,15 @@ class Vertex:
         self.canvas.delete(self.circle)
         self.canvas.delete(self.text)
         if self.is_selected:
-            self.canvas.delete(self.select)
+            self.canvas.delete(self.selection)
 
     def select(self):
         self.is_selected = True
-        self.select = create_circle(self.canvas, self.x, self.y, self.radius+3, outline='red', width=3)
+        self.selection = create_circle(self.canvas, self.x, self.y, self.radius+3, outline='red', width=3)
 
     def unselect(self):
         self.is_selected = False
-        self.canvas.delete(self.select)
+        self.canvas.delete(self.selection)
 
     def show_properties(self, event):
         props_vert = CTk()
@@ -99,7 +99,7 @@ class Vertex:
         self.canvas.coords(self.circle, self.x-self.radius, self.y-self.radius, self.x+self.radius, self.y+self.radius)
         self.canvas.coords(self.text, self.x, self.y)
         if self.is_selected:
-            self.canvas.coords(self.select, self.x-self.radius-3, self.y-self.radius-3, self.x+self.radius+3, self.y+self.radius+3)
+            self.canvas.coords(self.selection, self.x-self.radius-3, self.y-self.radius-3, self.x+self.radius+3, self.y+self.radius+3)
 
         
 
@@ -126,8 +126,10 @@ class Edge:
             if self.is_loop:
                 pass
             else:
-                self.line = self.canvas.create_line(*line_intersect_circle(self.x1, self.y1, self.x2, self.y2), fill=self.color, width=self.thickness, arrow='last', arrowshape=(25, 25, 5))
-                self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
+                self.line = self.canvas.create_line(*line_intersect_circle(self.x1, self.y1, self.x2, self.y2), fill=self.color,
+                                                    width=self.thickness, arrow='last', arrowshape=(25, 25, 5))
+                self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13,
+                                                        (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
                 self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black', )
         else:
             if self.is_loop:
@@ -150,7 +152,8 @@ class Edge:
         except ValueError:
             messagebox.showerror('Ошибка', 'Вес должен быть числом')
         else:
-            self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
+            self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13,
+                              (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
             self.canvas.itemconfig(self.text, text=self.weight)
     
     def change_color(self, color):

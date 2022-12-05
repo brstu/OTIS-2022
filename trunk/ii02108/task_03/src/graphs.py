@@ -1,5 +1,5 @@
 class Graph:
-    def __init__(self, adj_matr: list=[]) -> None:
+    def __init__(self, adj_matr: list = list()) -> None:
         self.adjacency_matrix = [i.copy() for i in adj_matr]
 
         self.vertexes_count = len(self.adjacency_matrix)
@@ -14,7 +14,8 @@ class Graph:
                         if self.adjacency_matrix[i][j] == self.adjacency_matrix[j][i]:
                             self.adjacency_matrix[j][i] = 0
             self.adjacency_matrix = [i.copy() for i in adj_matr]
-            
+
+
     # CREATE GRAPH ============================================================
 
     def add_vertex(self):
@@ -50,7 +51,7 @@ class Graph:
                 edge[1] -= 1
     
     def del_edge(self, vertex1: int, vertex2: int):
-        for i, edge in enumerate(self.edges):
+        for edge in self.edges:
             if edge[0] == vertex1 and edge[1] == vertex2:
                 self.edges.remove(edge)
                 self.edges_count -= 1

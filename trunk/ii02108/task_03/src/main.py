@@ -1,5 +1,5 @@
-from customtkinter import *
 from tkinter import Menu, PhotoImage, filedialog, Text
+from _tkinter import TclError
 from main_components import *
 from graphs import Graph, inc_to_adj
 from random import randint
@@ -31,7 +31,7 @@ class Workspace:
 
         self.tab_btn = CTkButton(root, text=self.name[0:12], command=self.SHOW, bg_color=btns_color,
                                  fg_color='white')
-        self.close_tab_btn = CTkButton(root, image=PhotoImage(file=path_to_img_close_tab), 
+        self.close_tab_btn = CTkButton(root, image=PhotoImage(file=path_to_img_close_tab),
                                     text='', bg_color=btns_color, fg_color=close_tab_button, hover_color='darkred',
                                     command=self.DEL)
         self.tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*len(workspaces), width=110)
@@ -40,7 +40,7 @@ class Workspace:
 
         self.SHOW()
         self.default_mode()
-    
+
     def __del__(self):
         del self.graph
         del self.edges
@@ -55,12 +55,12 @@ class Workspace:
         self.vertexes.clear()
         self.edges.clear()
         self.id_vert = 0
-        for i in range(len(adj)):
+        for i, _ in enumerate(adj):
             # self.graph
             self.vertexes.append(Vertex(self.canvas, self.id_vert, randint(0, 1445-vertex_radius), randint(0, 875-vertex_radius), self.id_vert))
             self.id_vert += 1
-        for i in range(len(adj)):
-            for j in range(len(adj)):
+        for i, _ in enumerate(adj):
+            for j, _ in enumerate(adj):
                 if adj[i][j] != 0:
                     self.edges.append(Edge(self.canvas, adj[i][j], self.vertexes[i], self.vertexes[j], adj[i][j] != adj[j][i]))
                     if adj[i][j] == adj[j][i]:
@@ -229,7 +229,7 @@ class Workspace:
                         edge.delete()
             self.vertexes.remove(vertex)
             for vert in self.vertexes:
-                if vert.id_vert > vertex.id_vert:  
+                if vert.id_vert > vertex.id_vert: 
                     vert.id_vert -= 1
                     self.id_vert -= 1
             self.graph.del_vertex(vertex.id_vert)
@@ -270,35 +270,37 @@ class Workspace:
         self.delete_selected_vertexes()
 
     def copy_to_clipboard(self):
-        dict = {}
-        dict['vertexes'] = []
-        dict['edges'] = []
+        dictionary = dict()
+        dictionary['vertexes'] = []
+        dictionary['edges'] = []
 
         for i, vertex1 in enumerate(self.selected_vertexes):
-            dict['vertexes'].append((vertex1.name, vertex1.x, vertex1.y, vertex1.color))
+            dictionary['vertexes'].append((vertex1.name, vertex1.x, vertex1.y, vertex1.color))
             for j, vertex2 in enumerate(self.selected_vertexes):
                 if vertex1 != vertex2:
                     for edge in self.edges:
                         if edge.vertex1 == vertex1 and edge.vertex2 == vertex2:
-                            dict['edges'].append((i, j, edge.weight, edge.is_oriented, edge.color)) # i, j - индексы вершин в списке dict['vertexes']
+                            dictionary['edges'].append((i, j, edge.weight, edge.is_oriented, edge.color)) # i, j - индексы вершин в списке dict['vertexes']
                             break
-        pyperclip.copy(json.dumps(dict))
+        copy = json.dumps(dictionary)
+        pyperclip.copy(copy)
 
     def paste_from_clipboard(self):
         try:
-            dict = json.loads(pyperclip.paste())
+            paste = pyperclip.paste()
+            dictionary = json.loads(paste)
         except json.decoder.JSONDecodeError:
             messagebox.showerror('Ошибка', 'В буфере обмена нет данных')
         else:
-            if not ('vertexes' in dict and 'edges' in dict):
+            if not ('vertexes' in dictionary and 'edges' in dictionary):
                 messagebox.showerror('Ошибка', 'В буфере обмена нет данных')
             else:
-                length = len(dict['vertexes'])
-                for vertex in dict['vertexes']:
+                length = len(dictionary['vertexes'])
+                for vertex in dictionary['vertexes']:
                     self.vertexes.append(Vertex(self.canvas, vertex[0], vertex[1], vertex[2], self.id_vert, vertex[3]))
                     self.graph.add_vertex()
                     self.id_vert += 1
-                for edge in dict['edges']:
+                for edge in dictionary['edges']:
 
                     self.edges.append(Edge(self.canvas, edge[2], self.vertexes[-length + edge[0]], self.vertexes[-length + edge[1]], edge[3], edge[4]))
                     if edge[3]:
@@ -307,16 +309,17 @@ class Workspace:
                         self.graph.add_unorient_edge(self.edges[-1].vertex1.id_vert, self.edges[-1].vertex2.id_vert, edge[2])
 
 
-    def recovery_from_dict(self, dict):
-        self.name = dict['graph_name']
+    def recovery_from_dict(self, dictionary: dict):
+        self.name = dictionary['graph_name']
         self.tab_btn.configure(text=self.name)
         self.id_vert = 0
         self.graph = Graph()
-        for vertex in range(len(dict['name'])):
+        for vertex in range(len(dictionary['name'])):
             self.graph.add_vertex()
-            self.vertexes.append(Vertex(self.canvas, dict['name'][vertex], dict['coords'][vertex][0], dict['coords'][vertex][1], self.id_vert, dict['color'][vertex]))
+            self.vertexes.append(Vertex(self.canvas, dictionary['name'][vertex], dictionary['coords'][vertex][0],
+                                dictionary['coords'][vertex][1], self.id_vert, dictionary['color'][vertex]))
             self.id_vert += 1
-        for edge in dict['edges']:
+        for edge in dictionary['edges']:
             for vertex in self.vertexes:
                 if vertex.x == edge[0][0] and vertex.y == edge[0][1]:
                     vertex1 = vertex
@@ -337,22 +340,22 @@ class Workspace:
             self.name = path.split('/')[-1].replace('.graph', '')
             self.tab_btn.configure(text=self.name)
 
-            dict = {}
-            dict['graph_name'] = self.name
-            dict['name'] = []
-            dict['coords'] = []
-            dict['color'] = []
-            dict['edges'] = []
+            dictionary = dict()
+            dictionary['graph_name'] = self.name
+            dictionary['name'] = []
+            dictionary['coords'] = []
+            dictionary['color'] = []
+            dictionary['edges'] = []
 
             for vertex in self.vertexes:
-                dict['name'].append(vertex.name)
-                dict['coords'].append((vertex.x, vertex.y))
-                dict['color'].append(vertex.color)
+                dictionary['name'].append(vertex.name)
+                dictionary['coords'].append((vertex.x, vertex.y))
+                dictionary['color'].append(vertex.color)
             for edge in self.edges:
-                dict['edges'].append(((edge.x1,edge.y1), (edge.x2, edge.y2), edge.weight, edge.is_oriented, edge.color))
+                dictionary['edges'].append(((edge.x1,edge.y1), (edge.x2, edge.y2), edge.weight, edge.is_oriented, edge.color))
 
             with open(path, 'w') as file:
-                file.write(json.dumps(dict))
+                file.write(json.dumps(dictionary))
 
     def export_to_text(self):
         path = filedialog.asksaveasfilename(defaultextension='.txt', filetypes=(('Текстовые файлы', '*.txt'), ('Все файлы', '*.')), initialdir=get_script_dir())
@@ -372,13 +375,13 @@ class Workspace:
             matrix = [i.copy() for i in self.graph.get_adj_matrix()]
 
             if is_orient:
-                for i in range(len(matrix)):
-                    for j in range(len(matrix)):
+                for i, _ in enumerate(matrix):
+                    for j, _ in enumerate(matrix):
                         if matrix[i][j] != 0:
                             string += f'{i+1} -> {j+1} {matrix[i][j]}\n'
             else:
-                for i in range(len(matrix)):
-                    for j in range(len(matrix)):
+                for i, _ in enumerate(matrix):
+                    for j, _ in enumerate(matrix):
                         if matrix[i][j] != 0:
                             string += f'{i+1} -- {j+1} {matrix[i][j]}\n'
                             matrix[j][i] = 0
@@ -441,79 +444,17 @@ class Workspace:
             self.canvas.destroy()
             self.tab_btn.destroy()
             self.close_tab_btn.destroy()
-        except:
+        except TclError:
             pass
         workspaces.remove(self)
 
-        for i in range(len(workspaces)):
+        for i, _ in enumerate(workspaces):
             workspaces[i].tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*i, width=110)
             workspaces[i].close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*i, width=30)
 
 
-def main():
-
-    global workspaces
-    workspaces = []
-
-    global root
-    root = CTk()
-    root.title('Graphs Editor Pro')
-    root.geometry("1600x900+150+70")
-    root.resizable(False, False)
-    root.set_appearance_mode(main_theme)
-
-    root.bind('<Delete>', delete_selected_vertexes)
-    root.bind('<Control-x>', cut_selected_vertexes)
-    root.bind('<Control-c>', copy_selected_vertexes)
-    root.bind('<Control-v>', paste_selected_vertexes)
-
-    # Раздел меню
-    mainmenu = Menu(root)
-    root.config(menu=mainmenu)
-
-    filemenu = Menu(mainmenu, tearoff=0)
-    filemenu.add_command(label="Новый", command=add_new_tab)
-    filemenu.add_command(label="Открыть", command=open_file)
-    filemenu.add_command(label="Сохранить", command=save_file)
-    filemenu.add_separator()
-    filemenu.add_command(label="Экспорт в текст", command=export_to_text)
-    filemenu.add_command(label="Импорт из текста", command=import_from_text)
-
-    algsmenu = Menu(mainmenu, tearoff=0)
-    algsmenu.add_command(label="Кол-во вершин", command=vertexes_count) # <====================================================
-    algsmenu.add_command(label="Кол-во ребер", command=edges_count) # <====================================================
-    algsmenu.add_command(label="Степени вершин", command=vertexes_degree) # <====================================================
-    algsmenu.add_command(label="Матрица смежности", command=get_adj_matrix) # <====================================================
-    algsmenu.add_command(label="Матрица инцидентности", command=get_inc_matrix) # <====================================================
-    algsmenu.add_command(label="Граф - дерево?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Граф полный?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Граф эйлеров?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Граф гамильтонов?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_separator()
-    algsmenu.add_command(label="Поиск кратчайшего пути", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Нахождение наименьшего расстояния", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Нахождние центра", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Нахождние диаметра", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Нахождние радиуса", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Нахождние радиуса", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Поиск эйлерова цикла", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-    algsmenu.add_command(label="Поиск гамильтонова цикла", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-
-    mainmenu.add_cascade(label="Файл", menu=filemenu)
-    mainmenu.add_cascade(label="Алгоритмы", menu=algsmenu)
-
-
-    # Раздел редактора
-    create_new_graph_btn = CTkButton(root, text='', bg_color=btns_color, fg_color=add_tab_button,
-                                    image=PhotoImage(file=path_to_img_create_new_tab), 
-                                    corner_radius=5, command=add_new_tab)
-    create_new_graph_btn.place(anchor='w', relx=0.9097, rely=0.3)
-
-    root.bind('q', close_program)
-    root.mainloop()
-
-
 def add_new_tab():
+    global workspaces
     for workspace in workspaces:
         workspace.is_tab_opened = False
         workspace.tab_btn.configure(fg_color=unselected_btn_clr)
@@ -526,20 +467,18 @@ def open_file():
     path = filedialog.askopenfilename(initialdir=get_script_dir(), filetypes=(('Графы', '*.graph'), ('Все файлы', '*.')), title='Открыть граф')
     if path:
         with open(path, 'r') as file:
-            dict = json.load(file)
-        graph.recovery_from_dict(dict)
-
-
-def activate_func(func):
-    for workspace in workspaces:
-        if workspace.is_tab_opened:
-            exec(f'workspace.{func}()')
+            dictionary = json.load(file)
+        graph.recovery_from_dict(dictionary)
 
 def save_file():
-    activate_func('save_graph')
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.save_graph()
 
 def export_to_text():
-    activate_func('export_to_text')
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.export_to_text()
 
 def import_from_text():
     graph = add_new_tab()
@@ -550,16 +489,24 @@ def import_from_text():
         graph.import_from_text(text)
 
 def delete_selected_vertexes(event):
-    activate_func('delete_selected_vertexes')
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.delete_selected_vertexes()
 
 def cut_selected_vertexes(event):
-    activate_func('cut_to_clipboard')
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.cut_to_clipboard()
 
 def copy_selected_vertexes(event):
-    activate_func('copy_to_clipboard')
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.copy_to_clipboard()
 
 def paste_selected_vertexes(event):
-    activate_func('paste_from_clipboard')
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.paste_from_clipboard()
 
 def vertexes_count():
     for workspace in workspaces:
@@ -595,7 +542,7 @@ def get_adj_matrix():
             def read_matrix():
                 matrix = []
                 strings = text.get(1.0, END).split('\n')
-                for i in range(len(strings)):
+                for i, _ in enumerate(strings):
                     matrix.append(strings[i].split(' '))
                 for i in matrix:
                     if i == ['']:
@@ -607,7 +554,7 @@ def get_adj_matrix():
                     for j in range(len(matrix[i])):
                         matrix[i][j] = int(matrix[i][j])
                 win.destroy()
-                workspace.update_from_adj(matrix) 
+                workspace.update_from_adj(matrix)
 
             CTkButton(win, text='Построить граф', command=read_matrix).place(anchor='center', relx=0.5, rely=0.95)
 
@@ -648,7 +595,7 @@ def get_inc_matrix():
                             matrix[i][j] = int(matrix[i][j])
                     win.destroy()
                     adj_matrix = inc_to_adj(matrix)
-                    workspace.update_from_adj(adj_matrix) 
+                    workspace.update_from_adj(adj_matrix)
 
             CTkButton(win, text='Построить граф', command=read_matrix).place(anchor='center', relx=0.5, rely=0.95)
 
@@ -656,16 +603,66 @@ def get_inc_matrix():
 
 
 
-workspaces = []
 def close_program(event):
     global root
     workspaces.clear()
     root.destroy()
 
-input()
-main()
+
+workspaces = []
+
+root = CTk()
+root.title('Graphs Editor Pro')
+root.geometry("1600x900+150+70")
+root.resizable(False, False)
+root.set_appearance_mode(main_theme)
+
+root.bind('<Delete>', delete_selected_vertexes)
+root.bind('<Control-x>', cut_selected_vertexes)
+root.bind('<Control-c>', copy_selected_vertexes)
+root.bind('<Control-v>', paste_selected_vertexes)
+
+# Раздел меню
+mainmenu = Menu(root)
+root.config(menu=mainmenu)
+
+filemenu = Menu(mainmenu, tearoff=0)
+filemenu.add_command(label="Новый", command=add_new_tab)
+filemenu.add_command(label="Открыть", command=open_file)
+filemenu.add_command(label="Сохранить", command=save_file)
+filemenu.add_separator()
+filemenu.add_command(label="Экспорт в текст", command=export_to_text)
+filemenu.add_command(label="Импорт из текста", command=import_from_text)
+
+algsmenu = Menu(mainmenu, tearoff=0)
+algsmenu.add_command(label="Кол-во вершин", command=vertexes_count) # <====================================================
+algsmenu.add_command(label="Кол-во ребер", command=edges_count) # <====================================================
+algsmenu.add_command(label="Степени вершин", command=vertexes_degree) # <====================================================
+algsmenu.add_command(label="Матрица смежности", command=get_adj_matrix) # <====================================================
+algsmenu.add_command(label="Матрица инцидентности", command=get_inc_matrix) # <====================================================
+algsmenu.add_command(label="Граф - дерево?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Граф полный?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Граф эйлеров?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Граф гамильтонов?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_separator()
+algsmenu.add_command(label="Поиск кратчайшего пути", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Нахождение наименьшего расстояния", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Нахождние центра", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Нахождние диаметра", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Нахождние радиуса", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Нахождние радиуса", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Поиск эйлерова цикла", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Поиск гамильтонова цикла", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+
+mainmenu.add_cascade(label="Файл", menu=filemenu)
+mainmenu.add_cascade(label="Алгоритмы", menu=algsmenu)
 
 
+# Раздел редактора
+create_new_graph_btn = CTkButton(root, text='', bg_color=btns_color, fg_color=add_tab_button,
+                                image=PhotoImage(file=path_to_img_create_new_tab),
+                                corner_radius=5, command=add_new_tab)
+create_new_graph_btn.place(anchor='w', relx=0.9097, rely=0.3)
 
-
-"""делать алгоритмы графа"""
+root.bind('q', close_program)
+root.mainloop()
