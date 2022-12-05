@@ -1,6 +1,6 @@
-from customtkinter import *
+from customtkinter import CTk, CTkEntry, CTkButton, CTkToplevel, CTkCanvas
 from tkinter import messagebox
-from config import *
+from config import vertex_radius
 from math import sqrt
 
 
@@ -69,7 +69,7 @@ class Vertex:
         clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relwidth=0.333, relheight=0.2)
         clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relwidth=0.35, relheight=0.2)
         clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
-        
+ 
         props_vert.mainloop()
 
 
@@ -136,7 +136,8 @@ class Edge:
                 pass
             else:
                 self.line = self.canvas.create_line(*line_intersect_circle(self.x1, self.y1, self.x2, self.y2), fill=self.color, width=self.thickness)
-                self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
+                self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13,
+                                                        (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
                 self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black')
         
     def delete(self):
@@ -165,13 +166,14 @@ class Edge:
         self.x1, self.y1 = self.vertex1.x, self.vertex1.y
         self.x2, self.y2 = self.vertex2.x, self.vertex2.y
         self.canvas.coords(self.line, line_intersect_circle(self.x1, self.y1, self.x2, self.y2))
-        self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13, (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
+        self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13,
+                          (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
         self.canvas.coords(self.text, (self.x1+self.x2)/2, (self.y1+self.y2)/2)
 
     def show_properties(self, event):
         props_edge = CTkToplevel()
         props_edge.wm_attributes('-topmost', '1')
-        props_edge.title(f'Edge properties')
+        props_edge.title('Edge properties')
         props_edge.geometry(f'300x300+{event.x+250}+{event.y}')
         props_edge.bind('<Escape>', lambda event: props_edge.destroy())
 

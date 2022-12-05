@@ -1,9 +1,13 @@
-from tkinter import Menu, PhotoImage, filedialog, Text
-from _tkinter import TclError
-from main_components import *
+from tkinter import Menu, PhotoImage, filedialog, Text, messagebox, END
+from main_components import Vertex, Edge
 from graphs import Graph, inc_to_adj
-from random import randint
+from config import main_theme, btns_color, add_tab_button, close_tab_button, unselected_btn_clr, selected_tab_clr
+from config import unactive_mode_btn, active_mode_btn, path_to_img_create_new_tab, path_to_img_close_tab, vertex_radius, get_script_dir
+from numpy.random import randint
+from numpy import sqrt as sq
+from _tkinter import TclError
 
+import customtkinter as ctk
 import json
 import pyperclip
 
@@ -19,19 +23,19 @@ class Workspace:
         self.edge_vertexes = []
 
 
-        self.add_vert_btn = CTkButton(root, text='Добавить вершину', command=self.add_vertex_mode, bg_color=btns_color)
-        self.add_edge_btn = CTkButton(root, text='Добавить ребро', command=self.add_edge_mode, bg_color=btns_color)
-        self.del_comp_btn = CTkButton(root, text='Удалить компонент', command=self.delete_comp_mode, bg_color=btns_color)
-        self.default_btn = CTkButton(root, text='По умолчанию', command=self.default_mode, bg_color=btns_color)
+        self.add_vert_btn = ctk.CTkButton(root, text='Добавить вершину', command=self.add_vertex_mode, bg_color=btns_color)
+        self.add_edge_btn = ctk.CTkButton(root, text='Добавить ребро', command=self.add_edge_mode, bg_color=btns_color)
+        self.del_comp_btn = ctk.CTkButton(root, text='Удалить компонент', command=self.delete_comp_mode, bg_color=btns_color)
+        self.default_btn = ctk.CTkButton(root, text='По умолчанию', command=self.default_mode, bg_color=btns_color)
 
 
         self.is_tab_opened = True
-        self.canvas = CTkCanvas(root, width=1445, height=875, bg='#D3D3D3')
+        self.canvas = ctk.CTkCanvas(root, width=1445, height=875, bg='#D3D3D3')
 
 
-        self.tab_btn = CTkButton(root, text=self.name[0:12], command=self.SHOW, bg_color=btns_color,
+        self.tab_btn = ctk.CTkButton(root, text=self.name[0:12], command=self.SHOW, bg_color=btns_color,
                                  fg_color='white')
-        self.close_tab_btn = CTkButton(root, image=PhotoImage(file=path_to_img_close_tab),
+        self.close_tab_btn = ctk.CTkButton(root, image=PhotoImage(file=path_to_img_close_tab),
                                     text='', bg_color=btns_color, fg_color=close_tab_button, hover_color='darkred',
                                     command=self.DEL)
         self.tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*len(workspaces), width=110)
@@ -75,7 +79,7 @@ class Workspace:
         for vertex in self.vertexes:
             vertex.unselect()
         self.selected_vertexes.clear()
-        
+
         self.canvas.bind('<Button-1>', self.add_vertex_click)
         self.canvas.bind('<B1-Motion>', lambda event: None)
         self.canvas.bind('<Button-3>', self.show_properties)
@@ -142,7 +146,7 @@ class Workspace:
                 break
         else:
             for edge in self.edges:
-                if sqrt((x - edge.x1)**2 + (y - edge.y1)**2) + sqrt((x - edge.x2)**2 + (y - edge.y2)**2) <= sqrt((edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2)+5:
+                if sq((x - edge.x1)**2 + (y - edge.y1)**2) + sq((x - edge.x2)**2 + (y - edge.y2)**2) <= sq((edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2)+5:
                     edge.show_properties(event)
                     break
 
@@ -172,7 +176,7 @@ class Workspace:
                 vertex.select()
                 break
         if len(self.edge_vertexes) == 2:
-            props = CTk()
+            props = ctk.CTk()
             props.geometry(f'300x200+{event.x_root}+{event.y_root}')
             props.title('Свойства ребра')
             props.resizable(False, False)
@@ -194,19 +198,19 @@ class Workspace:
                     self.del_vert_from_edge(None)
 
 
-            entry = CTkEntry(props, text='Введите вес', justify='center')
+            entry = ctk.CTkEntry(props, text='Введите вес', justify='center')
             entry.place(anchor='n', relx=0.5, rely=0.1)
             entry.focus()
             
-            btn_or = CTkButton(props, text='Ориентированное', command=lambda: create_edge(True))
-            btn_unor = CTkButton(props, text='Неориентированное', command=lambda: create_edge(False))
+            btn_or = ctk.CTkButton(props, text='Ориентированное', command=lambda: create_edge(True))
+            btn_unor = ctk.CTkButton(props, text='Неориентированное', command=lambda: create_edge(False))
             btn_or.place(anchor='n', relx=0.5, rely=0.5)
             btn_unor.place(anchor='n', relx=0.5, rely=0.7)
 
             props.mainloop()
 
     def del_vert_from_edge(self, event):
-        if event == None:
+        if event is None:
             for vertex in self.edge_vertexes:
                 vertex.unselect()
             self.edge_vertexes.clear()
@@ -229,7 +233,7 @@ class Workspace:
                         edge.delete()
             self.vertexes.remove(vertex)
             for vert in self.vertexes:
-                if vert.id_vert > vertex.id_vert: 
+                if vert.id_vert > vertex.id_vert:
                     vert.id_vert -= 1
                     self.id_vert -= 1
             self.graph.del_vertex(vertex.id_vert)
@@ -258,7 +262,7 @@ class Workspace:
                 break
         else:
             for edge in self.edges:
-                if sqrt((x - edge.x1)**2 + (y - edge.y1)**2) + sqrt((x - edge.x2)**2 + (y - edge.y2)**2) <= sqrt((edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2)+5:
+                if sq((x - edge.x1)**2 + (y - edge.y1)**2) + sq((x - edge.x2)**2 + (y - edge.y2)**2) <= sq((edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2)+5:
                     self.graph.del_edge(edge.vertex1.id_vert, edge.vertex2.id_vert)
                     edge.delete()
                     self.edges.remove(edge)
@@ -411,10 +415,10 @@ class Workspace:
         self.update_from_adj(matrix)
 
         
-    def vertexes_degree(self):
-        degrees = []
-        for vertex in self.vertexes:
-            pass
+    # def vertexes_degree(self):
+    #     degrees = []
+    #     for vertex in self.vertexes:
+    #         pass
 
     def HIDE(self):
         self.is_tab_opened = False
@@ -528,7 +532,7 @@ def get_adj_matrix():
         if workspace.is_tab_opened:
             string = workspace.graph.show_adj_matrix()
 
-            win = CTk()
+            win = ctk.CTk()
             win.title('Матрица смежности')
             win.geometry('500x500')
             win.bind('<Escape>', lambda event: win.destroy())
@@ -556,7 +560,7 @@ def get_adj_matrix():
                 win.destroy()
                 workspace.update_from_adj(matrix)
 
-            CTkButton(win, text='Построить граф', command=read_matrix).place(anchor='center', relx=0.5, rely=0.95)
+            ctk.CTkButton(win, text='Построить граф', command=read_matrix).place(anchor='center', relx=0.5, rely=0.95)
 
             win.mainloop()
 
@@ -565,7 +569,7 @@ def get_inc_matrix():
         if workspace.is_tab_opened:
             sring = workspace.graph.show_inc_matrix()
 
-            win = CTk()
+            win = ctk.CTk()
             win.title('Матрица инцидентности')
             win.geometry('500x500')
             win.bind('<Escape>', lambda event: win.destroy())
@@ -581,7 +585,7 @@ def get_inc_matrix():
                 string = text.get(1.0, END).replace(',', '')
                 if string:
                     strings = string.split('\n')
-                    for i in range(len(strings)):
+                    for i, _ in enumerate(strings):
                         matrix.append(strings[i].split(' '))
                     for i in matrix:
                         if i == ['']:
@@ -590,14 +594,14 @@ def get_inc_matrix():
                             if j == '':
                                 i.remove(j)
 
-                    for i in range(len(matrix)):
-                        for j in range(len(matrix[i])):
+                    for i, _ in enumerate(matrix):
+                        for j, _ in enumerate(matrix[i]):
                             matrix[i][j] = int(matrix[i][j])
                     win.destroy()
                     adj_matrix = inc_to_adj(matrix)
                     workspace.update_from_adj(adj_matrix)
 
-            CTkButton(win, text='Построить граф', command=read_matrix).place(anchor='center', relx=0.5, rely=0.95)
+            ctk.CTkButton(win, text='Построить граф', command=read_matrix).place(anchor='center', relx=0.5, rely=0.95)
 
             win.mainloop()
 
@@ -611,7 +615,7 @@ def close_program(event):
 
 workspaces = []
 
-root = CTk()
+root = ctk.CTk()
 root.title('Graphs Editor Pro')
 root.geometry("1600x900+150+70")
 root.resizable(False, False)
@@ -659,7 +663,7 @@ mainmenu.add_cascade(label="Алгоритмы", menu=algsmenu)
 
 
 # Раздел редактора
-create_new_graph_btn = CTkButton(root, text='', bg_color=btns_color, fg_color=add_tab_button,
+create_new_graph_btn = ctk.CTkButton(root, text='', bg_color=btns_color, fg_color=add_tab_button,
                                 image=PhotoImage(file=path_to_img_create_new_tab),
                                 corner_radius=5, command=add_new_tab)
 create_new_graph_btn.place(anchor='w', relx=0.9097, rely=0.3)

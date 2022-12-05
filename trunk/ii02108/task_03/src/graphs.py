@@ -1,19 +1,24 @@
 class Graph:
-    def __init__(self, adj_matr: list = list()) -> None:
-        self.adjacency_matrix = [i.copy() for i in adj_matr]
-
-        self.vertexes_count = len(self.adjacency_matrix)
+    def __init__(self, adj_matr = None) -> None:
+        self.vertexes_count = 0
         self.edges = []
         self.edges_count = 0
-        if adj_matr:
-            for i in range(self.vertexes_count):
-                for j in range(self.vertexes_count):
-                    if self.adjacency_matrix[i][j]:
-                        self.edges.append([i, j, self.adjacency_matrix[i][j], self.adjacency_matrix[i][j]!=self.adjacency_matrix[j][i]])
-                        self.edges_count += 1
-                        if self.adjacency_matrix[i][j] == self.adjacency_matrix[j][i]:
-                            self.adjacency_matrix[j][i] = 0
+
+        if adj_matr is None:
+            self.adjacency_matrix = []
+        else:
             self.adjacency_matrix = [i.copy() for i in adj_matr]
+            self.vertexes_count = len(self.adjacency_matrix)
+
+            if adj_matr:
+                for i in range(self.vertexes_count):
+                    for j in range(self.vertexes_count):
+                        if self.adjacency_matrix[i][j]:
+                            self.edges.append([i, j, self.adjacency_matrix[i][j], self.adjacency_matrix[i][j]!=self.adjacency_matrix[j][i]])
+                            self.edges_count += 1
+                            if self.adjacency_matrix[i][j] == self.adjacency_matrix[j][i]:
+                                self.adjacency_matrix[j][i] = 0
+                self.adjacency_matrix = [i.copy() for i in adj_matr]
 
 
     # CREATE GRAPH ============================================================
@@ -49,7 +54,7 @@ class Graph:
                 edge[0] -= 1
             if edge[1] > vertex:
                 edge[1] -= 1
-    
+
     def del_edge(self, vertex1: int, vertex2: int):
         for edge in self.edges:
             if edge[0] == vertex1 and edge[1] == vertex2:
@@ -224,7 +229,7 @@ class Graph:
         return center
 
 
-    # CHECKS ====================================================================    
+    # CHECKS ==================================================================== 
     
     def is_tree(self):
         '''Is the graph a tree'''
