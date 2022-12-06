@@ -73,7 +73,7 @@ class Graph:
             if self.adjacency_matrix[vertex][i]:
                 degree += 1
         return degree
-    
+
     def get_adj_matrix(self):
         return self.adjacency_matrix
 
@@ -191,10 +191,14 @@ class Graph:
         return paths
     
     def get_shortest_path(self, vertex1: int, vertex2: int):
+        '''смотрит на веса ребер'''
         paths = self.get_all_paths(vertex1, vertex2)
-        if not paths:
-            return None
-        return min(paths, key=len)
+        lengths = [0 for _ in paths]
+        for i, _ in enumerate(paths):
+            for j, _ in enumerate(paths[i][:-1]):
+                lengths[i] += self.adjacency_matrix[paths[i][j]][paths[i][j+1]]
+        min_index = lengths.index(min(lengths))
+        return paths[min_index]
     
     def get_distance(self, vertex1: int, vertex2: int):
         distance = 0
@@ -229,7 +233,7 @@ class Graph:
         return center
 
 
-    # CHECKS ==================================================================== 
+    # CHECKS ====================================================================
     
     def is_tree(self):
         '''Is the graph a tree'''

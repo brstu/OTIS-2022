@@ -32,7 +32,10 @@ class Vertex:
 
     def unselect(self):
         self.is_selected = False
-        self.canvas.delete(self.selection)
+        try:
+            self.canvas.delete(self.selection)
+        except AttributeError:
+            pass
 
     def show_properties(self, event):
         props_vert = CTk()
@@ -69,7 +72,7 @@ class Vertex:
         clrbtn_8.place(anchor='nw', relx=0.33, rely=0.68, relwidth=0.333, relheight=0.2)
         clrbtn_9.place(anchor='nw', relx=0.66, rely=0.68, relwidth=0.35, relheight=0.2)
         clrbtn_10.place(anchor='nw', relx=0, rely=0.88, relwidth=1, relheight=0.2)
- 
+
         props_vert.mainloop()
 
 
@@ -147,7 +150,7 @@ class Edge:
         del self.vertex1
         del self.vertex2
 
-    def change_weight(self, weight):
+    def change_weight(self, weight, graph):
         try:
             self.weight = int(weight)
         except ValueError:
@@ -156,12 +159,15 @@ class Edge:
             self.canvas.coords(self.rect, (self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13,
                               (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
             self.canvas.itemconfig(self.text, text=self.weight)
-    
+            graph.adjacency_matrix[self.vertex1.id_vert][self.vertex2.id_vert] = self.weight
+            if not self.is_oriented:
+                graph.adjacency_matrix[self.vertex2.id_vert][self.vertex1.id_vert] = self.weight
+
     def change_color(self, color):
         self.color = color
         self.canvas.itemconfig(self.line, fill=self.color)
-            
-    
+
+   
     def move(self):
         self.x1, self.y1 = self.vertex1.x, self.vertex1.y
         self.x2, self.y2 = self.vertex2.x, self.vertex2.y
@@ -170,7 +176,7 @@ class Edge:
                           (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13)
         self.canvas.coords(self.text, (self.x1+self.x2)/2, (self.y1+self.y2)/2)
 
-    def show_properties(self, event):
+    def show_properties(self, event, graph):
         props_edge = CTkToplevel()
         props_edge.wm_attributes('-topmost', '1')
         props_edge.title('Edge properties')
@@ -181,7 +187,7 @@ class Edge:
         name_entry.delete(0, 'end')
         name_entry.insert(0, str(self.weight))
         name_entry.place(anchor='n', relx=0.5, rely=0.1)
-        name_entry.bind('<Return>', lambda event: self.change_weight(name_entry.get()))
+        name_entry.bind('<Return>', lambda event: self.change_weight(name_entry.get(), graph))
         name_entry.focus()
 
         clrbtn_1 = CTkButton(props_edge, corner_radius=0, fg_color='red', text='', command=lambda: self.change_color('red'))

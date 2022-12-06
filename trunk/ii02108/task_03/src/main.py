@@ -1,4 +1,4 @@
-from tkinter import Menu, PhotoImage, filedialog, Text, messagebox, END
+from tkinter import Menu, PhotoImage, filedialog, Text, messagebox, Label, END
 from main_components import Vertex, Edge
 from graphs import Graph, inc_to_adj
 from config import main_theme, btns_color, add_tab_button, close_tab_button, unselected_btn_clr, selected_tab_clr
@@ -107,7 +107,7 @@ class Workspace:
         for vertex in self.vertexes:
             vertex.unselect()
         self.selected_vertexes.clear()
-            
+
         self.canvas.bind('<Button-1>', self.delete_comp_click)
         self.canvas.bind('<B1-Motion>', self.delete_comp_click)
         self.canvas.bind('<Button-3>', self.show_properties)
@@ -147,7 +147,7 @@ class Workspace:
         else:
             for edge in self.edges:
                 if sq((x - edge.x1)**2 + (y - edge.y1)**2) + sq((x - edge.x2)**2 + (y - edge.y2)**2) <= sq((edge.x2 - edge.x1)**2 + (edge.y2 - edge.y1)**2)+5:
-                    edge.show_properties(event)
+                    edge.show_properties(event, self.graph)
                     break
 
     
@@ -255,7 +255,7 @@ class Workspace:
                             self.graph.del_edge(vertex1, vertex2)
                 self.vertexes.remove(vertex)
                 for vert in self.vertexes:
-                    if vert.id_vert > vertex.id_vert:  
+                    if vert.id_vert > vertex.id_vert:
                         vert.id_vert -= 1
                         self.id_vert -= 1
                 self.graph.del_vertex(vertex.id_vert)
@@ -274,6 +274,7 @@ class Workspace:
         self.delete_selected_vertexes()
 
     def copy_to_clipboard(self):
+        print('copy')
         dictionary = dict()
         dictionary['vertexes'] = []
         dictionary['edges'] = []
@@ -362,7 +363,8 @@ class Workspace:
                 file.write(json.dumps(dictionary))
 
     def export_to_text(self):
-        path = filedialog.asksaveasfilename(defaultextension='.txt', filetypes=(('Текстовые файлы', '*.txt'), ('Все файлы', '*.')), initialdir=get_script_dir())
+        path = filedialog.asksaveasfilename(defaultextension='.txt', filetypes=(('Текстовые файлы', '*.txt'),
+                                           ('Все файлы', '*.')), initialdir=get_script_dir())
         if path:
             string = self.name + '\n'
             for edge in self.edges:
@@ -415,10 +417,29 @@ class Workspace:
         self.update_from_adj(matrix)
 
         
-    # def vertexes_degree(self):
-    #     degrees = []
-    #     for vertex in self.vertexes:
-    #         pass
+    def vertexes_degree(self):
+        degrees = {vertex.name : self.graph.get_degree(vertex.id_vert) for vertex in self.vertexes}
+        show_info('Степени вершин', str(degrees))
+
+    def find_shortest_path(self):
+        self.selected_vertexes.clear()
+        def get_vertex(event):
+            x = event.x
+            y = event.y
+            for vertex in self.vertexes:
+                vertex.unselect()
+                if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
+                    vertex.select()
+                    self.selected_vertexes.append(vertex)
+            if len(self.selected_vertexes) == 2:
+                path = self.graph.get_shortest_path(self.selected_vertexes[0].id_vert, self.selected_vertexes[1].id_vert)
+                if path is not None:
+                    show_info('Кратчайший путь', str(path))
+                else:
+                    show_info('Кратчайший путь', 'Путь не найден')
+                self.default_mode()
+        self.canvas.bind('<Button-1>', get_vertex)        
+
 
     def HIDE(self):
         self.is_tab_opened = False
@@ -433,7 +454,7 @@ class Workspace:
     def SHOW(self):
         for workspace in workspaces:
             workspace.HIDE()
-        self.is_tab_opened = True 
+        self.is_tab_opened = True
         self.canvas.place(anchor='nw')
 
         self.tab_btn.configure(fg_color=selected_tab_clr)
@@ -515,17 +536,63 @@ def paste_selected_vertexes(event):
 def vertexes_count():
     for workspace in workspaces:
         if workspace.is_tab_opened:
-            print(len(workspace.vertexes), workspace.graph.vertexes_count)
+            show_info('Количество вершин', str(len(workspace.vertexes)))
 
 def edges_count():
     for workspace in workspaces:
         if workspace.is_tab_opened:
-            print(len(workspace.edges), workspace.graph.edges_count)
+            show_info('Количество ребер', str(len(workspace.edges)))
 
 def vertexes_degree():
     for workspace in workspaces:
         if workspace.is_tab_opened:
             workspace.vertexes_degree()
+
+def is_tree():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            if workspace.graph.is_tree():
+                show_info('Дерево', 'Да')
+            else:
+                show_info('Дерево', 'Нет')
+
+def is_connected():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            if workspace.graph.is_connected():
+                show_info('Связность', 'Да')
+            else:
+                show_info('Связность', 'Нет')
+
+def is_full():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            if workspace.graph.is_full():
+                show_info('Полнота', 'Да')
+            else:
+                show_info('Полнота', 'Нет')
+
+def is_eulerian():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            if workspace.graph.is_eulerian():
+                show_info('Эйлеровость', 'Да')
+            else:
+                show_info('Эйлеровость', 'Нет')
+
+def is_hamiltonian():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            if workspace.graph.is_hamiltonian():
+                show_info('Гамильтоновость', 'Да')
+            else:
+                show_info('Гамильтоновость', 'Нет')
+
+
+def find_shortest_path():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.find_shortest_path()
 
 def get_adj_matrix():
     for workspace in workspaces:
@@ -554,8 +621,8 @@ def get_adj_matrix():
                     for j in i:
                         if j == '':
                             i.remove(j)
-                for i in range(len(matrix)):
-                    for j in range(len(matrix[i])):
+                for i, _ in enumerate(matrix):
+                    for j, _ in enumerate(matrix[i]):
                         matrix[i][j] = int(matrix[i][j])
                 win.destroy()
                 workspace.update_from_adj(matrix)
@@ -605,10 +672,19 @@ def get_inc_matrix():
 
             win.mainloop()
 
+def show_info(title: str, info: str):
+    win = ctk.CTk()
+    win.title(title)
+    win.geometry('500x500')
+    win.bind('<Escape>', lambda event: win.destroy())
 
+    for i in range(0, len(info), 32):
+        Label(win, font='Consolas 20', text=info[i:i+32]).pack()
+
+
+    win.mainloop()
 
 def close_program(event):
-    global root
     workspaces.clear()
     root.destroy()
 
@@ -639,17 +715,17 @@ filemenu.add_command(label="Экспорт в текст", command=export_to_tex
 filemenu.add_command(label="Импорт из текста", command=import_from_text)
 
 algsmenu = Menu(mainmenu, tearoff=0)
-algsmenu.add_command(label="Кол-во вершин", command=vertexes_count) # <====================================================
-algsmenu.add_command(label="Кол-во ребер", command=edges_count) # <====================================================
-algsmenu.add_command(label="Степени вершин", command=vertexes_degree) # <====================================================
-algsmenu.add_command(label="Матрица смежности", command=get_adj_matrix) # <====================================================
-algsmenu.add_command(label="Матрица инцидентности", command=get_inc_matrix) # <====================================================
-algsmenu.add_command(label="Граф - дерево?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Граф полный?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Граф эйлеров?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Граф гамильтонов?", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Кол-во вершин", command=vertexes_count)
+algsmenu.add_command(label="Кол-во ребер", command=edges_count)
+algsmenu.add_command(label="Степени вершин", command=vertexes_degree)
+algsmenu.add_command(label="Матрица смежности", command=get_adj_matrix)
+algsmenu.add_command(label="Матрица инцидентности", command=get_inc_matrix)
+algsmenu.add_command(label="Граф - дерево?", command=is_tree)
+algsmenu.add_command(label="Граф полный?", command=is_full)
+algsmenu.add_command(label="Граф эйлеров?", command=is_eulerian)
+algsmenu.add_command(label="Граф гамильтонов?", command=is_hamiltonian)
 algsmenu.add_separator()
-algsmenu.add_command(label="Поиск кратчайшего пути", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Поиск кратчайшего пути", command=find_shortest_path)
 algsmenu.add_command(label="Нахождение наименьшего расстояния", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
 algsmenu.add_command(label="Нахождние центра", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
 algsmenu.add_command(label="Нахождние диаметра", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
