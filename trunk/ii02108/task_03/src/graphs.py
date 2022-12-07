@@ -118,7 +118,7 @@ class Graph:
         for i in range(self.vertexes_count):
             if self.adjacency_matrix[vertex][i] and not visited[i]:
                 self.dfs(i, visited)
-    
+
     def bfs(self, vertex: int, visited: list):
         queue = [vertex]
         visited[vertex] = True
@@ -141,7 +141,7 @@ class Graph:
                         component.append(j)
                 components.append(component)
         return components
-    
+
     def get_eulerian_cycle(self):
         if not self.is_connected():
             return []
@@ -160,7 +160,7 @@ class Graph:
             else:
                 return cycle
         return cycle
-    
+
     def get_hamiltonian_cycle(self):
         if not self.is_connected():
             return None
@@ -189,7 +189,7 @@ class Graph:
                     else:
                         stack.append((i, path + [i]))
         return paths
-    
+
     def get_shortest_path(self, vertex1: int, vertex2: int):
         '''смотрит на веса ребер'''
         paths = self.get_all_paths(vertex1, vertex2)
@@ -199,7 +199,7 @@ class Graph:
                 lengths[i] += self.adjacency_matrix[paths[i][j]][paths[i][j+1]]
         min_index = lengths.index(min(lengths))
         return paths[min_index]
-    
+
     def get_distance(self, vertex1: int, vertex2: int):
         distance = 0
         path = self.get_shortest_path(vertex1, vertex2)
@@ -214,7 +214,7 @@ class Graph:
                 if i != j:
                     diameter = max(diameter, self.get_distance(i, j))
         return diameter
-    
+
     def get_radius(self):
         radius = float('inf')
         for i in range(self.vertexes_count):

@@ -123,7 +123,7 @@ class Edge:
 
         self.canvas = canvas
 
-        
+
         if self.is_oriented:
             if self.is_loop:
                 pass
@@ -141,7 +141,7 @@ class Edge:
                 self.rect = self.canvas.create_rectangle((self.x1+self.x2)/2-len(str(self.weight))*8, (self.y1+self.y2)/2-13,
                                                         (self.x1+self.x2)/2+len(str(self.weight))*8, (self.y1+self.y2)/2+13, fill='white', width=0)
                 self.text = self.canvas.create_text((self.x1+self.x2)/2, (self.y1+self.y2)/2, text=self.weight, font=('Arial', 18), fill='black')
-        
+
     def delete(self):
         self.canvas.delete(self.line)
         self.canvas.delete(self.rect)
@@ -166,7 +166,7 @@ class Edge:
         self.color = color
         self.canvas.itemconfig(self.line, fill=self.color)
 
-   
+
     def move(self):
         self.x1, self.y1 = self.vertex1.x, self.vertex1.y
         self.x2, self.y2 = self.vertex2.x, self.vertex2.y
@@ -226,4 +226,3 @@ def line_intersect_circle(x1, y1, x2, y2):
     dy = (main_gipotenusa - vertex_radius) * main_dy / main_gipotenusa
 
     return x2 - dx, y2 - dy, x1 + dx, y1 + dy
-    

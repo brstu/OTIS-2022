@@ -156,7 +156,7 @@ class Workspace:
         for vertex in self.vertexes:
             if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2 * 2:
                 vertex.move(x, y)
-                
+
                 for edge in self.edges:
                     if edge.vertex1 is vertex or edge.vertex2 is vertex:
                         edge.move()
@@ -181,7 +181,7 @@ class Workspace:
             props.title('Свойства ребра')
             props.resizable(False, False)
             props.bind('<Escape>', lambda event: props.destroy())
-                
+
 
             def create_edge(is_oriented: bool):
                 try:
@@ -239,7 +239,7 @@ class Workspace:
             self.graph.del_vertex(vertex.id_vert)
             vertex.delete()
         self.selected_vertexes.clear()
-    
+
     def delete_comp_click(self, event):
         x, y = event.x, event.y
         for vertex in self.vertexes:
@@ -268,7 +268,7 @@ class Workspace:
                     self.edges.remove(edge)
                     break
 
-    
+
     def cut_to_clipboard(self):
         self.copy_to_clipboard()
         self.delete_selected_vertexes()
@@ -335,7 +335,7 @@ class Workspace:
             else:
                 self.graph.add_unorient_edge(vertex1.id_vert, vertex2.id_vert, edge[2])
             self.edges.append(Edge(self.canvas, edge[2], vertex1, vertex2, edge[3], edge[4]))
-        
+
 
 
     def save_graph(self):
@@ -374,7 +374,7 @@ class Workspace:
             else:
                 string += 'UNORIENT\n'
                 is_orient = False
-            
+
             string += ''.join([str(i+1)+', ' for i in range(self.id_vert)])[:-2] + '\n'
 
             matrix = [i.copy() for i in self.graph.get_adj_matrix()]
@@ -415,7 +415,7 @@ class Workspace:
                     matrix[int(string[2])-1][int(string[0])-1] = int(string[3])
         self.update_from_adj(matrix)
 
-        
+
     def vertexes_degree(self):
         degrees = {vertex.name : self.graph.get_degree(vertex.id_vert) for vertex in self.vertexes}
         show_info('Степени вершин', degrees)
@@ -463,7 +463,7 @@ class Workspace:
             show_info('Радиус графа', diameter)
         else:
             show_info('Радиус графа', 'Диаметр не найден')
-    
+
     def eulerian_path(self):
         path = self.graph.get_eulerian_cycle()
         if path:
@@ -473,7 +473,7 @@ class Workspace:
             show_info('Эйлеров путь', output)
         else:
             show_info('Эйлеров путь', 'Путь не найден')
-    
+
     def hamiltonian_path(self):
         path = self.graph.get_hamiltonian_cycle()
         if path:
@@ -502,7 +502,7 @@ class Workspace:
         self.canvas.place(anchor='nw')
 
         self.tab_btn.configure(fg_color=selected_tab_clr)
-        
+
         self.add_vert_btn.place(anchor='ne', relx=0.997, rely=0.01)
         self.add_edge_btn.place(anchor='ne', relx=0.997, rely=0.05)
         self.del_comp_btn.place(anchor='ne', relx=0.997, rely=0.09)
