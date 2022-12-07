@@ -150,7 +150,7 @@ class Workspace:
                     edge.show_properties(event, self.graph)
                     break
 
-    
+
     def move_vertex(self, event):
         x, y = event.x, event.y
         for vertex in self.vertexes:
@@ -422,6 +422,7 @@ class Workspace:
 
     def find_shortest_path(self):
         self.selected_vertexes.clear()
+
         def get_vertex(event):
             x = event.x
             y = event.y
@@ -440,7 +441,7 @@ class Workspace:
                 else:
                     show_info('Кратчайший путь', 'Путь не найден')
                 self.default_mode()
-        self.canvas.bind('<Button-1>', get_vertex)        
+        self.canvas.bind('<Button-1>', get_vertex)
 
     def find_center(self):
         center = self.graph.get_center()

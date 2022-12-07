@@ -104,7 +104,6 @@ class Vertex:
         if self.is_selected:
             self.canvas.coords(self.selection, self.x-self.radius-3, self.y-self.radius-3, self.x+self.radius+3, self.y+self.radius+3)
 
-        
 
 
 class Edge:
@@ -117,7 +116,7 @@ class Edge:
         self.x2, self.y2 = vertex2.x, vertex2.y
 
         self.is_oriented = oriented
-        self.is_loop = self.x1 == self.x2 and self.y1 == self.y2
+        self.is_loop = self.vertex1 == self.vertex2
 
         self.color = color
         self.thickness = vertex_radius // 5

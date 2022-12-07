@@ -100,7 +100,7 @@ class Graph:
                 adj_matr += str(self.adjacency_matrix[i][j]) + ' '
             adj_matr += '\n'
         return adj_matr
-    
+
     def show_inc_matrix(self):
         inc_matr = self.get_inc_matrix()
         string = ''
