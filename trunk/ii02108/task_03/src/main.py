@@ -201,7 +201,7 @@ class Workspace:
             entry = ctk.CTkEntry(props, text='Введите вес', justify='center')
             entry.place(anchor='n', relx=0.5, rely=0.1)
             entry.focus()
-            
+
             btn_or = ctk.CTkButton(props, text='Ориентированное', command=lambda: create_edge(True))
             btn_unor = ctk.CTkButton(props, text='Неориентированное', command=lambda: create_edge(False))
             btn_or.place(anchor='n', relx=0.5, rely=0.5)
@@ -329,13 +329,12 @@ class Workspace:
                     vertex1 = vertex
                 elif vertex.x == edge[1][0] and vertex.y == edge[1][1]:
                     vertex2 = vertex
-            
+
             if edge[3]:
                 self.graph.add_orient_edge(vertex1.id_vert, vertex2.id_vert, edge[2])
             else:
                 self.graph.add_unorient_edge(vertex1.id_vert, vertex2.id_vert, edge[2])
             self.edges.append(Edge(self.canvas, edge[2], vertex1, vertex2, edge[3], edge[4]))
-
 
 
     def save_graph(self):
