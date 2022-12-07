@@ -223,7 +223,7 @@ class Workspace:
 
     def delete_selected_vertexes(self):
         for vertex in self.selected_vertexes:
-            for _ in range(len(self.vertexes)):
+            for _ in self.vertexes:
                 for edge in self.edges:
                     if vertex in (edge.vertex1, edge.vertex2):
                         vertex1 = edge.vertex1.id_vert
@@ -232,10 +232,10 @@ class Workspace:
                         self.graph.del_edge(vertex1, vertex2)
                         edge.delete()
             self.vertexes.remove(vertex)
+            self.id_vert -= 1
             for vert in self.vertexes:
                 if vert.id_vert > vertex.id_vert:
                     vert.id_vert -= 1
-                    self.id_vert -= 1
             self.graph.del_vertex(vertex.id_vert)
             vertex.delete()
         self.selected_vertexes.clear()
@@ -245,7 +245,7 @@ class Workspace:
         for vertex in self.vertexes:
             if (vertex.x - x)**2 + (vertex.y - y)**2 <= vertex.radius**2:
                 vertex.delete()
-                for _ in range(len(self.vertexes)):
+                for _ in self.vertexes:
                     for edge in self.edges:
                         if vertex in (edge.vertex1, edge.vertex2):
                             vertex1 = edge.vertex1.id_vert
@@ -254,10 +254,10 @@ class Workspace:
                             self.edges.remove(edge)
                             self.graph.del_edge(vertex1, vertex2)
                 self.vertexes.remove(vertex)
+                self.id_vert -= 1
                 for vert in self.vertexes:
                     if vert.id_vert > vertex.id_vert:
                         vert.id_vert -= 1
-                        self.id_vert -= 1
                 self.graph.del_vertex(vertex.id_vert)
                 break
         else:
@@ -274,7 +274,6 @@ class Workspace:
         self.delete_selected_vertexes()
 
     def copy_to_clipboard(self):
-        print('copy')
         dictionary = dict()
         dictionary['vertexes'] = []
         dictionary['edges'] = []
@@ -419,7 +418,7 @@ class Workspace:
         
     def vertexes_degree(self):
         degrees = {vertex.name : self.graph.get_degree(vertex.id_vert) for vertex in self.vertexes}
-        show_info('Степени вершин', str(degrees))
+        show_info('Степени вершин', degrees)
 
     def find_shortest_path(self):
         self.selected_vertexes.clear()
@@ -433,12 +432,56 @@ class Workspace:
                     self.selected_vertexes.append(vertex)
             if len(self.selected_vertexes) == 2:
                 path = self.graph.get_shortest_path(self.selected_vertexes[0].id_vert, self.selected_vertexes[1].id_vert)
+                output = ['' for _ in path]
+                for i, vertex in enumerate(path):
+                    output[i] = self.vertexes[vertex].name
                 if path is not None:
-                    show_info('Кратчайший путь', str(path))
+                    show_info('Кратчайший путь', output)
                 else:
                     show_info('Кратчайший путь', 'Путь не найден')
                 self.default_mode()
         self.canvas.bind('<Button-1>', get_vertex)        
+
+    def find_center(self):
+        center = self.graph.get_center()
+        if center:
+            show_info('Центр графа', center)
+        else:
+            show_info('Центр графа', 'Центр не найден')
+
+    def find_radius(self):
+        radius = self.graph.get_radius()
+        if radius != float('inf'):
+            show_info('Радиус графа', radius)
+        else:
+            show_info('Радиус графа', 'Радиус не найден')
+
+    def find_diameter(self):
+        diameter = self.graph.get_diameter()
+        if diameter != 0:
+            show_info('Радиус графа', diameter)
+        else:
+            show_info('Радиус графа', 'Диаметр не найден')
+    
+    def eulerian_path(self):
+        path = self.graph.get_eulerian_cycle()
+        if path:
+            output = ['' for _ in path]
+            for i, vertex in enumerate(path):
+                output[i] = self.vertexes[vertex].name
+            show_info('Эйлеров путь', output)
+        else:
+            show_info('Эйлеров путь', 'Путь не найден')
+    
+    def hamiltonian_path(self):
+        path = self.graph.get_hamiltonian_cycle()
+        if path:
+            output = ['' for _ in path]
+            for i, vertex in enumerate(path):
+                output[i] = self.vertexes[vertex].name
+            show_info('Гамильтонов путь', output)
+        else:
+            show_info('Гамильтонов путь', 'Путь не найден')
 
 
     def HIDE(self):
@@ -594,6 +637,31 @@ def find_shortest_path():
         if workspace.is_tab_opened:
             workspace.find_shortest_path()
 
+def find_center():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.find_center()
+
+def find_radius():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.find_radius()
+
+def find_diameter():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.find_diameter()
+
+def eulerian_path():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.eulerian_path()
+
+def hamiltonian_path():
+    for workspace in workspaces:
+        if workspace.is_tab_opened:
+            workspace.hamiltonian_path()
+
 def get_adj_matrix():
     for workspace in workspaces:
         if workspace.is_tab_opened:
@@ -672,7 +740,9 @@ def get_inc_matrix():
 
             win.mainloop()
 
-def show_info(title: str, info: str):
+def show_info(title: str, info: any):
+    info = str(info)
+
     win = ctk.CTk()
     win.title(title)
     win.geometry('500x500')
@@ -726,13 +796,12 @@ algsmenu.add_command(label="Граф эйлеров?", command=is_eulerian)
 algsmenu.add_command(label="Граф гамильтонов?", command=is_hamiltonian)
 algsmenu.add_separator()
 algsmenu.add_command(label="Поиск кратчайшего пути", command=find_shortest_path)
-algsmenu.add_command(label="Нахождение наименьшего расстояния", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Нахождние центра", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Нахождние диаметра", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Нахождние радиуса", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Нахождние радиуса", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Поиск эйлерова цикла", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
-algsmenu.add_command(label="Поиск гамильтонова цикла", command=lambda: print('Алгоритм Дейкстры')) # <====================================================
+algsmenu.add_command(label="Нахождение наименьшего расстояния", command=find_shortest_path)
+algsmenu.add_command(label="Нахождние центра", command=find_center)
+algsmenu.add_command(label="Нахождние радиуса", command=find_radius)
+algsmenu.add_command(label="Нахождние диаметра", command=find_diameter)
+algsmenu.add_command(label="Поиск эйлерова цикла", command=eulerian_path)
+algsmenu.add_command(label="Поиск гамильтонова цикла", command=hamiltonian_path)
 
 mainmenu.add_cascade(label="Файл", menu=filemenu)
 mainmenu.add_cascade(label="Алгоритмы", menu=algsmenu)

@@ -144,10 +144,10 @@ class Graph:
     
     def get_eulerian_cycle(self):
         if not self.is_connected():
-            return None
+            return []
         for i in range(self.vertexes_count):
             if self.get_degree(i) % 2:
-                return None
+                return []
         cycle = [0]
         visited = [False for i in range(self.vertexes_count)]
         visited[0] = True
@@ -158,7 +158,7 @@ class Graph:
                     visited[i] = True
                     break
             else:
-                return None
+                return cycle
         return cycle
     
     def get_hamiltonian_cycle(self):
@@ -202,10 +202,11 @@ class Graph:
     
     def get_distance(self, vertex1: int, vertex2: int):
         distance = 0
-        for i in self.get_shortest_path(vertex1, vertex2):
-            distance += self.adjacency_matrix[i][i+1]
+        path = self.get_shortest_path(vertex1, vertex2)
+        for i, vertex in enumerate(path[:-1]):
+            distance += self.adjacency_matrix[vertex][path[i+1]]
         return distance
-    
+
     def get_diameter(self):
         diameter = 0
         for i in range(self.vertexes_count):
@@ -234,29 +235,25 @@ class Graph:
 
 
     # CHECKS ====================================================================
-    
+
     def is_tree(self):
-        '''Is the graph a tree'''
         return self.vertexes_count == self.edges_count + 1
 
     def is_full(self):
-        '''Is the graph complete'''
         return self.edges_count == self.vertexes_count * (self.vertexes_count - 1) / 2
-    
+
     def is_connected(self):
-        '''Is the graph connected?'''
         visited = [False for i in range(self.vertexes_count)]
         self.dfs(0, visited)
         return all(visited)
-    
+
     def is_eulerian(self):
-        '''Is the graph Euler'''
         return all(self.get_degree(i) % 2 == 0 for i in range(self.vertexes_count))
 
     def is_hamiltonian(self):
-        '''Is the graph Hamiltonian'''
         return all(self.get_degree(i) >= 2 for i in range(self.vertexes_count))
-    
+
+
 def inc_to_adj(incidence_matrix):
     '''Translating Incident Matrix to Adjacency Matrix'''
     vertexes_count = len(incidence_matrix)
