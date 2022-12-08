@@ -517,8 +517,11 @@ class Workspace:
         workspaces.remove(self)
 
         for i, _ in enumerate(workspaces):
-            workspaces[i].tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*i, width=110)
-            workspaces[i].close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*i, width=30)
+            try:
+                workspaces[i].tab_btn.place(anchor='w', relx = 0.9097, rely=0.34+0.04*i, width=110)
+                workspaces[i].close_tab_btn.place(anchor='e', relx = 0.998, rely=0.34+0.04*i, width=30)
+            except TclError:
+                pass
 
 
 def add_new_tab():
@@ -762,7 +765,7 @@ def close_program(event):
 workspaces = []
 
 root = ctk.CTk()
-root.title('Graphs Editor Pro')
+root.title('Graph Editor')
 root.geometry("1600x900+150+70")
 root.resizable(False, False)
 root.set_appearance_mode(main_theme)
