@@ -73,23 +73,23 @@ def alg_buttons(editor, G):
     center.on_click(lambda x: print("center:", G.center()))
 
     def eulerian_cycle_func(self):
-            if not self.is_connected():
+        if not self.is_connected():
+            return "no cycle"
+        for i in range(self.num_verts()):
+            if self.degree(i) % 2:
                 return "no cycle"
+        cycle = [0]
+        visited = [False for i in range(self.num_verts())]
+        visited[0] = True
+        while len(cycle) < self.num_edges():
             for i in range(self.num_verts()):
-                if self.degree(i) % 2:
-                    return "no cycle"
-            cycle = [0]
-            visited = [False for i in range(self.num_verts())]
-            visited[0] = True
-            while len(cycle) < self.num_edges():
-                for i in range(self.num_verts()):
-                    if self.adjacency_matrix()[cycle[-1]][i] and not visited[i]:
-                        cycle.append(i)
-                        visited[i] = True
-                        break
-                else:
-                    return None
-            return cycle
+                if self.adjacency_matrix()[cycle[-1]][i] and not visited[i]:
+                    cycle.append(i)
+                    visited[i] = True
+                    break
+            else:
+                return None
+        return cycle
 
     eulerian_cycle = func_button("eulerian_cycle")
     eulerian_cycle.on_click(lambda x: print("eulerian_cycle:", eulerian_cycle_func(G)))
