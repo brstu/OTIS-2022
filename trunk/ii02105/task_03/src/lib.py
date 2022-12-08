@@ -123,7 +123,8 @@ from ipycanvas import MultiCanvas, hold_canvas
 from ipywidgets import (Label, BoundedIntText, Text, VBox, HBox, Output, Button,
                         Dropdown, ColorPicker, ToggleButton,
                         Layout, ToggleButtons)
-from random import randint, randrange
+from numpy import randrange
+from numpy.random import randint as randint
 from math import pi, sqrt, atan2
 from copy import copy
 
