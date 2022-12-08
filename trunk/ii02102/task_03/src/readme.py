@@ -1,4 +1,4 @@
-from tkinter import *
+from tkinter import Tk,Canvas,Button,Label,Entry
 from tkinter import messagebox as mb
 
 tk = Tk()  # Создание окна
@@ -29,21 +29,20 @@ class Vertex:
         self.vert_name = vert_name
         self.canvas = canvas
         self.color = color
-        self.id = canvas.create_oval(-12, -12, 40, 40, fill=color, width=2)
-        self.canvas.move(self.id, x_click, y_click)
+        self.x = x_click
+        self.y = y_click
+        self.id_vert = canvas.create_oval(-12, -12, 40, 40, fill=color, width=2)
+        self.canvas.move(self.id_vert, self.x, self.y)
         # print(self.id)
-        self.id = self.canvas.create_text(x_click + 14, y_click + 12, text=self.vert_name[self.vertex_count - 1],
+        self.id_txt = self.canvas.create_text(self.x + 14, self.y + 12, text=self.vert_name[self.vertex_count - 1],
                                           font="Arial 10", fill="white")
-        print(self.id)
         # self.btn.id=Button(canvas, )
         canvas.unbind("<Button-1>")
 
-    def rename_vertex(en1, en2, root):
-        global vert_name, vertex
-        canvas.delete(vertex[vert_name.index(en1)].id)
-        vertex[vert_name.index(en1)].id = vertex[vert_name.index(en1)].canvas.create_text(x_click + 14, y_click + 12,
-                                                                                          text=en2,
-                                                                                          font="Arial 10", fill="white")
+    def get_info(self):
+        return self.vertex_count, self.vert_name[self.vertex_count - 1]
+
+
 
 
 # Создание шара и лини ведущей к нему
@@ -156,14 +155,13 @@ def menu_create_vetrex():
     def create_name_vert(entry):
         global call_count
         call_count += 1
-        for i in [vert_name]:
-            if '' == entry.get():
-                mb.showerror("Ошибка", "Вы не ввели имя вершины")
-            elif entry.get() not in vert_name:
-                vert_name[vertex_count] = entry.get()
-                print(vert_name)
-            else:
-                mb.showerror("Ошибка", "Такая вершина уже существует")
+        if '' == entry.get():
+            mb.showerror("Ошибка", "Вы не ввели имя вершины")
+        elif entry.get() not in vert_name:
+            vert_name[vertex_count] = entry.get()
+            print(vert_name)
+        else:
+            mb.showerror("Ошибка", "Такая вершина уже существует")
 
     new_window = Tk()
     new_window.geometry("300x100+0+0")
@@ -176,8 +174,7 @@ def menu_create_vetrex():
     btnColor1 = Button(new_window, text="Синий", command=lambda: give_color(1), bg="blue")
     btnColor2 = Button(new_window, text="Красный", command=lambda: give_color(2), bg="red")
     btnColor3 = Button(new_window, text="Зелёный", command=lambda: give_color(3), bg="green")
-    btnCreate = Button(new_window, text="""Создать 
-вершину""", command=lambda: create_vertex(new_window))
+    btnCreate = Button(new_window, text="Создать\nвершину", command=lambda: create_vertex(new_window))
     label.grid(row=0, column=0, sticky="ew")
     entry.grid(row=1, column=0)
     btnVertName.grid(row=2, column=0, sticky="ew")
@@ -191,7 +188,8 @@ def menu_create_vetrex():
 
 # Меню удаления вершины
 def find_delete_vertex(entry, root):
-    global vert_name
+    global vert_name, vertex, vertex_count
+    vertex_count -= 1
     True_False = 0
     while 1:
         for i in range(len(vert_name)):
@@ -199,6 +197,8 @@ def find_delete_vertex(entry, root):
                 print(vert_name[i])
                 canvas.delete(i + 1)  # Удаление вершины по её id
                 canvas.delete(i + 2)  # Удаление текста по id вершины
+                vertex.pop(i)
+                vert_name.pop(i)
                 root.destroy()
                 True_False = 1
                 break
@@ -233,8 +233,8 @@ def delete_vertex():
 def rename_vertex(en1,en2,root):
     global vert_name, vertex
     if en1 in vert_name:
-        canvas.delete(vertex[vert_name.index(en1)].id)
-        vertex[vert_name.index(en1)].id = vertex[vert_name.index(en1)].canvas.create_text(x_click + 14, y_click + 12, text=en2,
+        canvas.delete(vertex[vert_name.index(en1)].id_txt)
+        vertex[vert_name.index(en1)].id_txt = vertex[vert_name.index(en1)].canvas.create_text(x_click + 14, y_click + 12, text=en2,
                                               font="Arial 10", fill="white")
         root.destroy()
     else:
@@ -263,6 +263,50 @@ def menu_rename_vertex():
     btnRen.grid(row=4, column=0, sticky="ew")
 
 
+def create_edge(en1, en2, root):
+    global vertex, vert_name
+    # print(type(vertex[vert_name.index(en1)]))
+    canvas.create_line(vertex[vert_name.index(en1)].x, vertex[vert_name.index(en1)].y, vertex[vert_name.index(en2)].x, vertex[vert_name.index(en2)].y, width=2)
+    canvas.delete(vertex[vert_name.index(en1)].id_txt)
+    canvas.delete(vertex[vert_name.index(en1)].id_vert)
+    canvas.delete(vertex[vert_name.index(en2)].id_txt)
+    canvas.delete(vertex[vert_name.index(en2)].id_vert)
+    vertex[vert_name.index(en1)].id_vert = canvas.create_oval(-12, -12, 40, 40, fill=color, width=2)
+    vertex[vert_name.index(en1)].id_vert.canvas.move(vertex[vert_name.index(en1)].id_vert, +14, 0)
+    vertex[vert_name.index(en1)].id_txt = vertex[vert_name.index(en1)].canvas.create_text(
+        vertex[vert_name.index(en1)].x + 14, vertex[vert_name.index(en1)].y + 12, text=en2,
+        font="Arial 10", fill="white")
+    root.destroy()
+
+
+def menu_create_edge():
+    new_window = Tk()
+    new_window.title("Задайте имя графа")
+    new_window.wm_attributes('-topmost', 1)
+    new_window.resizable(False, False)
+    label1 = Label(new_window)
+    label1["text"] = "Введите имя 1-ой вершины"
+    entry1 = Entry(new_window)
+    entry2 = Entry(new_window)
+    label2= Label(new_window)
+    label2["text"]="Введите имя 2-ой вершины"
+    btnVertName = Button(new_window, text="Ввод", command=lambda: create_edge(entry1.get(), entry2.get(), new_window))
+    label1.grid(row=0, column=0, sticky="ew")
+    entry1.grid(row=1, column=0, sticky="ew")
+    label2.grid(row=2, column=0, sticky="ew")
+    entry2.grid(row=3, column=0, sticky="ew")
+    btnVertName.grid(row=0, column=1, rowspan=4, sticky="ns")
+
+def out_info():
+    global vertex, vert_name, edges, vertex_count
+    for i in range (vertex_count):
+        print(vertex[i].id)
+
+
+def print_vertex(vertex):
+    for i in vertex:
+        print(i.name, i.x, i.y, i.id)
+
 vert_name = []  # Список имен вершин
 vertex = []  # Глобальные переменные
 color = "red"  # Цвет вершины
@@ -278,8 +322,8 @@ btn3 = Button(tk, text="Импортировать значения", command=im
 btn4 = Button(tk, text="Создать вершину", command=menu_create_vetrex)
 btn5 = Button(tk, text="Удалить вершину", command=delete_vertex)
 btn6 = Button(tk, text="Переименовать вершину", command=menu_rename_vertex)
-btn7 = Button(tk, text="7")
-btn8 = Button(tk, text="quit", command=lambda: tk.destroy())
+btn7 = Button(tk, text="Создать ребро", command=menu_create_edge)
+btn8 = Button(tk, text="quit", command=tk.destroy)
 
 btn1.grid(row=0, column=0, stick="ew")
 btn2.grid(row=0, column=1, stick="ew")
