@@ -25,15 +25,14 @@ def export_to_file(self, name, path, orient=False):
             else:
                 f.write(str(i) + ',')
 
-        for i in range(len(matrix)):
-            for j in range(len(matrix)):
+        for i, _ in enumerate(matrix):
+            for j, _ in enumerate(matrix):
                 if matrix[i][j] == 1:
                     if i == len(matrix) - 1 and j == len(matrix) - 1:
                         f.write(f'{i}->{j}; ')
                     else:
                         f.write(str(i) + '->' + str(j) + ',')
 
- 
 def export_from_file(path):
 
     with open(path, 'r') as f:
