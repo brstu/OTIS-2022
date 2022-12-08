@@ -1,4 +1,3 @@
-```python
 from tkinter import *
 from tkinter import messagebox as mb
 
@@ -292,6 +291,3 @@ btn7.grid(row=1, column=0, stick="ew")
 btn8.grid(row=1, column=5, stick="ew")
 
 tk.mainloop()
-
-
-```
