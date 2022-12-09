@@ -109,7 +109,7 @@ println(нелинейная_модель(Y, Y, U, U, 0, 10))
     Графики:
 
     Линейный
-    ![График](linear.png)
+    ![График](![linear](https://user-images.githubusercontent.com/113106251/206787844-72a07469-5883-4f0b-a485-3a72078fee34.png)
 
     Нелинейный
-    ![График](nonlinear.png)
+    ![График](![nonlinear](https://user-images.githubusercontent.com/113106251/206787895-4852aafd-2907-4b20-b250-91936425b94a.png)
