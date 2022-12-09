@@ -106,10 +106,11 @@ println(нелинейная_модель(Y, Y, U, U, 0, 10))
     0.6013897855732264
     0.6241301461015194
 
-    Графики:
+Графики:
 
 Линейный
+<br>
 ![linear](https://user-images.githubusercontent.com/113106251/206787844-72a07469-5883-4f0b-a485-3a72078fee34.png)
-
+<br>
 Нелинейный
 ![nonlinear](https://user-images.githubusercontent.com/113106251/206787895-4852aafd-2907-4b20-b250-91936425b94a.png)
