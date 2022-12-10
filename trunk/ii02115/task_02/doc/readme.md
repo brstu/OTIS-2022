@@ -53,4 +53,5 @@ end
 println()
 println("Нелинейная модель: \n")
 nonLinearModel() 
+```
 ![image](https://user-images.githubusercontent.com/61494312/206864623-e96727c9-3ae6-4846-b5ca-19ecc0275f21.svg)
