@@ -113,6 +113,7 @@ return 0
 Линейная модель
 <br>
 ![Линейная](images/linear.png)
+<br>
 Нелинейная модель
 <br>
 ![Нелинейная](images/nonlinear.png)
