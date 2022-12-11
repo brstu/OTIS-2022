@@ -111,6 +111,8 @@ return 0
 ---
 # Графики #
 Линейная модель
+<br>
 ![Линейная](images/linear.png)
 Нелинейная модель
+<br>
 ![Нелинейная](images/nonlinear.png)
