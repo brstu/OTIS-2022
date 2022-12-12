@@ -144,22 +144,29 @@ class Graph:
 
     def get_eulerian_cycle(self):
         if not self.is_connected():
-            return []
+            return None
         for i in range(self.vertexes_count):
-            if self.get_degree(i) % 2:
-                return []
-        cycle = [0]
-        visited = [False for i in range(self.vertexes_count)]
-        visited[0] = True
-        while len(cycle) < self.edges_count:
-            for i in range(self.vertexes_count):
-                if self.adjacency_matrix[cycle[-1]][i] and not visited[i]:
-                    cycle.append(i)
-                    visited[i] = True
+            if self.get_degree(i) % 2 != 0:
+                return None
+        adj = [i.copy() for i in self.adjacency_matrix]
+        path = []
+        s = []
+        poz = 0
+        s.append(poz)
+        while s:
+            poz = s[-1]
+            temp = False
+            for i, _ in enumerate(adj[0]):
+                if (adj[poz][i]):
+                    adj[poz][i] = 0
+                    adj[i][poz] = 0
+                    s.append(i)
+                    temp = True
                     break
-            else:
-                return cycle
-        return cycle
+            if not temp:
+                path.append((poz))
+                s.pop()
+        return path
 
     def get_hamiltonian_cycle(self):
         if not self.is_connected():
