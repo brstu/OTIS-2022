@@ -27,5 +27,5 @@
 
 3.  Написать отчет по выполненной работе в .md формате (readme.md) и с помощью pull request разместить его в следующем каталоге: trunk\ii0xxyy\task_04\doc.
 
-![Запуск](images/img.png)
 ---
+![Запуск](images/img.png)
