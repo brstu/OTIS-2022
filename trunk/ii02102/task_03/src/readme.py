@@ -33,7 +33,6 @@ class Vertex:
         self.x = x_click
         self.y = y_click
         self.id_vert = canvas.create_oval(self.x - 20, self.y - 20, self.x + 20, self.y + 20, fill=color, width=2)
-        # print(self.id)
         self.id_txt = self.canvas.create_text(self.x, self.y, anchor='center', text=self.vert_name,
                                               font="Arial 10", fill="white")
         # self.btn.id=Button(canvas, )
@@ -87,7 +86,6 @@ def on_wasd(event):
     global x_click, y_click
     x_click = event.x
     y_click = event.y
-    # print(f"x={event.x} y={event.y}")
 
 
 # def movement(event):
@@ -161,7 +159,6 @@ def create_vertex(root):
     if call_count != 0:
         global vertex_count, x_click, y_click
         vertex_count += 1
-        # print(x_click, y_click)  # отслеживание нажатия кнопки мыш
         vertex.append(Vertex(canvas, color))
         root.destroy()
     else:
@@ -185,7 +182,6 @@ def menu_create_vetrex():
             mb.showerror("Ошибка", "Вы не ввели имя вершины")
         elif entry.get() not in [vert.vert_name for vert in vertex]:
             vert_name[vertex_count] = entry.get()
-            # print(vert_name)
         else:
             mb.showerror("Ошибка", "Такая вершина уже существует")
 
@@ -214,13 +210,19 @@ def menu_create_vetrex():
 
 # Меню удаления вершины
 def find_delete_vertex(entry, root):
-    global vert_name, vertex, vertex_count
+    global vert_name, vertex, vertex_count, edge_count
     vertex_count -= 1
     flag = 1
     while flag:
+        for j, edge in enumerate(edges):
+            if edge.vertex1.vert_name == entry or edge.vertex2.vert_name == entry:
+                canvas.delete(edge.line)
+                canvas.delete(edge.text)
+                canvas.delete(edge.rect)
+                edges.pop(j)
+                edge_count -= 1
         for i, vert in enumerate(vertex):
             if vert.vert_name == entry:
-                # print(val)
                 canvas.delete(vert.id_vert)  # Удаление вершины по её id
                 canvas.delete(vert.id_txt)  # Удаление текста по id вершины
                 vertex.pop(i)
@@ -228,9 +230,12 @@ def find_delete_vertex(entry, root):
                 root.destroy()
                 flag = 0
                 break
+            #delete edges with this vertex
         else:
             mb.showerror("Ошибка", "Вы ввели неверное имя вершины")
             break
+    if edge_count == 0:
+        c2["state"] = "normal"
 
 
 # Удаление вершины
@@ -255,7 +260,6 @@ def delete_vertex():
 
 def find_delete_edge(en1, en2, root):
     global vertex, vert_name, edge_count, edges
-    # print(type(vertex[vert_name.index(en1)]))
     # find vertex1 and vertex2 in edges then delete from edges and canvas
     for i, edge in enumerate(edges):
         if edge.vertex1.vert_name == en1 and edge.vertex2.vert_name == en2:
@@ -339,7 +343,6 @@ def line_intersect_circle(x1, y1, x2, y2):
 
 def create_edge(en1, en2, weight, root):
     global vertex, vert_name, edge_count
-    # print(type(vertex[vert_name.index(en1)]))
     vert1, vert2 = 0, 0
     for vert in vertex:
         if vert.vert_name == en1:
@@ -353,7 +356,6 @@ def create_edge(en1, en2, weight, root):
             break
     else:
         mb.showerror("Ошибка", "Вы ввели неверное имя вершины")
-        print(weight)
     edges.append(Edge(vert1, vert2, weight))
     c2["state"] = "disable"
     edge_count += 1
