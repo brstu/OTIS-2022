@@ -103,5 +103,5 @@ end
 
 ## График ##
 
-![график](/trunk/ii02219/task_01/doc/plot.png)
+![график](/trunk/ii02214/task_01/doc/plot.png)
 
