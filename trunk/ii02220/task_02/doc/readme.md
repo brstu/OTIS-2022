@@ -27,15 +27,15 @@
 ``` julia
 using Plots
 kp = 0.1
-ki = 2.0
+ki = 2.0 #PID кооф.
 kd = 1.02
 dt = 1  
 K0 = kp * (1 + kd/dt)           
 K1 = -kp * (1 + 2kd/dt - dt/ki)  
 K2 = (kp * kd)/dt               
-function line_mod(y, c1, c2, s)
-    y = c1 * y + c2 * s
-    return y
+function fanc(f, c1, c2, s)
+    f = c1 * f + c2 * s
+    return f
 end
 duration = 100
 aim = 20
@@ -44,22 +44,22 @@ function main()
     Sarr = [] 
     c1 = 0.73
     c2 = 0.29
-    y = 0.0
+    f = 0.0
     prev_s = 0.0 
     s = 0.0
     ds = 0.0
-    arr_err = [0.0, 0.0, 0.0] 
+    errs = [0.0, 0.0, 0.0] 
     for i in 1:duration
-        arr_err[3] = arr_err[2] 
-        arr_err[2] = arr_err[1]
-        arr_err[1] = abs(aim - y)
-        ds = K0 * arr_err[1] + K1 * arr_err[2] + K2 * arr_err[3]
+        errs[3] = errs[2] 
+        errs[2] = errs[1]
+        errs[1] = abs(aim - f)
+        ds = K0 * errs[1] + K1 * errs[2] + K2 * errs[3]
         prev_s = s
         s = prev_s + ds
-        y = line_mod(y, c1, c2, s)
-        push!(Yarr, y)
+        f = fanc(f, c1, c2, s)
+        push!(Yarr, f)
         push!(Sarr, s)
-        println(i, ". y = ", y, "\t| s = ", s)
+        println(i, ". f = ", f, "\t| s = ", s)
     end
     plot(1:duration, range(aim, aim, duration), title="PID", label="Target value",lw=3, color=:black, legend=:outerbottom)
     plot!(1:duration, Sarr, label="Control value", lw=3, color=:yellow)
