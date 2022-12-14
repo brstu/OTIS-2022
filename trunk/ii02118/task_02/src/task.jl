@@ -1,4 +1,4 @@
-function nonliney(A,B,C,D,K,T0,TD,T,w,ys)
+function nonliney(J,G,C,D,K,T0,TD,T,w,ys)
  q0 = K * (1 + (TD / T0)) 
  q1 = -K * (1 + 2 * (TD / T0) - (T0 / T))
  q2 = K * (TD / T0)
@@ -10,7 +10,7 @@ function nonliney(A,B,C,D,K,T0,TD,T,w,ys)
  while abs(y[end] - w) > 0.1
   push!(e, w - y[end])
    u = u_prev + q0 * e[end] + q1 * e[end - 1] + q2 * e[end - 2]
-  push!(y, A * y[end] - B * y[end - 1] + C * u + D * sin(u_prev))
+  push!(y, J * y[end] - G * y[end - 1] + C * u + D * sin(u_prev))
      u_prev = u
   push!(um,u)
  end
@@ -30,16 +30,16 @@ println("Y")
  end
 end
 function main()
- A = 0.5
- B = 0.6
- C = 0.6
- D = 0.6
- K = 0.8
+ J = 0.4
+ G = 0.7
+ C = 0.8
+ D = 0.5
+ K = 0.7
  T0 = 1.1
  TD = 1
  T = 1.1
  ys = 2.0
  w = 20
- nonliney(A,B,C,D,K,T0,TD,T,w,ys)
+ nonliney(J,G,C,D,K,T0,TD,T,w,ys)
 end
 main()
