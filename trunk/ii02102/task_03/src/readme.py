@@ -4,10 +4,10 @@ import numpy as np
 
 tk = Tk()  # Создание окна
 tk.title("Graph")  # Заголовок окна
-tk.geometry("890x860+310+0")  # Размер окна и его расположение
+tk.geometry("890x860+410+10")  # Размер окна и его расположение
 tk.resizable(False, False)  # Запрет на изменение размера окна
 # tk.state('zoomed') #Развернуть окно на весь экран
-tk.overrideredirect(True)  # убирает рамку окна и запрещает его изменять размер
+# tk.overrideredirect(True)  # убирает рамку окна и запрещает его изменять размер
 tk.wm_attributes('-topmost', 1)  # Окно всегда сверху
 # tk.update()
 
@@ -35,7 +35,6 @@ class Vertex:
         self.id_vert = canvas.create_oval(self.x - 20, self.y - 20, self.x + 20, self.y + 20, fill=color, width=2)
         self.id_txt = self.canvas.create_text(self.x, self.y, anchor='center', text=self.vert_name,
                                               font="Arial 10", fill="white")
-        # self.btn.id=Button(canvas, )
         canvas.unbind("<Button-1>")
 
     def get_info(self):
@@ -62,7 +61,7 @@ class Edge:
                                                font=('Arial', 14), fill='black', )
             else:
                 self.rect = None
-                self.text= None
+                self.text = None
         else:
             self.line = canvas.create_line(line_intersect_circle(self.x1, self.y1, self.x2, self.y2), width=2)
             if weight != "0":
@@ -74,7 +73,8 @@ class Edge:
                                                font=('Arial', 14), fill='black', )
             else:
                 self.rect = None
-                self.text= None
+                self.text = None
+
     def delete(self):
         canvas.delete(self.line)
         canvas.delete(self.rect)
@@ -88,16 +88,70 @@ def on_wasd(event):
     y_click = event.y
 
 
-# def movement(event):
-#     pass
-# print(f"x1={event.x} y1={event.y}")
+# function create matrix adjacency from list of edges and print it in new window tkinter
+def create_matrix_adjacency():
+    global vert_name, edges
+    matrix_adjacency = [[0 for i in range(len(vert_name))] for i in range(len(vert_name))]
+    for edge in edges:
+        matrix_adjacency[vert_name.index(edge.vertex1.vert_name)][vert_name.index(edge.vertex2.vert_name)] = 1
+        matrix_adjacency[vert_name.index(edge.vertex2.vert_name)][vert_name.index(edge.vertex1.vert_name)] = 1
+    window = Tk()
+    window.title("Матрица инцидентности")
+    window.geometry("400x400+0+0")
+    for i in range(len(matrix_adjacency)):
+        for j in range(len(matrix_adjacency[0])):
+            Label(window, text=matrix_adjacency[i][j], font="Arial 10", width=5, height=2, borderwidth=1, relief="solid").grid(
+                row=i, column=j)
+    window.mainloop()
 
 
-# Отслеживание нажатия кнопки мыши и запись в глобальные переменные
-# def mouseclick():
-#     mouse_x = tk.winfo_pointerx() - tk.winfo_rootx()
-#     mouse_y = tk.winfo_pointery() - tk.winfo_rooty()
-#     print(mouse_x, mouse_y)
+def import_data():
+    new_window = Tk()
+    new_window.title("Импорт данных")
+    new_window.geometry("400x400+0+0")
+    Label(new_window, text="Введите строку", font="Arial 10").grid(row=0, column=0)
+    entry = Entry(new_window, width=20)
+    entry.grid(row=0, column=1)
+    Button(new_window, text="Импортировать", command=lambda: import_from_text(entry.get())).grid(row=1, column=0)
+    new_window.mainloop()
+
+
+
+def import_from_text(text: str):
+    strings = text.split('\n')
+    name = strings[0]
+
+    length = int(strings[2].split(', ')[-1])
+    matrix = [[0 for i in range(length)] for _ in range(length)]
+
+    if strings[1] == 'ORIENT':
+        for edge in strings[3:]:
+            if edge:
+                string = edge.split(' ')
+                matrix[int(string[0]) - 1][int(string[2]) - 1] = int(string[3])
+    else:
+        for edge in strings[3:]:
+            if edge:
+                string = edge.split(' ')
+                matrix[int(string[0]) - 1][int(string[2]) - 1] = int(string[3])
+                matrix[int(string[2]) - 1][int(string[0]) - 1] = int(string[3])
+
+
+# function create matrix incendence from list of edges and print it in new window tkinter
+def create_matrix_incidence_window():
+    global vert_name, edges
+    matrix = [[0 for i in range(len(edges))] for i in range(len(vert_name))]
+    for i in range(len(edges)):
+        matrix[vert_name.index(edges[i].vertex1.vert_name)][i] = 1
+        matrix[vert_name.index(edges[i].vertex2.vert_name)][i] = 1
+    window = Tk()
+    window.title("Матрица инцидентности")
+    window.geometry("400x400+0+0")
+    for i in range(len(matrix)):
+        for j in range(len(matrix[0])):
+            Label(window, text=matrix[i][j], font="Arial 10", width=5, height=2, borderwidth=1, relief="solid").grid(
+                row=i, column=j)
+    window.mainloop()
 
 # функция выхода из программы
 def quitfunc(root):
@@ -128,16 +182,47 @@ def graf_name():
     new_window.mainloop()
 
 
-def choose_opt_vert():
-    pass
+def move_vertex2():
+    canvas.bind("<Button-1>", select_vertex)
+
+
+# function select vertex with mouse click
+def select_vertex(event):
+    global x_click, y_click, selected_vertex, id_vertex
+    x_click = event.x
+    y_click = event.y
+    for vert in vertex:
+        if vert.x - 20 <= x_click <= vert.x + 20 and vert.y - 20 <= y_click <= vert.y + 20:
+            selected_vertex = vert
+            canvas.bind("<B1-Motion>", move_vertex)
+            canvas.bind("<ButtonRelease-1>", unselect_vertex)
+            print(selected_vertex.vert_name, x_click, y_click)
+            break
+
+
+def move_vertex(event):
+    global x_click, y_click, selected_vertex, vertex
+    x_click = event.x
+    y_click = event.y
+    selected_vertex.x = x_click
+    selected_vertex.y = y_click
+    canvas.coords(selected_vertex.id_vert, x_click - 20, y_click - 20, x_click + 20, y_click + 20)
+    canvas.coords(selected_vertex.id_txt, x_click, y_click)
+    for edge in edges:
+        if edge.vertex1 == selected_vertex:
+            canvas.coords(edge.line, line_intersect_circle(x_click, y_click, edge.vertex2.x, edge.vertex2.y))
+        elif edge.vertex2 == selected_vertex:
+            canvas.coords(edge.line, line_intersect_circle(edge.vertex1.x, edge.vertex1.y, x_click, y_click))
+
+
+def unselect_vertex(event):
+    canvas.unbind("<B1-Motion>")
+    canvas.unbind("<ButtonRelease-1>")
 
 
 def save_data():
     pass
 
-
-def import_data():
-    pass
 
 
 # Законченная функция выбора цвета вершины
@@ -154,15 +239,20 @@ def give_color(numb):
 
 
 # Функция создания вершины
-def create_vertex(root):
-    global call_count
+def create_vertex(root, entry):
+    global call_count, vertex_count, color, vertex, vert_name
+    if '' == entry.get():
+        mb.showerror("Ошибка", "Вы не ввели имя вершины")
+    elif entry.get() in [vert.vert_name for vert in vertex]:
+        mb.showerror("Ошибка", "Такая вершина уже существует")
+    elif entry.get() not in [vert.vert_name for vert in vertex]:
+        vert_name[vertex_count] = entry.get()
+        call_count += 1
     if call_count != 0:
-        global vertex_count, x_click, y_click
         vertex_count += 1
         vertex.append(Vertex(canvas, color))
+        call_count = 0
         root.destroy()
-    else:
-        mb.showerror("Ошибка", "Вы не ввели имя вершины")
 
 
 call_count = 0
@@ -186,24 +276,22 @@ def menu_create_vetrex():
             mb.showerror("Ошибка", "Такая вершина уже существует")
 
     new_window = Tk()
-    new_window.geometry("300x100+0+0")
+    new_window.geometry("230x100+0+0")
     new_window.wm_attributes('-topmost', 1)
     new_window.resizable(False, False)
     label = Label(new_window)
     label["text"] = "Введите имя вершины"
     entry = Entry(new_window)
-    btnVertName = Button(new_window, text="Ввод", command=lambda: create_name_vert(entry))
     btnColor1 = Button(new_window, text="Синий", command=lambda: give_color(1), bg="blue")
     btnColor2 = Button(new_window, text="Красный", command=lambda: give_color(2), bg="red")
     btnColor3 = Button(new_window, text="Зелёный", command=lambda: give_color(3), bg="green")
-    btnCreate = Button(new_window, text="Создать\nвершину", command=lambda: create_vertex(new_window))
+    btnCreate = Button(new_window, text="Создать\nвершину", command=lambda: create_vertex(new_window, entry))
     label.grid(row=0, column=0, sticky="ew")
-    entry.grid(row=1, column=0)
-    btnVertName.grid(row=2, column=0, sticky="ew")
+    entry.grid(row=1, column=0, sticky="ewns")
     btnColor1.grid(row=0, column=1, sticky="ew")
     btnColor2.grid(row=1, column=1, sticky="ew")
-    btnColor3.grid(row=2, column=1, sticky="ew")
-    btnCreate.grid(row=0, column=2, sticky="sn", rowspan=3)
+    btnColor3.grid(row=2, column=1, sticky="ewn")
+    btnCreate.grid(row=2, column=0, sticky="ew")
 
     new_window.mainloop()
 
@@ -230,7 +318,6 @@ def find_delete_vertex(entry, root):
                 root.destroy()
                 flag = 0
                 break
-            #delete edges with this vertex
         else:
             mb.showerror("Ошибка", "Вы ввели неверное имя вершины")
             break
@@ -253,14 +340,10 @@ def delete_vertex():
     btnDel.grid(row=2, column=0, sticky="ew")
     if entry.get == label["text"]:
         new_window.destroy()
-    # new_window.mainloop
-    # canvas.delete(3)  # Удаление вершины по её id
-    # canvas.delete(4)  # Удаление текста по id вершины
 
 
 def find_delete_edge(en1, en2, root):
     global vertex, vert_name, edge_count, edges
-    # find vertex1 and vertex2 in edges then delete from edges and canvas
     for i, edge in enumerate(edges):
         if edge.vertex1.vert_name == en1 and edge.vertex2.vert_name == en2:
             canvas.delete(edge.line)
@@ -312,7 +395,6 @@ def rename_vertex(en1, en2, root):
 # Меню переназвания вершины
 def menu_rename_vertex():
     new_window = Tk()
-    # new_window.geometry(f"180x100")
     new_window.title("Задайте имя графа")
     new_window.wm_attributes('-topmost', 1)
     new_window.resizable(False, False)
@@ -400,6 +482,8 @@ vertex_count = 0  # Счетчик вершин
 edge_count = 0
 var1 = BooleanVar()
 var1.set(False)
+var2 = BooleanVar()
+var2.set(False)
 
 btn1 = Button(tk, text="Задать имя графа", command=graf_name)
 btn2 = Button(tk, text="Сохранить Значения", command=save_data)
@@ -408,9 +492,12 @@ btn4 = Button(tk, text="Создать вершину", command=menu_create_vetr
 btn5 = Button(tk, text="Удалить вершину", command=delete_vertex)
 btn6 = Button(tk, text="Переименовать вершину", command=menu_rename_vertex)
 btn7 = Button(tk, text="Создать ребро", command=menu_create_edge)
-btn8 = Button(tk, text="quit", command=tk.destroy)
+btn8 = Button(tk, text="quit", command=exit)
 btn9 = Button(tk, text="Удалить ребро", command=menu_delete_edge)
 c2 = Checkbutton(tk, text="Ориентированность", onvalue=1, offvalue=0, variable=var1, bg="gray")
+c1 = Button(tk, text="Передвижение вершин", command=move_vertex2)
+btn11 = Button(tk, text="Матрица инцендентности", command=create_matrix_incidence_window)
+btn12 = Button(tk, text="Матрица смежности", command=create_matrix_adjacency)
 
 btn1.grid(row=0, column=0, stick="ew")
 btn2.grid(row=0, column=4, stick="ew")
@@ -421,6 +508,9 @@ btn6.grid(row=2, column=1, stick="ew")
 btn7.grid(row=0, column=2, stick="ew")
 btn8.grid(row=1, column=5, stick="ew")
 btn9.grid(row=1, column=2, stick="ew")
+c1.grid(row=1, column=0, stick="ew")
 c2.grid(row=2, column=2, stick="ew")
+btn11.grid(row=1, column=3, stick="ew")
+btn12.grid(row=0, column=3, stick="ew")
 
 tk.mainloop()
