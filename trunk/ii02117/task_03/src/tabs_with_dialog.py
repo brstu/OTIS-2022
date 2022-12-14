@@ -232,6 +232,7 @@ class Ui_MainWindow(object):
         self.action_17.triggered.connect(self.type_of_graph)
         self.action_18.triggered.connect(self.find_cycles)
         self.retranslateUi(MainWindow)
+        # self.lineEdit.setPlaceholderText("Введите вершину для добавления")
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def get_color(self):
@@ -280,8 +281,8 @@ class Ui_MainWindow(object):
             self.print_message("Информация о графе", res)
         except IndexError:
             self.print_error("Сначала создайте граф")
-
-    def print_message(self, name, text):
+    @staticmethod
+    def print_message(name, text):
         message = QMessageBox()
         message.setWindowTitle(name)
         message.setText(text)
@@ -405,13 +406,13 @@ class Ui_MainWindow(object):
             self.print_error("Сначала создайте граф")
 
     def create_graph(self):
-        if self.checkBox_4.isChecked() == True:
+        if self.checkBox_4.isChecked() is True:
             graph = nx.Graph()
             if self.tabWidget.currentIndex() < len(self.flags):
                 self.flags[self.tabWidget.currentIndex()] = 0
             else:
                 self.flags.append(0)
-        elif self.checkBox_5.isChecked() == True:
+        elif self.checkBox_5.isChecked() is True:
             graph = nx.DiGraph()
             if self.tabWidget.currentIndex() < len(self.flags):
                 self.flags[self.tabWidget.currentIndex()] = 1
@@ -421,15 +422,15 @@ class Ui_MainWindow(object):
 
     def check_shape_box(self):
         shape = "dot"
-        if self.checkBox_9.isChecked() == True:
+        if self.checkBox_9.isChecked() is True:
             shape = "dot"
-        elif self.checkBox_7.isChecked() == True:
+        elif self.checkBox_7.isChecked() is True:
             shape = "triangle"
-        elif self.checkBox_8.isChecked() == True:
+        elif self.checkBox_8.isChecked() is True:
             shape = "star"
         return shape
-
-    def print_error(self, text):
+    @staticmethod
+    def print_error(text):
         error = QMessageBox()
         error.setText(text)
         error.setWindowTitle("Ошибка")
@@ -527,9 +528,9 @@ class Ui_MainWindow(object):
     def ad_edge(self):
         try:
             if self.graphs[self.tabWidget.currentIndex()].has_edge(self.Dialog.lineEdit.text(),
-                                                                   self.Dialog.lineEdit_2.text()) == False:
-                if self.graphs[self.tabWidget.currentIndex()].has_node(self.Dialog.lineEdit.text()) == True:
-                    if self.graphs[self.tabWidget.currentIndex()].has_node(self.Dialog.lineEdit_2.text()) == True:
+                                                                   self.Dialog.lineEdit_2.text()) is False:
+                if self.graphs[self.tabWidget.currentIndex()].has_node(self.Dialog.lineEdit.text()) is True:
+                    if self.graphs[self.tabWidget.currentIndex()].has_node(self.Dialog.lineEdit_2.text()) is True:
                         self.graphs[self.tabWidget.currentIndex()].add_edge(self.Dialog.lineEdit.text(),
                                                                             self.Dialog.lineEdit_2.text(),
                                                                             color=self.color)
@@ -555,9 +556,9 @@ class Ui_MainWindow(object):
     def rm_edge(self):
         try:
             if self.graphs[self.tabWidget.currentIndex()].has_edge(self.Dialog.lineEdit.text(),
-                                                                   self.Dialog.lineEdit_2.text()) == True:
-                if self.graphs[self.tabWidget.currentIndex()].has_node(self.Dialog.lineEdit.text()) == True:
-                    if self.graphs[self.tabWidget.currentIndex()].has_node(self.Dialog.lineEdit_2.text()) == True:
+                                                                   self.Dialog.lineEdit_2.text()) is True:
+                if self.graphs[self.tabWidget.currentIndex()].has_node(self.Dialog.lineEdit.text()) is True:
+                    if self.graphs[self.tabWidget.currentIndex()].has_node(self.Dialog.lineEdit_2.text()) is True:
                         self.graphs[self.tabWidget.currentIndex()].remove_edge(self.Dialog.lineEdit.text(),
                                                                                self.Dialog.lineEdit_2.text())
                         self.updating_graph()
@@ -609,8 +610,8 @@ class Ui_MainWindow(object):
         first_node = self.Dialog.lineEdit.text()
         second_node = self.Dialog.lineEdit_2.text()
         paths = ''
-        if self.graphs[self.tabWidget.currentIndex()].has_node(first_node)==True:
-            if self.graphs[self.tabWidget.currentIndex()].has_node(second_node)==True:
+        if self.graphs[self.tabWidget.currentIndex()].has_node(first_node) is True:
+            if self.graphs[self.tabWidget.currentIndex()].has_node(second_node) is True:
                 for i in nx.all_simple_paths(self.graphs[self.tabWidget.currentIndex()], first_node, second_node):
                     paths += str(i) + '\n'
                 if len(paths) == 0:
@@ -632,8 +633,8 @@ class Ui_MainWindow(object):
         first_node=self.Dialog.lineEdit.text()
         second_node=self.Dialog.lineEdit_2.text()
         paths=''
-        if self.graphs[self.tabWidget.currentIndex()].has_node(first_node)==True:
-            if self.graphs[self.tabWidget.currentIndex()].has_node(second_node)==True:
+        if self.graphs[self.tabWidget.currentIndex()].has_node(first_node) is True:
+            if self.graphs[self.tabWidget.currentIndex()].has_node(second_node) is True:
                 try:
                     for i in nx.all_shortest_paths(self.graphs[self.tabWidget.currentIndex()], first_node,
                                                          second_node):
@@ -656,8 +657,8 @@ class Ui_MainWindow(object):
     def find_length(self):
         first_node=self.Dialog.lineEdit.text()
         second_node=self.Dialog.lineEdit_2.text()
-        if self.graphs[self.tabWidget.currentIndex()].has_node(first_node)==True:
-            if self.graphs[self.tabWidget.currentIndex()].has_node(second_node)==True:
+        if self.graphs[self.tabWidget.currentIndex()].has_node(first_node) is True:
+            if self.graphs[self.tabWidget.currentIndex()].has_node(second_node) is True:
                 try:
                     length = nx.shortest_path_length(self.graphs[self.tabWidget.currentIndex()], first_node,
                                                            second_node)
@@ -692,6 +693,7 @@ class Ui_MainWindow(object):
         isconnected=None
         iseulerian=None
         isplanar=None
+
         def is_complete_graph(G):
             N = len(G) - 1
             return not any(n in nbrdict or len(nbrdict) != N for n, nbrdict in G.adj.items())
@@ -763,8 +765,6 @@ class Ui_MainWindow(object):
         self.tabWidget.addTab(tab_3, self.Dialog.lineEdit.text())
         self.updating_graph()
     def export_txt(self):
-    #     namegraph:UNORIENT;1,2,3,4,5;1->2,1->4,2->3,3->5,4->5
-        result=''
         directed=False
         if self.flags[self.tabWidget.currentIndex()]==1:
             directed="ORIENT"
@@ -778,7 +778,7 @@ class Ui_MainWindow(object):
 
     def export_in_interior_format(self):
         with open(f"{self.graphs_name[self.tabWidget.currentIndex()]}.pkl","wb") as file:
-                pickle.dump(self.graphs[self.tabWidget.currentIndex()],file)
+            pickle.dump(self.graphs[self.tabWidget.currentIndex()],file)
     def create_import_interior_format(self):
         self.create_oneline_window("Введите путь","Путь к файлу")
         self.Dialog.buttonBox.accepted.connect(self.import_in_interior_format)  # type: ignore
