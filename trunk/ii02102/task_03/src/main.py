@@ -63,10 +63,7 @@ class Edge:
         else:
             self.line = canvas.create_line(line_intersect_circle(self.x1, self.y1, self.x2, self.y2), width=2)
             if weight != "0":
-                self.rect = canvas.create_rectangle((self.x1 + self.x2) / 2 - len(str(self.weight)) * 8 + 4,
-                                                    (self.y1 + self.y2) / 2 - 13 + 4,
-                                                    (self.x1 + self.x2) / 2 + len(str(self.weight)) * 8 - 4,
-                                                    (self.y1 + self.y2) / 2 + 13 - 4, fill='white', width=0)
+                self.rect = canvas.create_rectangle((self.x1 + self.x2) / 2 - 5, (self.y1 + self.y2) / 2 - 8, (self.x1 + self.x2) / 2 + 5, (self.y1 + self.y2) / 2 + 8, fill='white', width=0)
                 self.text = canvas.create_text((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2, text=self.weight,
                                                font=('Arial', 14), fill='black', )
             else:
@@ -108,13 +105,13 @@ def create_matrix_adjacency():
 def create_matrix_incidence_window():
     global vert_name, edges
     matrix = [[0 for i in range(len(edges))] for i in range(len(vert_name))]
-    for i in range(len(edges)):
+    for i in range(edges.__len__()):
         matrix[vert_name.index(edges[i].vertex1.vert_name)][i] = 1
         matrix[vert_name.index(edges[i].vertex2.vert_name)][i] = 1
     window = Tk()
     window.title("Матрица инцидентности")
     window.geometry("400x400+0+0")
-    for i in range(len(matrix)):
+    for i in range(matrix.__len__()):
         for j in range(len(matrix[0])):
             Label(window, text=matrix[i][j], font="Arial 10", width=5, height=2, borderwidth=1, relief="solid").grid(
                 row=i, column=j)
@@ -156,42 +153,42 @@ def move_vertex2():
 
 # function select vertex with mouse click
 def select_vertex(event):
-    global x_click, y_click, selected_vertex, id_vertex
-    selected_vertex = 0
+    global x_click, y_click, sel_vert
     x_click = event.x
     y_click = event.y
     for vert in vertex:
         if vert.x - 20 <= x_click <= vert.x + 20 and vert.y - 20 <= y_click <= vert.y + 20:
-            selected_vertex = vert
+            sel_vert = vert
             canvas.bind("<B1-Motion>", move_vertex)
             canvas.bind("<ButtonRelease-1>", unselect_vertex)
-            print(selected_vertex.vert_name, x_click, y_click)
+            print(sel_vert.vert_name, x_click, y_click)
             break
 
 
 def move_vertex(event):
-    global x_click, y_click, selected_vertex, vertex
+    global x_click, y_click, sel_vert, vertex
     x_click = event.x
     y_click = event.y
-    selected_vertex.x = x_click
-    selected_vertex.y = y_click
-    canvas.coords(selected_vertex.id_vert, x_click - 20, y_click - 20, x_click + 20, y_click + 20)
-    canvas.coords(selected_vertex.id_txt, x_click, y_click)
+    sel_vert.x = x_click
+    sel_vert.y = y_click
+    canvas.coords(sel_vert.id_vert, x_click - 20, y_click - 20, x_click + 20, y_click + 20)
+    canvas.coords(sel_vert.id_txt, x_click, y_click)
     for edge in edges:
-        if edge.vertex1 == selected_vertex:
+        if edge.vertex1 == sel_vert:
             canvas.coords(edge.line, line_intersect_circle(x_click, y_click, edge.vertex2.x, edge.vertex2.y))
-            canvas.coords(edge.rect, (x_click + edge.x2) / 2 - len(str(edge.weight)) * 8 + 4,
-                          (y_click + edge.y2) / 2 - 13 + 4,
-                          (x_click + edge.x2) / 2 + len(str(edge.weight)) * 8 - 4,
-                          (y_click + edge.y2) / 2 + 13 - 4)
-            canvas.coords(edge.text, (x_click + edge.x2) / 2, (y_click + edge.y2) / 2)
-        elif edge.vertex2 == selected_vertex:
+            canvas.coords(edge.rect, (x_click + edge.vertex2.x) / 2 - 5,
+                          (y_click + edge.vertex2.y) / 2 - 8,
+                          (x_click + edge.vertex2.x) / 2 + 5,
+                          (y_click + edge.vertex2.y) / 2 + 8)
+            canvas.coords(edge.text, (x_click + edge.vertex2.x) / 2, (y_click + edge.vertex2.y) / 2)
+
+        elif edge.vertex2 == sel_vert:
             canvas.coords(edge.line, line_intersect_circle(edge.vertex1.x, edge.vertex1.y, x_click, y_click))
-            canvas.coords(edge.rect, (edge.x1 + x_click) / 2 - len(str(edge.weight)) * 8 + 4,
-                          (edge.y1 + y_click) / 2 - 13 + 4,
-                          (edge.x1 + x_click) / 2 + len(str(edge.weight)) * 8 - 4,
-                          (edge.y1 + y_click) / 2 + 13 - 4)
-            canvas.coords(edge.text, (edge.x1 + x_click) / 2, (edge.y1 + y_click) / 2)
+            canvas.coords(edge.rect, (x_click + edge.vertex1.x) / 2 - 5,
+                          (y_click + edge.vertex1.y) / 2 - 8,
+                          (x_click + edge.vertex1.x) / 2 + 5,
+                          (y_click + edge.vertex1.y) / 2 + 8)
+            canvas.coords(edge.text, (x_click + edge.vertex1.x) / 2, (y_click + edge.vertex1.y) / 2)
 
 
 def unselect_vertex(event):
@@ -437,6 +434,7 @@ def menu_create_edge():
     btnVertName.grid(row=0, column=1, rowspan=6, sticky="ns")
 
 
+sel_vert = None
 vert_name = []  # Список имен вершин
 edges = []
 vertex = []  # Глобальные переменные
