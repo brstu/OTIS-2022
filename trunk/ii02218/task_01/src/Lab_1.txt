@@ -1,0 +1,41 @@
+using Plots
+a=0.7
+b=0.2
+c=0.9
+d=0.4
+    function LinearModel(current_y,t,warm)
+        Mass_y=[]
+        println("Liner date ")
+        println(current_y)
+        push!(Mass_y,current_y)
+        for i in 1:t
+            New_y=a*current_y+b*warm
+            push!(Mass_y,New_y)
+            current_y=New_y
+            println(New_y)
+        end
+        plot([1:(t+1)], Mass_y, color = :blue , label = "Linear_model")
+        #println("Liner date ", Mass_y)
+    end
+    function UnlinearModel(middle_y,t,middle_warm)
+        last_y=0
+        last_warm=0
+        Mass_y=[]
+        println("UnLiner date ")
+        println(middle_y)
+        push!(Mass_y,middle_y)
+        for i in 1:t
+            New_y=a*middle_y-b*last_y^2+c*middle_warm+d*sin(last_warm)
+            push!(Mass_y,New_y)
+            last_y=middle_y
+            middle_y=New_y
+            last_warm=middle_warm
+            middle_warm=middle_warm+0.005
+            println(New_y)
+        end
+        plot!([1:(t+1)], Mass_y, color = :green , label = "UnLinear_model")
+        savefig("tam.png")
+        #println("UnLiner date ", Mass_y)
+    end
+    LinearModel(0,10,4)
+    UnlinearModel(1,10,1)
