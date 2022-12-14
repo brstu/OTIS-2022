@@ -51,11 +51,14 @@ class Edge:
             self.line = canvas.create_line(line_intersect_circle(self.x1, self.y1, self.x2, self.y2), width=2,
                                            arrow="last")
             if weight != "0":
-                self.rect = canvas.create_rectangle((self.x1 + self.x2) / 2 - len(str(self.weight)) * 8 + 4,
-                                                    (self.y1 + self.y2) / 2 - 13 + 4,
-                                                    (self.x1 + self.x2) / 2 + len(str(self.weight)) * 8 - 4,
-                                                    (self.y1 + self.y2) / 2 + 13 - 4, fill='white', width=0)
-                self.text = canvas.create_text((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2, text=self.weight,
+                self.rect = canvas.create_rectangle((self.x1 + self.x2) / 2 - 5,
+                                                    (self.y1 + self.y2) / 2 - 8,
+                                                    (self.x1 + self.x2) / 2 + 5,
+                                                    (self.y1 + self.y2) / 2 + 8,
+                                                    fill='white', width=0)
+                self.text = canvas.create_text((self.x1 + self.x2) / 2,
+                                               (self.y1 + self.y2) / 2,
+                                               text=self.weight,
                                                font=('Arial', 14), fill='black', )
             else:
                 self.rect = None
@@ -63,8 +66,14 @@ class Edge:
         else:
             self.line = canvas.create_line(line_intersect_circle(self.x1, self.y1, self.x2, self.y2), width=2)
             if weight != "0":
-                self.rect = canvas.create_rectangle((self.x1 + self.x2) / 2 - 5, (self.y1 + self.y2) / 2 - 8, (self.x1 + self.x2) / 2 + 5, (self.y1 + self.y2) / 2 + 8, fill='white', width=0)
-                self.text = canvas.create_text((self.x1 + self.x2) / 2, (self.y1 + self.y2) / 2, text=self.weight,
+                self.rect = canvas.create_rectangle((self.x1 + self.x2) / 2 - 5,
+                                                    (self.y1 + self.y2) / 2 - 8,
+                                                    (self.x1 + self.x2) / 2 + 5,
+                                                    (self.y1 + self.y2) / 2 + 8,
+                                                    fill='white', width=0)
+                self.text = canvas.create_text((self.x1 + self.x2) / 2,
+                                               (self.y1 + self.y2) / 2,
+                                               text=self.weight,
                                                font=('Arial', 14), fill='black', )
             else:
                 self.rect = None
