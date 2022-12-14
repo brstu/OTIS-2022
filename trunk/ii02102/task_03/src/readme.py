@@ -20,8 +20,6 @@ label.place(x=370, y=100)  # Расположение метки
 label["text"] = "Имя графа"  # Текст метки
 
 
-# canvas.bind("<Motion> <B1-Motion>",movement) #отслеживание движения мыши
-
 # Класс создания вершины
 class Vertex:
     def __init__(self, canvas, color):
@@ -211,8 +209,18 @@ def move_vertex(event):
     for edge in edges:
         if edge.vertex1 == selected_vertex:
             canvas.coords(edge.line, line_intersect_circle(x_click, y_click, edge.vertex2.x, edge.vertex2.y))
+            canvas.coords(edge.rect, (x_click + edge.x2) / 2 - len(str(edge.weight)) * 8 + 4,
+                                                    (y_click + edge.y2) / 2 - 13 + 4,
+                                                    (x_click + edge.x2) / 2 + len(str(edge.weight)) * 8 - 4,
+                                                    (y_click + edge.y2) / 2 + 13 - 4)
+            canvas.coords(edge.text, (x_click + edge.x2) / 2, (y_click + edge.y2) / 2)
         elif edge.vertex2 == selected_vertex:
             canvas.coords(edge.line, line_intersect_circle(edge.vertex1.x, edge.vertex1.y, x_click, y_click))
+            canvas.coords(edge.rect, (edge.x1 + x_click) / 2 - len(str(edge.weight)) * 8 + 4,
+                          (edge.y1 + y_click) / 2 - 13 + 4,
+                          (edge.x1 + x_click) / 2 + len(str(edge.weight)) * 8 - 4,
+                          (edge.y1 + y_click) / 2 + 13 - 4)
+            canvas.coords(edge.text, (edge.x1 + x_click) / 2, (edge.y1 + y_click) / 2)
 
 
 def unselect_vertex(event):
