@@ -24,29 +24,32 @@
 ---
 # Код программы #
 ```julia
-function nonliney(J,G,C,D,K,T0,TD,T,w,ys)
- q0 = K * (1 + (TD / T0)) 
- q1 = -K * (1 + 2 * (TD / T0) - (T0 / T))
- q2 = K * (TD / T0)
+function nonliney(J,G,V,B,L,T0,TD,T,w,ys)
+#ПИН регулятор
+ q0 = L * (1 + (TD / T0)) 
+ q1 = -L * (1 + 2 * (TD / T0) - (T0 / T))
+ q2 = L * (TD / T0)
  y = [ys, ys]
  u = 1.0
  u_prev = 1.0
  e = [w - ys, w - ys]
  um = [u,u]
+ #подсчитаем значения
  while abs(y[end] - w) > 0.1
   push!(e, w - y[end])
    u = u_prev + q0 * e[end] + q1 * e[end - 1] + q2 * e[end - 2]
-  push!(y, J * y[end] - G * y[end - 1] + C * u + D * sin(u_prev))
+  push!(y, J * y[end] - G * y[end - 1] + V * u + B * sin(u_prev))
      u_prev = u
   push!(um,u)
  end
-println("Y")
- for i in 1:length(y)
+ #сделаем вывод
+println("P")
+ for i in 1:length(p)
   println(y[i])
  end 
  println(" ")
- println("E")
- for i in 1:length(e)
+ println("O")
+ for i in 1:length(o)
   println(e[i])
  end
  println(" ")
@@ -56,24 +59,26 @@ println("Y")
  end
 end
 function main()
+#Инициализируем параметры
  J = 0.4
  G = 0.7
- C = 0.8
- D = 0.5
- K = 0.7
+ V = 0.8
+ B = 0.5
+ L = 0.7
  T0 = 1.1
  TD = 1
  T = 1.1
+ #укажем начальные значения и требуемый результат
  ys = 2.0
  w = 20
- nonliney(J,G,C,D,K,T0,TD,T,w,ys)
+ nonliney(J,G,V,B,L,T0,TD,T,w,ys)
 end
 main()
 ```
 
 # Вывод #
 ```
-Y
+P
 2.0
 2.0
 10.700735492403949
@@ -92,7 +97,7 @@ Y
 19.6651124219771
 20.098884241544393
  
-E
+O
 18.0
 18.0
 18.0
