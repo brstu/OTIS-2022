@@ -571,8 +571,9 @@ class GraphEditor():
             (9, 10)
         """
         return copy(self.graph)
-
-    def get_vertex_label(self, v):
+    
+    @staticmethod
+    def get_vertex_label(v):
         """Return the label of a vertex.
 
         INPUT:
