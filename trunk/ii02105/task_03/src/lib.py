@@ -2371,7 +2371,7 @@ class GraphEditor():
         self.dist = {v: self.get_vertex_label(v) for v in self.graph}
         for v in self._selected_vertices:
             self.dist[v] = label
-        self.get_vertex_label = lambda v: str(self.dist[v])
+        self.set_vertex_label = lambda v: str(self.dist[v])
         self.refresh()
 
     def _set_edge_label_button_clbk(self):
