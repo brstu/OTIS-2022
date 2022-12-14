@@ -94,7 +94,7 @@ def create_matrix_adjacency():
         matrix_adjacency[vert_name.index(edge.vertex1.vert_name)][vert_name.index(edge.vertex2.vert_name)] = 1
         matrix_adjacency[vert_name.index(edge.vertex2.vert_name)][vert_name.index(edge.vertex1.vert_name)] = 1
     window = Tk()
-    window.title("Матрица инцидентности")
+    window.title("Матрица смежности")
     window.geometry("400x400+0+0")
     for i in range(len(matrix_adjacency)):
         for j in range(len(matrix_adjacency[0])):
