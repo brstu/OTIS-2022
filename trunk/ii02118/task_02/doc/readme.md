@@ -25,7 +25,7 @@
 # Код программы #
 ```julia
 function nonliney(J,G,V,B,L,T9,HP,H,Q,ys)
-#ПИН регулятор.
+#это наш рассмотренный выше ПИд-регулятор
  q0 = L * (1 + (HP / T9)) 
  q1 = -L * (1 + 2 * (HP / T9) - (T9 / H))
  q2 = L * (HP / T9)
@@ -34,7 +34,7 @@ function nonliney(J,G,V,B,L,T9,HP,H,Q,ys)
  u_prev = 1.0
  e = [Q - SS, Q - SS]
  um = [u,u]
- #подсчитаем значения.
+ #при помощи этого сможем посчитать все нужное
  while abs(y[end] - Q) > 0.1
   push!(e, Q - y[end])
    u = u_prev + q0 * e[end] + q1 * e[end - 1] + q2 * e[end - 2]
@@ -42,7 +42,7 @@ function nonliney(J,G,V,B,L,T9,HP,H,Q,ys)
      u_prev = u
   push!(um,u)
  end
- #напишем вывод.
+ #для вывода нужно это :Х
 println("P")
  for i in 1:length(p)
   println(y[i])
@@ -58,7 +58,7 @@ println("P")
   println(um[i])
  end
 end
-#инициализируем параметры.
+#вот такие у нас параметры
 function main()
  J = 0.4
  G = 0.7
@@ -68,11 +68,12 @@ function main()
  T9 = 1.1
  HP = 1
  H = 1.1
+#здесь нужно указать значения для нужного нам результата
  SS = 2.0
  Q = 20
  nonliney(J,G,V,B,L,T9,HP,H,Q,SS)
- #укажем значения и результат.
 end
+#посмотрим какой вывод мы имеем 
 main()
 ```
 
