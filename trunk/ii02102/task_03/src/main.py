@@ -89,50 +89,19 @@ def on_wasd(event):
 # function create matrix adjacency from list of edges and print it in new window tkinter
 def create_matrix_adjacency():
     global vert_name, edges
-    matrix_adjacency = [[0 for i in range(len(vert_name))] for i in range(len(vert_name))]
+    matrix_adjacency = [[0 for i in range(vert_name.__len__())] for i in range(vert_name.__len__())]
     for edge in edges:
         matrix_adjacency[vert_name.index(edge.vertex1.vert_name)][vert_name.index(edge.vertex2.vert_name)] = 1
         matrix_adjacency[vert_name.index(edge.vertex2.vert_name)][vert_name.index(edge.vertex1.vert_name)] = 1
     window = Tk()
     window.title("Матрица смежности")
     window.geometry("400x400+0+0")
-    for i in range(len(matrix_adjacency)):
+    for i in range(matrix_adjacency.__len__()):
         for j in range(len(matrix_adjacency[0])):
-            Label(window, text=matrix_adjacency[i][j], font="Arial 10", width=5, height=2, borderwidth=1, relief="solid").grid(
+            Label(window, text=matrix_adjacency[i][j], font="Arial 10", width=5, height=2, borderwidth=1,
+                  relief="solid").grid(
                 row=i, column=j)
     window.mainloop()
-
-
-def import_data():
-    new_window = Tk()
-    new_window.title("Импорт данных")
-    new_window.geometry("400x400+0+0")
-    Label(new_window, text="Введите строку", font="Arial 10").grid(row=0, column=0)
-    entry = Entry(new_window, width=20)
-    entry.grid(row=0, column=1)
-    Button(new_window, text="Импортировать", command=lambda: import_from_text(entry.get())).grid(row=1, column=0)
-    new_window.mainloop()
-
-
-
-def import_from_text(text: str):
-    strings = text.split('\n')
-    name = strings[0]
-
-    length = int(strings[2].split(', ')[-1])
-    matrix = [[0 for i in range(length)] for _ in range(length)]
-
-    if strings[1] == 'ORIENT':
-        for edge in strings[3:]:
-            if edge:
-                string = edge.split(' ')
-                matrix[int(string[0]) - 1][int(string[2]) - 1] = int(string[3])
-    else:
-        for edge in strings[3:]:
-            if edge:
-                string = edge.split(' ')
-                matrix[int(string[0]) - 1][int(string[2]) - 1] = int(string[3])
-                matrix[int(string[2]) - 1][int(string[0]) - 1] = int(string[3])
 
 
 # function create matrix incendence from list of edges and print it in new window tkinter
@@ -150,6 +119,7 @@ def create_matrix_incidence_window():
             Label(window, text=matrix[i][j], font="Arial 10", width=5, height=2, borderwidth=1, relief="solid").grid(
                 row=i, column=j)
     window.mainloop()
+
 
 # функция выхода из программы
 def quitfunc(root):
@@ -187,6 +157,7 @@ def move_vertex2():
 # function select vertex with mouse click
 def select_vertex(event):
     global x_click, y_click, selected_vertex, id_vertex
+    selected_vertex = 0
     x_click = event.x
     y_click = event.y
     for vert in vertex:
@@ -210,9 +181,9 @@ def move_vertex(event):
         if edge.vertex1 == selected_vertex:
             canvas.coords(edge.line, line_intersect_circle(x_click, y_click, edge.vertex2.x, edge.vertex2.y))
             canvas.coords(edge.rect, (x_click + edge.x2) / 2 - len(str(edge.weight)) * 8 + 4,
-                                                    (y_click + edge.y2) / 2 - 13 + 4,
-                                                    (x_click + edge.x2) / 2 + len(str(edge.weight)) * 8 - 4,
-                                                    (y_click + edge.y2) / 2 + 13 - 4)
+                          (y_click + edge.y2) / 2 - 13 + 4,
+                          (x_click + edge.x2) / 2 + len(str(edge.weight)) * 8 - 4,
+                          (y_click + edge.y2) / 2 + 13 - 4)
             canvas.coords(edge.text, (x_click + edge.x2) / 2, (y_click + edge.y2) / 2)
         elif edge.vertex2 == selected_vertex:
             canvas.coords(edge.line, line_intersect_circle(edge.vertex1.x, edge.vertex1.y, x_click, y_click))
@@ -230,7 +201,6 @@ def unselect_vertex(event):
 
 def save_data():
     pass
-
 
 
 # Законченная функция выбора цвета вершины
@@ -272,17 +242,6 @@ def menu_create_vetrex():
     call_count = 0
     canvas.bind("<Button-1>", on_wasd)  # Событие нажатия кнопки мыши
     vert_name.append("")
-
-    def create_name_vert(entry):
-        global call_count
-        call_count += 1
-        if '' == entry.get():
-            mb.showerror("Ошибка", "Вы не ввели имя вершины")
-        elif entry.get() not in [vert.vert_name for vert in vertex]:
-            vert_name[vertex_count] = entry.get()
-        else:
-            mb.showerror("Ошибка", "Такая вершина уже существует")
-
     new_window = Tk()
     new_window.geometry("230x100+0+0")
     new_window.wm_attributes('-topmost', 1)
@@ -495,7 +454,7 @@ var2.set(False)
 
 btn1 = Button(tk, text="Задать имя графа", command=graf_name)
 btn2 = Button(tk, text="Сохранить Значения", command=save_data)
-btn3 = Button(tk, text="Импортировать значения", command=import_data)
+# btn3 = Button(tk, text="Импортировать значения", command=import_data)
 btn4 = Button(tk, text="Создать вершину", command=menu_create_vetrex)
 btn5 = Button(tk, text="Удалить вершину", command=delete_vertex)
 btn6 = Button(tk, text="Переименовать вершину", command=menu_rename_vertex)
@@ -509,7 +468,7 @@ btn12 = Button(tk, text="Матрица смежности", command=create_matr
 
 btn1.grid(row=0, column=0, stick="ew")
 btn2.grid(row=0, column=4, stick="ew")
-btn3.grid(row=1, column=4, stick="ew")
+# btn3.grid(row=1, column=4, stick="ew")
 btn4.grid(row=0, column=1, stick="ew")
 btn5.grid(row=1, column=1, stick="ew")
 btn6.grid(row=2, column=1, stick="ew")
