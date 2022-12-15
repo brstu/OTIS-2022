@@ -533,6 +533,7 @@ def OpenGraph(even=0):
                 print(Canvas.gettags(Canvas.create_oval(coords[0],coords[1],coords[2],coords[3],width=1,\
                                                         outline=item[2],fill=item[3],tags=tags,activefill=item[5])))
             elif item[0]=="TextNode":
+                Graph.add_node(item[2])
                 tags=item[4][1:-1].replace('\"', '').replace('\'','').split(', ')
                 print(Canvas.gettags(Canvas.create_text(coords[0],coords[1],text=item[2],fill=item[3],tags=tags)))
             elif item[0]=="Edge":
