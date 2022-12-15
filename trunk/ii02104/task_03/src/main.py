@@ -34,10 +34,10 @@ def reversergb(r, g, b):
         return abs(int(r) - 255), abs(int(g) - 255), abs(int(b) - 255)
     else:
         return 0, 0, 0
-def reversehexrgb(hex):
+def reversehexrgb(hxlist):
     rgb = []
     for i in (1, 3, 5):
-        decimal = int(hex[i:i + 2], 16)
+        decimal = int(hxlist[i:i + 2], 16)
         rgb.append(decimal)
     # print(rgb)
     return "#{:02X}{:02X}{:02X}".format(abs(rgb[0] - 255), abs(rgb[1] - 255), abs(rgb[2] - 255))
@@ -571,12 +571,12 @@ def SaveGraph(event=0):
             file_writer.writerow(["TextEdge",Canvas.coords(item),Canvas.itemcget(item,'text'),\
                                   Canvas.itemcget(item,'anchor'),Canvas.gettags(item)])
 def SaveasGraph(event=0):
-     global GraphName
-     Nodes=Canvas.find_withtag("Node")
-     TextNodes=Canvas.find_withtag("TextNode")
-     Edges=Canvas.find_withtag("Edge")
-     TextEdges=Canvas.find_withtag("TextEdge")
-     with open(f"{filedialog.asksaveasfilename(filetypes=[['CSV-files', '*.csv']])}.csv",mode='w') as w_file:
+    global GraphName
+    Nodes=Canvas.find_withtag("Node")
+    TextNodes=Canvas.find_withtag("TextNode")
+    Edges=Canvas.find_withtag("Edge")
+    TextEdges=Canvas.find_withtag("TextEdge")
+    with open(f"{filedialog.asksaveasfilename(filetypes=[['CSV-files', '*.csv']])}.csv",mode='w') as w_file:
         file_writer= csv.writer(w_file, delimiter=';',lineterminator='\r')
         file_writer.writerow([GraphName])
         file_writer.writerow([Graph.is_directed()])
