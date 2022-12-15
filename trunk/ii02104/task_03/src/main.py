@@ -125,8 +125,10 @@ def DeleteNode(event=0):
         Canvas.delete(f"Edge&&{item[1]}-{Canvas.gettags(i)[1]}")
         Canvas.delete(f"Edge&&{Canvas.gettags(i)[1]}-{item[1]}")
         Canvas.delete(f"TextEdge&&{item[1]}-{Canvas.gettags(i)[1]}")
-        Canvas.delete(f"TextEdge&&{Canvas.gettags(i)[1]}-{item[1]}") 
+        Canvas.delete(f"TextEdge&&{Canvas.gettags(i)[1]}-{item[1]}")
     Graph.remove_node(item[1])
+
+
 NodeChange = 0
 def ChangeNodeMode(event=0):
     app.config(menu='')
@@ -182,8 +184,8 @@ def MoveNodeMode(event=0):
     InfoLabel.pack(fill="x", expand=False, side="top")
     Canvas.bind("<Button 1>", MoveNodeFirstPart)
     Canvas.bind("<Button 3>", StopInputModeNodes)
-    
-    
+
+
 NodeOrText=0
 def MoveNodeFirstPart(event=0):
     global NodeOrText
@@ -381,7 +383,7 @@ def Radius(event=0):
         result="Невозможно"
     InfoLabel["text"]=f"Радиус Графа: {result} | Нажмите правую кнопку мыши в месте рисования для завершения"
     InfoLabel.pack(fill="x", expand=False, side="top")
-    Canvas.bind("<Button 3>", StopInputModeNodes)  
+    Canvas.bind("<Button 3>", StopInputModeNodes)
 def Diameter(event=0):
     app.config(menu='')
     result=''
@@ -484,7 +486,7 @@ def OpenGraphtxt(event=0):
                     x2 -= 15
                 else:
                     x1 -= 15
-                    x2 += 15    
+                    x2 += 15
             Canvas.create_line(x1,y1,x2,y2, width=2, fill='#ffcc3d',
                                tags=["Edge",f"{indexlist[0]}-{indexlist[1]}" ,
                                      "Orient"], activewidth=5, arrow=arrow)
