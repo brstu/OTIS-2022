@@ -202,7 +202,6 @@ def MoveNodeSecondPart(event):
     Text=Canvas.find_withtag(f"TextNode&&{Canvas.gettags(NodeOrText)[1]}")
     Canvas.coords(Node,event.x-15,event.y-15,event.x+15,event.y+15)
     Canvas.coords(Text,event.x,event.y)
-    Nodelist=Canvas.find_withtag("Node")
     Edgelist=Canvas.find_withtag("Edge")
     EdgeId=[Canvas.gettags(i)[1] for i in Edgelist]
     for i in EdgeId:
@@ -330,8 +329,8 @@ def ChangeEdgeMode(event=0):
     InfoLabel.pack(fill="x", expand=False, side="top")
     Canvas.tag_bind("Edge","<Button 1>", ShowEdgeChange)
     Canvas.bind("<Button 3>", StopInputModeNodes)
-    
-    
+
+
 EdgeChange=0
 def ShowEdgeChange(event=0):
     global EdgeChange
@@ -559,13 +558,17 @@ def SaveGraph(event=0):
         file_writer.writerow([Graph.is_directed()])
         file_writer.writerow(list(Graph.edges.data("weight", default=1)))
         for item in Nodes:
-            file_writer.writerow(["Node",Canvas.coords(item),Canvas.itemcget(item,'outline'),Canvas.itemcget(item,'fill'),Canvas.gettags(item),Canvas.itemcget(item,'activefill')])
+            file_writer.writerow(["Node",Canvas.coords(item),Canvas.itemcget(item,'outline'),\
+                                  Canvas.itemcget(item,'fill'),Canvas.gettags(item),Canvas.itemcget(item,'activefill')])
         for item in TextNodes:
-            file_writer.writerow(["TextNode",Canvas.coords(item),Canvas.itemcget(item,'text'),Canvas.itemcget(item,'fill'),Canvas.gettags(item)])
+            file_writer.writerow(["TextNode",Canvas.coords(item),Canvas.itemcget(item,'text'),\
+                                  Canvas.itemcget(item,'fill'),Canvas.gettags(item)])
         for item in Edges:
-            file_writer.writerow(["Edge",Canvas.coords(item),Canvas.itemcget(item,'fill'),Canvas.gettags(item),Canvas.itemcget(item,'arrow')])
+            file_writer.writerow(["Edge",Canvas.coords(item),Canvas.itemcget(item,'fill'),\
+                                  Canvas.gettags(item),Canvas.itemcget(item,'arrow')])
         for item in TextEdges:
-            file_writer.writerow(["TextEdge",Canvas.coords(item),Canvas.itemcget(item,'text'),Canvas.itemcget(item,'anchor'),Canvas.gettags(item)])
+            file_writer.writerow(["TextEdge",Canvas.coords(item),Canvas.itemcget(item,'text'),\
+                                  Canvas.itemcget(item,'anchor'),Canvas.gettags(item)])
 def SaveasGraph(event=0):
      global GraphName
      Nodes=Canvas.find_withtag("Node")
