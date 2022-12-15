@@ -161,9 +161,7 @@ def SumbitChangeNode(event=0):
         Canvas.itemconfigure(textitem, text=f"{EntryTextNode.get()}", tags=['TextNode', f'{EntryTextNode.get()}'])
         Canvas.itemconfigure(item, tags=['Node', f'{EntryTextNode.get()}'])
         EdgesId=Canvas.find_withtag("Edge")
-        TextEdgesId=Canvas.find_withtag("TextEdge")
         for item in EdgesId:
-            
             tags=Canvas.gettags(item)[1]
             if tags.find(previosname)!=-1:
                 print('& ',tags.replace(previosname,f"{EntryTextNode.get()}"))
@@ -184,6 +182,8 @@ def MoveNodeMode(event=0):
     InfoLabel.pack(fill="x", expand=False, side="top")
     Canvas.bind("<Button 1>", MoveNodeFirstPart)
     Canvas.bind("<Button 3>", StopInputModeNodes)
+    
+    
 NodeOrText=0
 def MoveNodeFirstPart(event=0):
     global NodeOrText
@@ -201,7 +201,6 @@ def MoveNodeSecondPart(event):
     Canvas.coords(Node,event.x-15,event.y-15,event.x+15,event.y+15)
     Canvas.coords(Text,event.x,event.y)
     Nodelist=Canvas.find_withtag("Node")
-    NodeId=[Canvas.gettags(i)[1] for i in Nodelist]
     Edgelist=Canvas.find_withtag("Edge")
     EdgeId=[Canvas.gettags(i)[1] for i in Edgelist]
     for i in EdgeId:
@@ -229,7 +228,7 @@ def MoveNodeSecondPart(event):
                     x2 -= 15
                 else:
                     x1 -= 15
-                    x2 += 15    
+                    x2 += 15
             Canvas.coords(f"Edge&&{i}",x1,y1,x2,y2)
             Canvas.coords(f"TextEdge&&{i}",(x1+x2)/2,(y1+y2)/2)
 
@@ -329,6 +328,8 @@ def ChangeEdgeMode(event=0):
     InfoLabel.pack(fill="x", expand=False, side="top")
     Canvas.tag_bind("Edge","<Button 1>", ShowEdgeChange)
     Canvas.bind("<Button 3>", StopInputModeNodes)
+    
+    
 EdgeChange=0
 def ShowEdgeChange(event=0):
     global EdgeChange
@@ -360,7 +361,7 @@ def Elier_Circiut(event=0):
         result="Граф не удовлетворяет условию"
     InfoLabel["text"]=f"Эйлеровый цикл Графа:{result} | Нажмите правую кнопку мыши в месте рисования для завершения"
     InfoLabel.pack(fill="x", expand=False, side="top")
-    Canvas.bind("<Button 3>", StopInputModeNodes)    
+    Canvas.bind("<Button 3>", StopInputModeNodes)
 def Dijkstra(event=0):
     app.config(menu='')
     result=''
@@ -527,16 +528,19 @@ def OpenGraph(even=0):
             if item[0]=="Node":
                 NodeCount+=1
                 tags=item[4][1:-1].replace('\"', '').replace('\'','').split(', ')
-                print(Canvas.gettags(Canvas.create_oval(coords[0],coords[1],coords[2],coords[3],width=1,outline=item[2],fill=item[3],tags=tags,activefill=item[5])))
+                print(Canvas.gettags(Canvas.create_oval(coords[0],coords[1],coords[2],coords[3],width=1,\
+                                                        outline=item[2],fill=item[3],tags=tags,activefill=item[5])))
             elif item[0]=="TextNode":
                 tags=item[4][1:-1].replace('\"', '').replace('\'','').split(', ')
                 print(Canvas.gettags(Canvas.create_text(coords[0],coords[1],text=item[2],fill=item[3],tags=tags)))
             elif item[0]=="Edge":
                 tags=item[3][1:-1].replace('\"', '').replace('\'','').split(', ')
-                print(Canvas.gettags(Canvas.create_line(coords[0],coords[1],coords[2],coords[3],width=2, fill=item[2],tags=tags,arrow=item[4],activewidth=5)))
+                print(Canvas.gettags(Canvas.create_line(coords[0],coords[1],coords[2],coords[3],width=2,\
+                                                        fill=item[2],tags=tags,arrow=item[4],activewidth=5)))
             elif item[0]=="TextEdge":
                 tags=item[4][1:-1].replace('\"', '').replace('\'','').split(', ')
-                print(Canvas.gettags(Canvas.create_text(coords[0],coords[1],text=item[2],anchor=item[3],tags=tags,fill="Red", font='Helvetica 15 bold',activefill="Green")))
+                print(Canvas.gettags(Canvas.create_text(coords[0],coords[1],text=item[2],anchor=item[3],\
+                                                        tags=tags,fill="Red", font='Helvetica 15 bold',activefill="Green")))
     Canvas.gettags("all")
     main_menu.entryconfig(3, state=tk.NORMAL)
     main_menu.entryconfig(5, state=tk.NORMAL)
@@ -559,7 +563,7 @@ def SaveGraph(event=0):
         for item in Edges:
             file_writer.writerow(["Edge",Canvas.coords(item),Canvas.itemcget(item,'fill'),Canvas.gettags(item),Canvas.itemcget(item,'arrow')])
         for item in TextEdges:
-            file_writer.writerow(["TextEdge",Canvas.coords(item),Canvas.itemcget(item,'text'),Canvas.itemcget(item,'anchor'),Canvas.gettags(item)])     
+            file_writer.writerow(["TextEdge",Canvas.coords(item),Canvas.itemcget(item,'text'),Canvas.itemcget(item,'anchor'),Canvas.gettags(item)])
 def SaveasGraph(event=0):
      global GraphName
      Nodes=Canvas.find_withtag("Node")
@@ -591,20 +595,20 @@ def GraphInfo(event=0):
     LabelText+=f"\nКол-во дуг: {Graph.number_of_edges()}"
     LabelText+=f"\nУзлы: {Graph.nodes()}"
     LabelText+=f"\nДуги: {list(Graph.edges(data=True))}"
-    LabelText+=f"\nСтепени вершин: "
+    LabelText+="\nСтепени вершин: "
     for node in Graph.nodes():
        LabelText+=f"\n{node} - {Graph.degree(node)}"
-    LabelText+=f"\nМатрица Индидентности: "
+    LabelText+="\nМатрица Индидентности: "
     try:
         LabelText+=f"\n{nk.incidence_matrix(Graph).todense()}"
     except nk.exception:
         LabelText+="Невозможно"
-    LabelText+=f"\nМатрица Смежности: "
+    LabelText+="\nМатрица Смежности: "
     try:
         LabelText+=f"\n{nk.adjacency_matrix(Graph,weight=None).todense()}"
     except nk.exception:
         LabelText+="Невозможно"
-    LabelText+="\nЯвляется ли деревом: " 
+    LabelText+="\nЯвляется ли деревом: "
     try:
         LabelText+=f"{nk.is_tree(Graph)}"
     except nk.exception:
@@ -623,7 +627,7 @@ def GraphInfo(event=0):
     try:
         LabelText+=f"{nk.is_eulerian(Graph)}"
     except nk.exception:
-        LabelText+="Невозможно" 
+        LabelText+="Невозможно"
     LabelText+="\nЯвляется ли планарным: "
     try:
         LabelText+=f"{nk.is_planar(Graph)}\n"
