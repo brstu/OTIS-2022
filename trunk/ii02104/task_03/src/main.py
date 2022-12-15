@@ -593,8 +593,11 @@ def SaveasGraph(event=0):
         for item in TextEdges:
             file_writer.writerow(["TextEdge",Canvas.coords(item),Canvas.itemcget(item,'text'),\
                                   Canvas.itemcget(item,'anchor'),Canvas.gettags(item)])
+
+
+LabelText=''
 def GraphInfo(event=0):
-    global GraphAlgLabel,GraphName
+    global GraphAlgLabel,GraphName,LabelText
     app.config(menu='')
     InfoLabel["text"]="Нажмите правую кнопку мыши в месте рисования для закрытия меню"
     InfoLabel.pack(fill="x", expand=False, side="top")
@@ -618,6 +621,10 @@ def GraphInfo(event=0):
         LabelText+=f"\n{nk.adjacency_matrix(Graph,weight=None).todense()}"
     except nk.exception:
         LabelText+="Невозможно"
+    GraphInfoSecond()
+
+def GraphInfoSecond(event=0):
+    global LabelText
     LabelText+="\nЯвляется ли деревом: "
     try:
         LabelText+=f"{nk.is_tree(Graph)}"
