@@ -92,31 +92,31 @@ pip3 install -Iv customtkinter==4.6.3 networkx scipy
 
 # Описание работы программы: #
 ## Окно программы и создание графа
-https://user-images.githubusercontent.com/51264803/207812130-a8952130-ab64-4452-9355-60c09bcb8bf2.mp4
-
-## Создаем вершины
-https://user-images.githubusercontent.com/51264803/207812139-298ee8c0-96cf-4dfb-a932-e0b938b3deed.mp4
-
-## Соединяем вершины ребрами
-https://user-images.githubusercontent.com/51264803/207812154-b9063163-c4c8-408b-af89-30c79b4d5783.mp4
-
-## Изменяем цвета вершин, ребер и передвигаем их
-https://user-images.githubusercontent.com/51264803/207812169-9e273aeb-0489-4d98-8b4e-2e9a71e86fa9.mp4
-
-## Удалим лишние нам вершины
-https://user-images.githubusercontent.com/51264803/207812187-beba7d8c-3a6c-43b9-ae6d-ba429a464214.mp4
-
-## Можем сохранить граф во внутреннем формате или экспортировать в текстовый файл
-https://user-images.githubusercontent.com/51264803/207812203-f3aae780-6930-4bab-b2ea-e393d5eb909d.mp4
-
-## Вычислим Радиус,Диаметр,Центр графа
 https://user-images.githubusercontent.com/51264803/207812226-b91be137-722c-497a-b755-b724d214b565.mp4
 
-## Найти Эйлеров цикл для графа
+## Создаем вершины
 https://user-images.githubusercontent.com/51264803/207812240-0ac4562e-7d9c-4dbc-8125-8c729720675e.mp4
 
-## Вычислим матрицу Дейкстры
+## Соединяем вершины ребрами
 https://user-images.githubusercontent.com/51264803/207812261-f305850f-06bb-4d69-b4df-c341e50c63ac.mp4
 
-## Посмотрим общую информацию о графе
+## Изменяем цвета вершин, ребер и передвигаем их
 https://user-images.githubusercontent.com/51264803/207812269-2c329bb7-f93a-49b8-b2eb-3611da13baa2.mp4
+
+## Удалим лишние нам вершины
+https://user-images.githubusercontent.com/51264803/207812130-a8952130-ab64-4452-9355-60c09bcb8bf2.mp4
+
+## Можем сохранить граф во внутреннем формате или экспортировать в текстовый файл
+https://user-images.githubusercontent.com/51264803/207812139-298ee8c0-96cf-4dfb-a932-e0b938b3deed.mp4
+
+## Вычислим Радиус,Диаметр,Центр графа
+https://user-images.githubusercontent.com/51264803/207812154-b9063163-c4c8-408b-af89-30c79b4d5783.mp4
+
+## Найти Эйлеров цикл для графа
+https://user-images.githubusercontent.com/51264803/207812169-9e273aeb-0489-4d98-8b4e-2e9a71e86fa9.mp4
+
+## Вычислим матрицу Дейкстры
+https://user-images.githubusercontent.com/51264803/207812187-beba7d8c-3a6c-43b9-ae6d-ba429a464214.mp4
+
+## Посмотрим общую информацию о графе
+https://user-images.githubusercontent.com/51264803/207812203-f3aae780-6930-4bab-b2ea-e393d5eb909d.mp4
