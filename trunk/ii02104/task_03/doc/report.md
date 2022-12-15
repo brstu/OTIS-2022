@@ -92,7 +92,7 @@ pip3 install -Iv customtkinter==4.6.3 networkx scipy
 
 # Описание работы программы: #
 ## Окно программы и создание графа
-![Окно программы](https://user-images.githubusercontent.com/51264803/207812130-a8952130-ab64-4452-9355-60c09bcb8bf2.mp4)
+https://user-images.githubusercontent.com/51264803/207812130-a8952130-ab64-4452-9355-60c09bcb8bf2.mp4
 
 ## Создаем вершины
 ![Создание вершин](https://user-images.githubusercontent.com/51264803/207812139-298ee8c0-96cf-4dfb-a932-e0b938b3deed.mp4)
