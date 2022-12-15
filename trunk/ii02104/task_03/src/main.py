@@ -3,7 +3,7 @@ from tkinter import filedialog
 import customtkinter as ctk
 import networkx as nk
 import csv
-import random
+from random import SystemRandom
 # Переменные
 # Для всех элементов
 NodeCount = 1
@@ -34,7 +34,7 @@ def reversergb(r, g, b):
         return abs(int(r) - 255), abs(int(g) - 255), abs(int(b) - 255)
     else:
         return 0, 0, 0
-def reversehexrgb(hex: list):
+def reversehexrgb(hex):
     rgb = []
     for i in (1, 3, 5):
         decimal = int(hex[i:i + 2], 16)
@@ -420,7 +420,7 @@ def SaveGraphtxt(event=0):
         file_writer.writerow([GraphName,Graph.is_directed(),list(Nodes),list(Edges)])
 def OpenGraphtxt(event=0):
     global Graph,NodeCount,GraphName
-    
+
     with open(filedialog.askopenfilename(filetypes=[['TXT-files', '*.txt']]),mode='r') as r_file:
         file_reader = csv.reader(r_file,delimiter=';')
         listreader=next(file_reader)
@@ -442,8 +442,9 @@ def OpenGraphtxt(event=0):
             Graph = nk.Graph()
         Nodes=listreader[2][1:-1].replace('\'','').split(", ")
         Edges=listreader[3][1:-1].replace('\'','').replace('-',' ').split(", ")
-        rand_x=random.randint(50,750)
-        rand_y=random.randint(50,550)
+        rand=SystemRandom()
+        rand_x=rand.randrange(700)+50
+        rand_y=rand.randrange(500)+50
         randlistx={}
         randlisty={}
         for index in Nodes:
@@ -459,8 +460,8 @@ def OpenGraphtxt(event=0):
                                               tags=["TextNode", f"{index}"])
             NodeCount+=1
             Graph.add_node(index)
-            rand_x=random.randint(50,750)
-            rand_y=random.randint(50,550)
+            rand_x=rand.randrange(700)+50
+            rand_y=rand.randrange(500)+50
         anchor=None
         for index in Edges:
             indexlist=index.split(' ')
@@ -581,13 +582,17 @@ def SaveasGraph(event=0):
         file_writer.writerow([Graph.is_directed()])
         file_writer.writerow(list(Graph.edges.data("weight", default=1)))
         for item in Nodes:
-            file_writer.writerow(["Node",Canvas.coords(item),Canvas.itemcget(item,'outline'),Canvas.itemcget(item,'fill'),Canvas.gettags(item),Canvas.itemcget(item,'activefill')])
+            file_writer.writerow(["Node",Canvas.coords(item),Canvas.itemcget(item,'outline'),\
+                                  Canvas.itemcget(item,'fill'),Canvas.gettags(item),Canvas.itemcget(item,'activefill')])
         for item in TextNodes:
-            file_writer.writerow(["TextNode",Canvas.coords(item),Canvas.itemcget(item,'text'),Canvas.itemcget(item,'fill'),Canvas.gettags(item)])
+            file_writer.writerow(["TextNode",Canvas.coords(item),Canvas.itemcget(item,'text'),\
+                                  Canvas.itemcget(item,'fill'),Canvas.gettags(item)])
         for item in Edges:
-            file_writer.writerow(["Edge",Canvas.coords(item),Canvas.itemcget(item,'fill'),Canvas.gettags(item),Canvas.itemcget(item,'arrow')])
+            file_writer.writerow(["Edge",Canvas.coords(item),Canvas.itemcget(item,'fill'),\
+                                  Canvas.gettags(item),Canvas.itemcget(item,'arrow')])
         for item in TextEdges:
-            file_writer.writerow(["TextEdge",Canvas.coords(item),Canvas.itemcget(item,'text'),Canvas.itemcget(item,'anchor'),Canvas.gettags(item)])
+            file_writer.writerow(["TextEdge",Canvas.coords(item),Canvas.itemcget(item,'text'),\
+                                  Canvas.itemcget(item,'anchor'),Canvas.gettags(item)])
 def GraphInfo(event=0):
     global GraphAlgLabel,GraphName
     app.config(menu='')
@@ -678,6 +683,7 @@ def ChangeGraphNameSumbit(event=0):
     GraphRadioButton2.grid(row=0, column=1, pady=5)
     GraphFrame.pack_forget()
     app.config(menu=main_menu)
+
 
 # Базовые значения окна
 ctk.set_appearance_mode("dark")  # Modes: system (default), light, dark
