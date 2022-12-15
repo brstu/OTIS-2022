@@ -13,7 +13,7 @@
 <p align="right">Карагодин Д.Л.</p>
 <p align="right">Проверил:</p>
 <p align="right">Иванюк Д. С.</p>
-<br><br><br><br><br>
+<br><br><br><br>
 <p align="center">Брест 2022</p>
 
 
