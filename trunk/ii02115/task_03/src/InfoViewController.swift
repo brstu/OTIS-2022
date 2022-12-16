@@ -17,19 +17,26 @@ class InfoViewController: UIViewController {
     var numberOfPeaks = ""
     var numberOfEdges = ""
     var multiplicityAll = ""
+    var multiplicityCurrentPeak = ""
     override func viewDidLoad() {
         super.viewDidLoad()
         numberOfPeaksLabel.text? += numberOfPeaks
         numberOfEdgesLabel.text? += numberOfEdges
         multiplicityAllPeaksLabel.text? += multiplicityAll
+        multiplicityCurrentPeakLabel.text? += multiplicityCurrentPeak
     }
     
-    func getInfo(info: (Int, Int, [Int])) {
+    func getInfo(info: (Int, (Int, [Int])), peak: Int?) {
         numberOfPeaks +=  String(info.0)
-        numberOfEdges += String(info.1)
-        for (index, element) in info.2.enumerated() {
-            multiplicityAll += String(index + 1) + "." + String(element) + " "
+        numberOfEdges += String(info.1.0)
+        for (index, element) in info.1.1.enumerated() {
+            multiplicityAll += String(index + 1) + ": " + String(element) + " "
         }
-    }
+        guard let peak = peak else {
+            multiplicityCurrentPeak = "Вершина не выбрана"
+            return
+        }
+        multiplicityCurrentPeak += String(info.1.1[peak - 1])
 
+    }
 }

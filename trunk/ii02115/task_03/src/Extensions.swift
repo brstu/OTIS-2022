@@ -11,14 +11,16 @@ import UIKit
 extension String {
     func arrayStringToInt(content: [String]) -> [Int] {
         var intArray: [Int] = []
-        for x in content {
-            //TODO: исправить nil, слелать какое-то дефолтное значение 
-                intArray.append(Int(x) ?? 1)
+        for element in content {
+                intArray.append(Int(element) ?? 1)
         }
         return intArray
     }
 }
-public func alertWithTextField(title: String, message: String, placeholder: String?, handler: ((_ int: [Int], _ string: String) -> ())?) -> UIViewController {
+public func alertWithTextField(title: String,
+                               message: String,
+                               placeholder: String?,
+                               handler: ((_ int: [Int], _ string: String) -> Void)?) -> UIViewController {
     var peaksString: [String] = []
     var peaksInt: [Int] = []
     var name = String()
@@ -26,7 +28,7 @@ public func alertWithTextField(title: String, message: String, placeholder: Stri
     alert.addTextField { (textField: UITextField!) -> Void in
         textField.placeholder = placeholder
     }
-    let ok = UIAlertAction(title: "Ok", style: .default) { _ in
+    let okey = UIAlertAction(title: "Ok", style: .default) { _ in
         name = alert.textFields![0].text ?? ""
         peaksString = (alert.textFields![0].text?.components(separatedBy: " "))!
         peaksInt = peaksString.description.arrayStringToInt(content: peaksString)
@@ -34,11 +36,14 @@ public func alertWithTextField(title: String, message: String, placeholder: Stri
             handler(peaksInt, name)
         }
     }
-    alert.addAction(ok)
+    alert.addAction(okey)
     return alert
 }
 
-public func actionSheet(titleForFirstAction: String, titleForSecondAction: String, closureForFirstAction: @escaping  () -> (), closureForSecondAction: @escaping () -> ()) -> UIViewController {
+public func actionSheet(titleForFirstAction: String,
+                        titleForSecondAction: String,
+                        closureForFirstAction: @escaping  () -> Void,
+                        closureForSecondAction: @escaping () -> Void) -> UIViewController {
     let alert = UIAlertController(title: "Внимание", message: "Выберите действие", preferredStyle: .actionSheet)
     let deletePeak = UIAlertAction(title: titleForFirstAction, style: .default) { _ in
         closureForFirstAction()
@@ -55,8 +60,7 @@ public func actionSheet(titleForFirstAction: String, titleForSecondAction: Strin
 
 public func alert(title: String, message: String) -> UIViewController {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
-    let ok = UIAlertAction(title: "OK", style: .default)
-    alert.addAction(ok)
+    let okey = UIAlertAction(title: "OK", style: .default)
+    alert.addAction(okey)
     return alert
 }
-
