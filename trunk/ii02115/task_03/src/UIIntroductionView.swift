@@ -17,31 +17,17 @@ class UIIntroductionView: UIView {
     var coordinatesArray: [CGFloat] = []
     var peaksColor: [UIColor] = []
     var edgesColor: [UIColor] = []
-    var isClear = false
     var firstCall = true
     var isAddPeaks = false
     var activeGraph = 1
-    
     // MARK: - Functions
     override func draw(_ rect: CGRect) {
-        
-        if isClear == true {
-            issclear()
-        } else {
-            guard let allPeaks = UserDefaults.standard.object(forKey: "allPeaks")
-                    as? [Int] else { return }
-            self.allPeaks = allPeaks
-            drawmth()
-        }
-        //        drawCircle(in: rect)//рисуем окружность
-        //        drawLine(in: pathRect)//рисуем линию
+        guard let allPeaks = UserDefaults.standard.object(forKey: "allPeaks")
+                as? [Int] else { return }
+        self.allPeaks = allPeaks
+        drawmth()
     }
-    
-    func clear() {
-        isClear = true
-        setNeedsDisplay()
-    }
-    
+
     // изменение активного графа
     func changeGraph(countOfGraphs: Int, tag: Int, isAddGraph: Bool) {
         activeGraph = tag

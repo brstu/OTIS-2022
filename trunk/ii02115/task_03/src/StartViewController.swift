@@ -33,7 +33,6 @@ class StartViewController: UIViewController {
         customTextView()
         customButton()
     }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         peaks.removeAll()

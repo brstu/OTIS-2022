@@ -10,6 +10,7 @@ import UIKit
 class ViewController: UIViewController {
     // MARK: - Variables
     @IBOutlet weak var toolbar: UINavigationItem!
+    @IBOutlet weak var drawingView: UIIntroductionView!
     var nameOfGraph: String?
     var buttonsScrollView = UIScrollView()
     var pageScrollView = UIScrollView()
@@ -33,8 +34,6 @@ class ViewController: UIViewController {
     var edgeForChangeColor: [Int] = [0, 0]
     var selectedColor = UIColor(ciColor: .black)
     var activeGraph = 1
-    
-    @IBOutlet weak var drawingView: UIIntroductionView!
     // MARK: - LifeCycles
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -290,16 +289,6 @@ class ViewController: UIViewController {
         infoButton.setTitleColor(.black, for: .normal)
         infoButton.layer.cornerRadius = 10
         buttonsScrollView.addSubview(infoButton)
-    }
-    
-    // кастомные кнопки
-    // TODO: доделать эту функцию
-    func customButton(button: UIButton, title: String) {
-        button.center.y = buttonsScrollView.center.y
-        button.setTitle(title, for: .normal)
-        button.backgroundColor = .white
-        button.setTitleColor(.black, for: .normal)
-        button.layer.cornerRadius = 10
     }
     
     // добавление таргетов для кнопок из нижнего бара

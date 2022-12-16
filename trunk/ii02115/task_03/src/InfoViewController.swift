@@ -13,7 +13,6 @@ class InfoViewController: UIViewController {
     @IBOutlet weak var numberOfPeaksLabel: UILabel!
     @IBOutlet weak var multiplicityCurrentPeakLabel: UILabel!
     @IBOutlet weak var multiplicityAllPeaksLabel: UILabel!
-    
     var numberOfPeaks = ""
     var numberOfEdges = ""
     var multiplicityAll = ""
