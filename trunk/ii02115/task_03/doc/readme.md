@@ -37,6 +37,8 @@
      + степени для всех вершин и для выбранной вершины;
 ---
  # Скрины: #
+ <div>
+ <p>
 <img src = "https://user-images.githubusercontent.com/61494312/208044147-f3be9eff-1839-4540-a50d-e10094ce2cdb.png", width = 242px, heigth = 583px>
 <img src = "https://user-images.githubusercontent.com/61494312/208044260-f650117f-a70e-4284-8611-1f9c6f87c6d7.png", width = 242px, heigth = 583px>
 <img src = "https://user-images.githubusercontent.com/61494312/208044525-a032e19f-10fd-47eb-a836-f4a2fd80cab6.png", width = 242px, heigth = 583px>
@@ -46,3 +48,5 @@
 <img src = "https://user-images.githubusercontent.com/61494312/208044776-97e6ddff-b529-4715-93c9-a209ca9e54d5.png", width = 242px, heigth = 583px>
 <img src = "https://user-images.githubusercontent.com/61494312/208044867-fac2455a-be4a-41ab-9b99-256d290969cc.png", width = 242px, heigth = 583px>
 <img src = "https://user-images.githubusercontent.com/61494312/208044936-4c70d05a-695a-4efe-81d6-b6819015ae0f.png", width = 242px, heigth = 583px>
+ </p>
+</div>
