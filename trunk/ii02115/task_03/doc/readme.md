@@ -35,7 +35,8 @@
 
      + количество вершин, дуг;
      + степени для всех вершин и для выбранной вершины;
-
+---
+ # Скрины: #
 <img src = "https://user-images.githubusercontent.com/61494312/208044147-f3be9eff-1839-4540-a50d-e10094ce2cdb.png", width = 242.5px, heigth = 583px>
 <img src = "https://user-images.githubusercontent.com/61494312/208044260-f650117f-a70e-4284-8611-1f9c6f87c6d7.png", width = 242.5px, heigth = 583px>
 <img src = "https://user-images.githubusercontent.com/61494312/208044525-a032e19f-10fd-47eb-a836-f4a2fd80cab6.png", width = 242.5px, heigth = 583px>
