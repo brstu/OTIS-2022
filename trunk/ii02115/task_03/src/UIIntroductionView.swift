@@ -48,7 +48,6 @@ class UIIntroductionView: UIView {
 //                peaksColor = UserDefaults.standard.object(forKey: "colorPeaksGraph\(activeGraph)") as! [UIColor]
         setNeedsDisplay()
     }
-    
     // добавление ребра
     func addEdge(edge: [Int]) {
         var edges = [Int]()

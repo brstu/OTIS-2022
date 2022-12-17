@@ -45,7 +45,6 @@ class ViewController: UIViewController {
         makePageScrollView()
         makeButtonsForPages()
     }
-    
     override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
         if isAdd {

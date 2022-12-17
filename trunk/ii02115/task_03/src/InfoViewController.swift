@@ -24,7 +24,6 @@ class InfoViewController: UIViewController {
         multiplicityAllPeaksLabel.text? += multiplicityAll
         multiplicityCurrentPeakLabel.text? += multiplicityCurrentPeak
     }
-    
     func getInfo(info: (Int, (Int, [Int])), peak: Int?) {
         numberOfPeaks +=  String(info.0)
         numberOfEdges += String(info.1.0)
@@ -36,6 +35,5 @@ class InfoViewController: UIViewController {
             return
         }
         multiplicityCurrentPeak += String(info.1.1[peak - 1])
-
     }
 }
