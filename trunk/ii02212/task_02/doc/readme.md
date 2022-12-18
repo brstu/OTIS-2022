@@ -77,7 +77,7 @@ plot(1:15, array_yt_linear, title = "Temperature dependence with PID controller"
 ```
 
 ## График ##
-![](https://github.com/neonchikCallMe/OTIS-2022/blob/Lab-2/trunk/ii02212/task_02/doc/photo_2022-12-18_16-57-35.jpg?raw=true) 
+![](https://github.com/neonchikCallMe/OTIS-2022/blob/Lab-2/trunk/ii02212/task_02/doc/MEDuIWUodFM.jpg?raw=true) 
 ## Результат работы программы ##
 linear model \
 13.05 \
