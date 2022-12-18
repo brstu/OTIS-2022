@@ -1,43 +1,46 @@
 # program simulating PID controller
+# because of the system the code was abused [2]
 using Plots
 
-u = 0.0 # control action
+value_u_t = 0.0 # control action
 _this_is_a_value_time_ = 15 # time
-constant_To = 0.1 # step
+constant_TO = 0.1 # step
 constant_w_t = 10 # system functioning algorithm
-constant_a = 0.2  # constant
+this_is_a_constant_whanoke_a = 0.2  # constant
 constant_K = 5 # transmission ratio
-constant_b = 0.3  # constant
-constant_c = -0.32  # constant
+this_is_a_constant_karekau_b = 0.3  # constant
+this_is_a_constant_uwha_c = -0.32  # constant
 constant_T = 0.1# constant of integration
-constant_d = 0.53 # constant
+this_is_a_constant_tonu_d = 0.53 # constant
 constant_td = 0 # constant of differentiation
 array_yt_linear = [] #array for linear dependency
 
 #function for linear dependence
-function f()
-    global yt
-    yt = 1.5 # input temperature
-    yt_prev = 0 # input temperature
+function my_only_function()
+    global _y_t_
+    _y_t_ = 1.5 # input temperature
+    _y_t_early = 0 # previous input temperature
     println("linear model")
-    for i in 1 : 15
-        global u
-        err = constant_w_t - yt # error
+    i = 1
+    while i <= _this_is_a_value_time_
+        global value_u_t
+        err = constant_w_t - _y_t_ # error
         e_early = err # previous error
         e_2early = e_early # twice previous error
-        q_0 = constant_K * (1 + (constant_td / constant_To))
-        q_1 = -constant_K * (1 + 2*(constant_td / constant_To) - (constant_To / constant_T))
-        q_2 = constant_K * (constant_td / constant_To)
-        D_u = q_0 * err + q_1 * e_early + q_2 * e_2early 
-        u_early = u
-        u = u_early + D_u
-        temp = yt_prev
-        yt = constant_a * yt + constant_b * u
-        yt_prev = temp
-        println(yt)
-        push!(array_yt_linear, yt)
+        _q_00_ = constant_K * (1 + (constant_td / constant_TO)) # controller parameters
+        _q_01_ = -constant_K * (1 + 2*(constant_td / constant_TO) - (constant_To / constant_T)) # controller parameters
+        _q_02_ = constant_K * (constant_td / constant_TO) # controller parameters
+        D_value_u_t = _q_00_ * err + _q_01_ * e_early + _q_02_ * e_2early # delta control action
+        u_early = value_u_t # previous control action
+        value_u_t = u_early + D_value_u_t
+        temperature = _y_t_early
+        _y_t_ = this_is_a_constant_whanoke_a * _y_t_ + this_is_a_constant_karekau_b * value_u_t
+        _y_t_early = temperature
+        println(_y_t_)
+        i = i +1
+        push!(array_yt_linear, _y_t_)
     end
 end
 
-f()
+my_only_function()
 plot(1:15, array_yt_linear, title = "Temperature dependence with PID controller", label = "linear dependence",  lw = 3)
