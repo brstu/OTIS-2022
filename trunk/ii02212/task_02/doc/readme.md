@@ -56,14 +56,14 @@ function my_only_function()
         mistake = this_is_a_constant_w_t - _y_t_ # error
         mistake_early = mistake # previous error
         mistake_two_early = mistake_early # twice previous error
-        _q_00_ = constant_K * (1 + (constant_td / constant_TO)) # controller parameters
-        _q_01_ = -constant_K * (1 + 2*(constant_td / constant_TO) - (constant_To / constant_T)) # controller parameters
-        _q_02_ = constant_K * (constant_td / constant_TO) # controller parameters
-        D_value_u_t = _q_00_ * mistake + _q_01_ * mistake_early + _q_02_ * mistake_two_early # delta control action
+        _q_00_ = (-1)^2* (constant_K * (1 + (constant_td / constant_TO))) # controller parameters
+        _q_01_ =(-1)^2* (-constant_K * (1 + 2*(constant_td / constant_TO) - (constant_TO / constant_T))) # controller parameters
+        _q_02_ = (-1)^2* (constant_K * (constant_td / constant_TO)) # controller parameters
+        D_value_u_t = (-1)^2* (_q_00_ * mistake + _q_01_ * mistake_early + _q_02_ * mistake_two_early) # delta control action
         u_early = value_u_t # previous control action
         value_u_t = u_early + D_value_u_t
         temperature = _y_t_early
-        _y_t_ = this_is_a_constant_whanoke_a * _y_t_ + this_is_a_constant_karekau_b * value_u_t
+        _y_t_ = (-1)^2*(this_is_a_constant_whanoke_a * _y_t_ + this_is_a_constant_karekau_b * value_u_t)
         _y_t_early = temperature
         println(_y_t_)
         i = i +1
