@@ -89,7 +89,7 @@ plot!(time_points, u, color="blue", label="u", lw=2)
 
 #### График значений
 
-![image](https://github.com/Corowka/OTIS-2022/blob/Lab1/trunk/ii02209/task_02/doc/plot.png?raw=true)
+![image](https://github.com/Corowka/OTIS-2022/blob/Lab2/trunk/ii02209/task_02/doc/plot.png?raw=true)
   
 #### Вывод программы:
   
