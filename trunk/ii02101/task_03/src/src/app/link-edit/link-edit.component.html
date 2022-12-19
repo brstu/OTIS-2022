@@ -1,0 +1,13 @@
+
+<div style="display: flex; flex-flow: column;">
+    <div style="width: 100%;">
+      <mat-form-field appearance="fill" style="width: 140px;">
+        <mat-label>Вес</mat-label>
+        <input matInput type="text" [(ngModel)]="data.data.weight" >
+      </mat-form-field>
+    </div>
+
+    <div style="width: 100%;">
+      <button mat-stroked-button color="accent" (click)="close()" style="margin-left: 4px;">Закрыть</button>
+    </div>
+  </div>
