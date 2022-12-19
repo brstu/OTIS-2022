@@ -27,7 +27,6 @@ class UIIntroductionView: UIView {
         self.allPeaks = allPeaks
         drawmth()
     }
-
     // изменение активного графа
     func changeGraph(countOfGraphs: Int, tag: Int, isAddGraph: Bool) {
         activeGraph = tag
@@ -94,7 +93,6 @@ class UIIntroductionView: UIView {
         }
         setNeedsDisplay()
     }
-    
     // удаление вершины
     func deleteDrawPeak(tag: Int) {
         var tag = tag
@@ -124,7 +122,6 @@ class UIIntroductionView: UIView {
         count = 0
         setNeedsDisplay()
     }
-    
     // передвижение вершины
     func changePosition(coordx: CGFloat, coordy: CGFloat, tag: Int) {
         var tag = tag
@@ -133,13 +130,11 @@ class UIIntroductionView: UIView {
         coordinatesArray[tag + 1 + 1 * tag] = coordy
         setNeedsDisplay()
     }
-    
     // изменение цвета вершины
     func changeColor(color: UIColor, tag: Int) {
         peaksColor[tag] = color
         setNeedsDisplay()
     }
-    
     // изменение цвета вершины
     func changeColorOfEdge(color: UIColor, edge: [Int]) {
         var indexOfEdge = 0
@@ -159,7 +154,6 @@ class UIIntroductionView: UIView {
         edgesColor[indexOfEdge] = color
         setNeedsDisplay()
     }
-    
     // добавление вершины
     func addPeakInView(peaks: [Int]) {
         isAddPeaks = true
@@ -177,18 +171,8 @@ class UIIntroductionView: UIView {
         }
         setNeedsDisplay()
     }
-
-    func issclear() {
-        let path = CGRect(x: 0, y: 0, width: self.bounds.width, height: self.bounds.height)
-        let clearRectangle = UIBezierPath(rect: path)
-        let color = UIColor.white
-        color.setFill()
-        clearRectangle.fill()
-    }
-    
     public func drawmth() {
         var path: CGRect
-        
         // рисуются вершины
         var count2 = 0
         for element in 0..<peaks {
@@ -203,7 +187,6 @@ class UIIntroductionView: UIView {
             count2 += 2
             drawCircle(in: path, count: element)
         }
-
         // рисуются линии
         var count = 0
         for element in 0..<allPeaks.count / 2 {
@@ -224,7 +207,6 @@ class UIIntroductionView: UIView {
         UserDefaults.standard.set(peaks, forKey: "peaksGraph\(activeGraph)")
 //        UserDefaults.standard.set(peaksColor, forKey: "colorPeaksGraph\(activeGraph)")
     }
-    
     // рисование вершин
     public func drawCircle(in rect: CGRect, count: Int) {
         
@@ -245,7 +227,6 @@ class UIIntroductionView: UIView {
         color.setFill()
         path.fill()
     }
-    
     // получение информации
     func getInfo() -> (Int, (Int, [Int])) {
         let countOfPeaks = peaks
@@ -261,7 +242,6 @@ class UIIntroductionView: UIView {
         }
         return (countOfPeaks, (countOfEdges, peaksMultiplicity))
     }
-    
     // рисование линии для соединения вершин
     public func drawLine(point1: CGPoint, point2: CGPoint, count: Int) {
         let path = UIBezierPath()

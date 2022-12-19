@@ -84,7 +84,6 @@ class ViewController: UIViewController {
             self.isFirstCall = false
         }
     }
-    
     // переименование вершины
     @objc func renamePeak(param: UITapGestureRecognizer) {
         let tag = param.view?.tag
@@ -99,12 +98,10 @@ class ViewController: UIViewController {
             self.drawButtons()
         }, animated: true, completion: nil)
     }
-    
     // создание pageScrollView
     func makePageScrollView() {
         pageScrollView = UIScrollView()
     }
-    
     @IBAction func addPageButtonTapped(_ sender: Any) {
         countOfGraphs += 1
         isFirstCall = true
@@ -119,7 +116,6 @@ class ViewController: UIViewController {
         viewController.getData(value: isAdd, currentGraph: countOfGraphs)
         show(viewController, sender: nil)
     }
-    
     // кнопки для pageScrollView
     func makeButtonsForPages() {
         let button = UIButton()
@@ -152,7 +148,6 @@ class ViewController: UIViewController {
         }
         buttonsForPages.append(button)
     }
-    
     // переименование страницы
     @objc func renamePage(param: UITapGestureRecognizer) {
         let tag = param.view?.tag
@@ -170,7 +165,6 @@ class ViewController: UIViewController {
             self.makeButtonsForPages()
         }), animated: true, completion: nil)
     }
-    
     // action дл кнопок в pages
     @objc func changeGraph(param: UIButton) {
         param.backgroundColor = #colorLiteral(red: 0.8039215803, green: 0.8039215803, blue: 0.8039215803, alpha: 1)
@@ -186,7 +180,6 @@ class ViewController: UIViewController {
         drawButtons()
         isAdd = false
     }
-    
     // определение выыбранной вершины
     @objc func forButton(param: UIButton) {
         if tagOfSelectedButton == param.tag {
@@ -200,7 +193,6 @@ class ViewController: UIViewController {
             param.setTitleColor(.green, for: .normal)
         }
     }
-    
     // передвижение вершины
     @objc private func movePeak(param: UIPanGestureRecognizer) {
         guard let tagOfSelectedButton = tagOfSelectedButton else { return }
@@ -214,11 +206,9 @@ class ViewController: UIViewController {
                                    tag: dragButton.tag)
         print(param.location(in: drawingView))
     }
-    
     // создание нижнего scrollView
     func createScroll() {
     }
-    
     // создание view для scrolView
     func createButtonBarView() {
         buttonBarView = UIView(frame: CGRect(x: 13.0,
@@ -234,7 +224,6 @@ class ViewController: UIViewController {
         // button for add peak
        
     }
-    
     // вывод инфо
     @objc func info() {
         let information = drawingView.getInfo()
@@ -246,7 +235,6 @@ class ViewController: UIViewController {
         present(viewController, animated: true, completion: nil)
     }
 }
-
 extension ViewController: UIColorPickerViewControllerDelegate {
     func colorPickerViewControllerDidFinish(_ viewController: UIColorPickerViewController) {
         guard let tagOfSelectedButton = tagOfSelectedButton else { return }

@@ -42,13 +42,11 @@ class StartViewController: UIViewController {
     private func customButton() {
         doneButton.layer.cornerRadius = 15
     }
-    
     // кастомизация textView
     private func customTextView() {
         dataTextView.layer.cornerRadius = 15
         dataTextView.text = placeholderForTextView
     }
-    
     // переход на новый view и передача данных
     @IBAction func doneButtonTapped(_ sender: Any) {
         countOfPeaks()
@@ -82,13 +80,11 @@ class StartViewController: UIViewController {
             performSegue(withIdentifier: "detail", sender: self)
         }
     }
-    
     // скрытие клавиатуры
     override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
         dataTextView.resignFirstResponder()
         dataTextView.layer.shadowOpacity = 0
     }
-    
     // подсчет вершин
     public func countOfPeaks() {
         var number = ""
@@ -115,7 +111,6 @@ class StartViewController: UIViewController {
         self.currentGraph = currentGraph
     }
 }
-
 extension StartViewController: UITextViewDelegate {
     func textViewDidBeginEditing(_ textView: UITextView) {
         if isPreview {

@@ -8,7 +8,6 @@
 import UIKit
 
 class InfoViewController: UIViewController {
-
     @IBOutlet weak var numberOfEdgesLabel: UILabel!
     @IBOutlet weak var numberOfPeaksLabel: UILabel!
     @IBOutlet weak var multiplicityCurrentPeakLabel: UILabel!

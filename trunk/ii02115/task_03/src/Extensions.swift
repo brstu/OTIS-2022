@@ -39,7 +39,6 @@ public func alertWithTextField(title: String,
     alert.addAction(okey)
     return alert
 }
-
 public func actionSheet(titleForFirstAction: String,
                         titleForSecondAction: String,
                         closureForFirstAction: @escaping  () -> Void,
@@ -57,7 +56,6 @@ public func actionSheet(titleForFirstAction: String,
     alert.addAction(cancel)
     return alert
 }
-
 public func alert(title: String, message: String) -> UIViewController {
     let alert = UIAlertController(title: title, message: message, preferredStyle: .alert)
     let okey = UIAlertAction(title: "OK", style: .default)
