@@ -38,7 +38,6 @@ class StartViewController: UIViewController {
         peaks.removeAll()
         allPeaks.removeAll()
     }
-    
     // кастомизация кнопки
     private func customButton() {
         doneButton.layer.cornerRadius = 15

@@ -54,7 +54,6 @@ class ViewController: UIViewController {
         }
         isAdd = false
     }
-    
     // MARK: - Functions
     // рисование кнопок поверх вершин
     private func drawButtons() {
@@ -104,17 +103,6 @@ class ViewController: UIViewController {
     // создание pageScrollView
     func makePageScrollView() {
         pageScrollView = UIScrollView()
-        pageScrollView.translatesAutoresizingMaskIntoConstraints = false
-        pageScrollView.showsHorizontalScrollIndicator = false
-        view.addSubview(pageScrollView)
-        pageScrollView.alwaysBounceHorizontal = true
-        NSLayoutConstraint.activate([
-            pageScrollView.topAnchor.constraint(equalTo: view.topAnchor, constant: 85),
-            pageScrollView.bottomAnchor.constraint(equalTo: drawingView.topAnchor),
-            pageScrollView.leftAnchor.constraint(equalTo: view.leftAnchor),
-            pageScrollView.rightAnchor.constraint(equalTo: view.rightAnchor)
-        ])
-        pageScrollView.contentInset.right = view.bounds.width
     }
     
     @IBAction func addPageButtonTapped(_ sender: Any) {
@@ -229,14 +217,6 @@ class ViewController: UIViewController {
     
     // создание нижнего scrollView
     func createScroll() {
-        buttonsScrollView = UIScrollView(frame: CGRect(x: buttonBarView.bounds.origin.x,
-                                                       y: buttonBarView.bounds.origin.y,
-                                                       width: buttonBarView.bounds.width,
-                                                       height: buttonBarView.bounds.height))
-        buttonsScrollView.showsHorizontalScrollIndicator = false
-        buttonsScrollView.isPagingEnabled = true
-        buttonsScrollView.contentSize = CGSize(width: buttonBarView.bounds.width * 3, height: 50)
-        buttonBarView.addSubview(buttonsScrollView)
     }
     
     // создание view для scrolView
@@ -252,41 +232,7 @@ class ViewController: UIViewController {
     // создание кнопок для нижнего бара
     func createButtons() {
         // button for add peak
-        buttonFoAddPeak = UIButton(frame: CGRect(x: buttonsScrollView.bounds.minX + 10, y: 0, width: 100, height: 35))
-        buttonFoAddPeak.center.y = buttonsScrollView.center.y
-        buttonFoAddPeak.setTitle("Add", for: .normal)
-        buttonFoAddPeak.setTitleColor(.black, for: .normal)
-        buttonFoAddPeak.backgroundColor = .white
-        buttonFoAddPeak.layer.cornerRadius = 10
-        buttonsScrollView.addSubview(buttonFoAddPeak)
-        
-        // button for change color of peak
-        colorButton = UIButton(frame: CGRect(x: buttonsScrollView.bounds.minX + 125, y: 0, width: 100, height: 35))
-        colorButton.center.y = buttonsScrollView.center.y
-        colorButton.center.x = buttonsScrollView.center.x
-        colorButton.setTitle("Color", for: .normal)
-        colorButton.setTitleColor(.black, for: .normal)
-        colorButton.backgroundColor = .white
-        colorButton.layer.cornerRadius = 10
-        buttonsScrollView.addSubview(colorButton)
-        
-        // кнопка для удаления вершины
-        deleteButton = UIButton(frame: CGRect(x: buttonsScrollView.bounds.minX + 250, y: 0, width: 100, height: 35))
-        deleteButton.center.y = buttonsScrollView.center.y
-        deleteButton.setTitle("Delete", for: .normal)
-        deleteButton.backgroundColor = .white
-        deleteButton.setTitleColor(.black, for: .normal)
-        deleteButton.layer.cornerRadius = 10
-        buttonsScrollView.addSubview(deleteButton)
-        
-        // кнопка для вывода информации
-        infoButton = UIButton(frame: CGRect(x: buttonsScrollView.bounds.minX + 375, y: 0, width: 100, height: 35))
-        infoButton.center.y = buttonsScrollView.center.y
-        infoButton.setTitle("Info", for: .normal)
-        infoButton.backgroundColor = .white
-        infoButton.setTitleColor(.black, for: .normal)
-        infoButton.layer.cornerRadius = 10
-        buttonsScrollView.addSubview(infoButton)
+       
     }
     
     // вывод инфо

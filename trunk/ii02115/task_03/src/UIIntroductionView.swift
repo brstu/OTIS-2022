@@ -60,7 +60,6 @@ class UIIntroductionView: UIView {
         UserDefaults.standard.set(allPeaks, forKey: "allPeaks")
         setNeedsDisplay()
     }
-    
     // удаление ребра
     func deleteEdge(edge: [Int]) {
         var edges = [Int]()
