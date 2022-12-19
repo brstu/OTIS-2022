@@ -45,7 +45,6 @@ class UIIntroductionView: UIView {
         guard let peaks = UserDefaults.standard.object(forKey: "peaksGraph\(activeGraph)")
                 as? Int else { return }
         self.peaks = peaks
-//                peaksColor = UserDefaults.standard.object(forKey: "colorPeaksGraph\(activeGraph)") as! [UIColor]
         setNeedsDisplay()
     }
     // добавление ребра
@@ -153,14 +152,6 @@ class UIIntroductionView: UIView {
                 if allPeaks.indices.contains(index + 1) {
                     if allPeaks[index + 1] == edge[1] {
                         indexOfEdge = index / 2
-                        break
-                    } else if allPeaks[index - 1] == edge[1] {
-                        indexOfEdge = (index - 1) / 2
-                        break
-                    }
-                } else {
-                    if allPeaks[index - 1] == edge[1] {
-                        indexOfEdge = (index - 1) / 2
                         break
                     }
                 }

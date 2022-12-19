@@ -41,7 +41,6 @@ class ViewController: UIViewController {
         createButtonBarView()
         createScroll()
         createButtons()
-        actionsForButtons()
         makePageScrollView()
         makeButtonsForPages()
     }
@@ -290,14 +289,6 @@ class ViewController: UIViewController {
         buttonsScrollView.addSubview(infoButton)
     }
     
-    // добавление таргетов для кнопок из нижнего бара
-    func actionsForButtons() {
-        buttonFoAddPeak.addTarget(self, action: #selector(addPeak), for: .touchUpInside)
-        colorButton.addTarget(self, action: #selector(changeColorButton), for: .touchUpInside)
-        deleteButton.addTarget(self, action: #selector(deletePeak), for: .touchUpInside)
-        infoButton.addTarget(self, action: #selector(info), for: .touchUpInside)
-    }
-    
     // вывод инфо
     @objc func info() {
         let information = drawingView.getInfo()
@@ -307,103 +298,6 @@ class ViewController: UIViewController {
         viewController.modalPresentationStyle = .pageSheet
         viewController.modalTransitionStyle = .coverVertical
         present(viewController, animated: true, completion: nil)
-    }
-    
-    // удаление вершины
-    @objc func deletePeak() {
-        self.present(actionSheet(titleForFirstAction: "Удалить вершину",
-                                 titleForSecondAction: "Удалить ребро",
-                                 closureForFirstAction: {
-            guard let tagOfSelectedButton = self.tagOfSelectedButton else {
-                self.present(alert(title: "Ошибка", message: "Выберите вершину"), animated: true, completion: nil)
-                return
-            }
-            self.drawingView.deleteDrawPeak(tag: tagOfSelectedButton)
-            for element in self.buttonsForPeaks where element.tag > tagOfSelectedButton {
-                    element.tag -= 1
-            }
-            self.buttonsForPeaks[tagOfSelectedButton - 1].removeFromSuperview()
-            self.buttonsForPeaks.remove(at: tagOfSelectedButton - 1)
-        }, closureForSecondAction: {
-            self.present(alertWithTextField(title: "Внимание",
-                                            message: "Введите две вершины ребра",
-                                            placeholder: "1 2",
-                                            handler: { peaksInt, _ in
-                self.drawingView.deleteEdge(edge: peaksInt)
-            }), animated: true, completion: nil)
-        }), animated: true)
-        
-    }
-    
-    // изменение цвета вершины
-    @objc func changeColorButton() {
-        guard tagOfSelectedButton != nil else {
-            self.present(alert(title: "Ошибка", message: "Выберите вершину"), animated: true, completion: nil)
-            return
-        }
-        self.present(actionSheet(titleForFirstAction: "Изменить цвет вершины",
-                                 titleForSecondAction: "Изменить цвет ребра",
-                                 closureForFirstAction: {
-            self.isChangeColorOfPeak = true
-            let picker = UIColorPickerViewController()
-            picker.selectedColor = self.selectedColor
-            picker.delegate = self
-            self.present(picker, animated: true, completion: nil)
-        }, closureForSecondAction: {
-            self.isChangeColorOfPeak = false
-            self.present(alertWithTextField(title: "Внимание",
-                                            message: "Введите вторую вершину",
-                                            placeholder: "6",
-                                            handler: { peaksInt, _ in
-                self.edgeForChangeColor[0] = (self.tagOfSelectedButton ?? 0) - 1
-                self.edgeForChangeColor[1] = peaksInt[0] - 1
-                let picker = UIColorPickerViewController()
-                picker.selectedColor = self.selectedColor
-                picker.delegate = self
-                self.present(picker, animated: true, completion: nil)
-            }), animated: true, completion: nil)
-        }), animated: true, completion: nil)
-    }
-    
-    // создание кнопок поверх вершин
-    func addButton() {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.2) {
-            let paths = UserDefaults.standard.object(forKey: "coordinatesGraph\(self.activeGraph)") as? [CGFloat]
-            guard let paths = paths else { return }
-            let button = UIButton(frame: CGRect(x: paths[paths.count - 2] - 10,
-                                                y: paths[paths.count - 1] - 10, width: 20,
-                                                height: 20))
-            button.setTitle("\(self.buttonsForPeaks.count + 1)", for: .normal)
-            button.setTitleColor(.magenta, for: .normal)
-            let drag = UIPanGestureRecognizer(target: self, action: #selector(self.movePeak(param:)))
-            button.addTarget(self, action: #selector(self.forButton(param:)), for: .touchUpInside)
-            button.addGestureRecognizer(drag)
-            button.tag = self.buttonsForPeaks.count + 1
-            self.drawingView.addSubview(button)
-            self.buttonsForPeaks.append(button)
-        }
-    }
-    
-    // создание новой вершины
-    @objc func addPeak() {
-        self.present(actionSheet(titleForFirstAction: "Добавить вершину",
-                                 titleForSecondAction: "Добавить ребро",
-                                 closureForFirstAction: {
-            self.present(alertWithTextField(title: "Добавить",
-                                            message: "Перечислите вершины с которыми новая вершина связывается",
-                                            placeholder: "1 2 3",
-                                            handler: { peaksInt, _ in
-                self.drawingView.addPeakInView(peaks: peaksInt)
-                self.addButton()
-            }), animated: true, completion: nil)
-        }, closureForSecondAction: {
-            self.present(alertWithTextField(title: "Внимание",
-                                            message: "Введите две вершины ребра",
-                                            placeholder: "1 2",
-                                            handler: { peaksInt, _ in
-                self.drawingView.addEdge(edge: peaksInt)
-            }), animated: true, completion: nil)
-        }), animated: true, completion: nil)
     }
 }
 
