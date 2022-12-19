@@ -1,0 +1,47 @@
+using Plots
+
+
+#функция подсчёта линейной модели
+function LinearModel(current_y, A, B, u)
+    current_y = A * current_y + B * u #формула линейной модели
+    return current_y
+end
+
+time = 100 #количество итераций
+w = 50.0 #желаемое значение
+function main()
+    K = 0.09   #пропорциональная составляющая
+    T = 2  #интегральная составляющая
+    TD = 1.0    #дифференциальная составляющая
+
+    To = 1      #шаг
+
+    q0 = K * (1 + TD/To)           #
+    q1 = -K * (1 + 2TD/To - To/T)  #коэффициенты для подсчёта изменения управляющего сигнала
+    q2 = (K * TD)/To               #
+
+    println("START")
+    Mass_Y = [] #массив текущих значений
+    Mass_U = []    #массив управляющих сигналов
+    A = 0.7
+    B = 0.2
+    current_y = 0.0 # начально значение У
+    U = 0.0
+    Mass_E = [0.0, 0.0, 0.0] #массив разности желаемого значения и текущего значения
+    #цикл вычисления Y для линейной модели
+    for i in 1:time
+        Mass_E[3] = Mass_E[2] 
+        Mass_E[2] = Mass_E[1]
+        Mass_E[1] = w - current_y
+        U = U + q0 * Mass_E[1] + q1 * Mass_E[2] + q2 * Mass_E[3]
+        current_y = LinearModel(current_y, A, B, U) #вычисление текущего значения y
+        push!(Mass_Y, current_y)     #добавляем в массив текущее значение
+        push!(Mass_U, U)  
+        println(i, ". y = ", current_y, "\t| u = ", U)
+    end
+    plot(1:time, range(w, w, time), label="Target",lw=3, color=:blue, legend=:outerbottom)# Построение графиков
+    plot!(1:time, Mass_U, label="Control",  color=:red)
+    plot!(1:time, Mass_Y, label="Current",  color=:green)
+    println("End")
+end
+main()
