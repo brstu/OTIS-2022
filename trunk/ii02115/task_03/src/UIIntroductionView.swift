@@ -208,7 +208,6 @@ class UIIntroductionView: UIView {
     }
     // рисование вершин
     public func drawCircle(in rect: CGRect, count: Int) {
-        
         let center = CGPoint(x: rect.origin.x, y: rect.origin.y)
         let radius = (rect.width * 1.2)
         let path = UIBezierPath(arcCenter: center, radius: radius, startAngle: 0, endAngle: 360, clockwise: true)
