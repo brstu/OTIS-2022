@@ -222,7 +222,6 @@ class ViewController: UIViewController {
     // создание кнопок для нижнего бара
     func createButtons() {
         // button for add peak
-       
     }
     // вывод инфо
     @objc func info() {

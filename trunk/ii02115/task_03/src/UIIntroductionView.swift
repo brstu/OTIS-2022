@@ -112,7 +112,6 @@ class UIIntroductionView: UIView {
                     allPeaks.remove(at: count)
                     allPeaks.remove(at: count - 1)
                     count -= 2
-                    
                 }
             } else if element > tag && count < allPeaks.count {
                 allPeaks[count] -= 1
