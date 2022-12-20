@@ -1,0 +1,22 @@
+<div style="display: flex; flex-flow: column">
+  <div style="width: 100%">
+    <table>
+      <tr *ngFor="let y of data">
+        <td *ngFor="let x of y" style="width: 50px;">{{ x }}</td>
+      </tr>
+    </table>
+  </div>
+
+</div>
+
+  <div style="width: 100%">
+    <button
+      mat-stroked-button
+      color="accent"
+      (click)="close()"
+      style="margin-left: 4px"
+    >
+      Закрыть
+    </button>
+  
+</div>
