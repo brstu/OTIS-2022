@@ -1,0 +1,218 @@
+<div style="display: flex; flex-flow: row; width: 100%; height: 100%;">
+
+  <div style="display: flex; flex-flow: column; background-color: rgb(233, 233, 233); padding: 10px; border-radius: 10px; width: 800px; overflow-y: scroll;">
+
+    <mat-label style="font-weight: 500; font-size: 14pt; margin-left: 15px; margin-bottom: 4px;">Графы</mat-label>
+
+    <div style="margin: 2px; margin-left: 15px;">
+      <mat-form-field appearance="fill" style="width: 140px;">
+        <mat-label>Имя графа</mat-label>
+        <input matInput type="text" [(ngModel)]="newGraphName" >
+      </mat-form-field>
+      <mat-radio-group [(ngModel)]="graphType" style="margin-left: 2px;">
+        <mat-radio-button [value]="'UNORIENT'" style="margin-right: 8px;">UNORIENT</mat-radio-button>
+        <mat-radio-button [value]="'ORIENT'" style="margin-right: 8px;">ORIENT</mat-radio-button>
+      </mat-radio-group>
+      <button mat-stroked-button color="accent" (click)="addEmptyGraph()" style="margin-left: 2px;">Добавить</button>
+      <button *ngIf="selectedMDIGraph!=null" mat-flat-button color="accent" (click)="removeGraph()" style="margin-left: 2px;">Удалить</button>
+    </div>
+
+    <div style="margin: 2px; margin-left: 15px;">
+      <button mat-stroked-button color="primary"(click)="loadFromClipboard()">Загрузить из буфера </button>
+      <button mat-stroked-button color="primary"(click)="inputFile.click()" style="margin-left: 2px;">Загрузить из файла </button>
+      <input hidden #inputFile type="file" (change)="loadFromFile($event)" title="Загрузить из файла">
+      <button mat-stroked-button color="primary" (click)="saveGraphs()" style="margin-left: 2px;">Сохранить графы</button>
+    </div>
+
+    <mat-divider style="margin-top: 8px; margin-bottom: 8px;"></mat-divider>
+
+    <mat-label *ngIf="selectedMDIGraph!=null" style="font-weight: 500; font-size: 14pt; margin-left: 15px; margin-bottom: 4px;">Вершины и рёбра</mat-label>
+
+    <div *ngIf="selectedMDIGraph!=null" style="margin: 2px; margin-left: 15px;">
+      <mat-form-field appearance="fill" style="width: 120px;">
+        <mat-label>Имя</mat-label>
+        <input #inputNewNode matInput type="text" [(ngModel)]="newNodeName" >
+      </mat-form-field>
+      <button mat-flat-button [(colorPicker)]="newNodeColor" [style.background]="newNodeColor" style="margin-left: 2px; margin-right: 2px;">Цвет</button>
+      <button mat-stroked-button color="accent" (click)="addNode()" style="margin-left: 2px;">Добавить вершину</button>
+
+    </div>
+
+    <div *ngIf="selectedMDIGraph!=null" style="margin: 2px; margin-left: 15px;">
+      <mat-form-field appearance="fill" style="width: 120px;">
+        <mat-label>Вершина 1</mat-label>
+        <mat-select [(ngModel)]="selected1Node">
+          <mat-option *ngFor="let node of selectedMDIGraph.graph.nodes" [value]="node.id">
+            {{node.id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      -
+      <mat-form-field appearance="fill" style="width: 120px;">
+        <mat-label>Вершина 2</mat-label>
+        <mat-select [(ngModel)]="selected2Node">
+          <mat-option *ngFor="let node of selectedMDIGraph.graph.nodes" [value]="node.id">
+            {{node.id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-stroked-button color="accent" (click)="addLink()" style="margin-left: 4px;">Добавить ребро</button>
+    </div>
+
+    <div *ngIf="selectedMDIGraph!=null" style="margin: 2px; margin-left: 15px;">
+      <mat-form-field appearance="fill" style="width: 120px;">
+        <mat-label>Вершина</mat-label>
+        <mat-select [(ngModel)]="selectedNode">
+          <mat-option *ngFor="let node of selectedMDIGraph.graph.nodes" [value]="node.id">
+            {{node.id}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="accent" (click)="removeNode()" style="margin-left: 4px;">Удалить вершину</button>
+    </div>
+
+    <div *ngIf="selectedMDIGraph!=null" style="margin: 2px; margin-left: 15px;">
+      <mat-form-field appearance="fill" style="width: 120px;">
+        <mat-label>Ребро</mat-label>
+        <mat-select [(ngModel)]="selectedLink">
+          <mat-option *ngFor="let link of selectedMDIGraph.graph.links" [value]="link.id">
+            {{link.source}} - {{link.target}} (вес: {{link.data?.weight}})
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-flat-button color="accent" (click)="removeLink()" style="margin-left: 4px;">Удалить ребро</button>
+    </div>
+
+    <div *ngIf="selectedMDIGraph!=null" style="margin: 2px; margin-left: 15px;">
+      <mat-form-field appearance="fill" style="width: 200px;">
+        <mat-label>Стиль графа</mat-label>
+        <mat-select [(ngModel)]="selectedMDIGraph.graph.layout">
+          <mat-option *ngFor="let layout of layouts" [value]="layout">
+            {{layout}}
+          </mat-option>
+        </mat-select>
+      </mat-form-field>
+      <button mat-stroked-button color="primary" (click)="toCenter()" style="margin-left: 4px;">В центр</button>
+      <button mat-stroked-button color="primary" (click)="zoomToFit()" style="margin-left: 4px;">Вписать</button>
+    </div>
+
+    <mat-divider style="margin-top: 8px; margin-bottom: 8px;"></mat-divider>
+
+    <div *ngIf="selectedMDIGraph!=null" style="margin: 2px; margin-left: 15px;">
+
+      <table>
+        <tr>
+          <td style="width: 80%;"><mat-label>Матрица смежности:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fAdjencyMatrix()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80%;"><mat-label>Матрица инциндентности:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fIncendencyMatrix()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80%;"><mat-label>Эйлеров цикл:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fEylerCycle()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80%;"><mat-label>Гамильтонов цикл:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fHamiltonCycle()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80%;"><mat-label>Полность графа:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fCompleteGraph()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80%;"><mat-label>Планарность графа:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fPlanarGraph()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80%;"><mat-label>Степень всех вершин:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fDegrees()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80%;"><mat-label>Радиус графа:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fRadiusGraph()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+        <tr>
+          <td style="width: 80%;"><mat-label>Центр графа:</mat-label></td>
+          <td style="width: 120px;"><button mat-stroked-button color="primary" (click)="fCenterGraph()" style="margin-left: 4px;">Выполнить</button></td>
+        </tr>
+      </table>  
+
+    </div>
+
+  </div>
+
+  <div style="display: flex; flex-flow: row; background-color: rgb(248, 203, 203); padding: 10px; border-radius: 10px; width: 100%;">
+    <mat-tab-group animationDuration="0ms" [(selectedIndex)]="graphTab" (selectedTabChange)="graphTabChange($event)">
+      <mat-tab *ngFor="let mdiGraph of graphs; let idx=index;"  [label]="mdiGraph.graph.name + ' (' + mdiGraph.graph.type + ')'">
+
+        <div #divGraph style="width: 100%; height: 100%;">
+
+          <!-- d3ForceDirected -->
+          <ngx-graph #ngxGraph
+            class="chart-container"
+            [view]="[graphWidth, graphHeight]"
+            [layout]="mdiGraph.graph.layout"
+            [links]="mdiGraph.graph.links"
+            [nodes]="mdiGraph.graph.nodes"
+            [update$]="mdiGraph.update"
+            [center$]="mdiGraph.center"
+            [zoomToFit$]="mdiGraph.zoomToFit"
+            [draggingEnabled]="mdiGraph.graph.layout=='d3ForceDirected'"
+            >
+
+            <ng-template #defsTemplate>
+              <svg:marker *ngIf="mdiGraph.graph.type=='ORIENT'"
+                id="arrow"
+                viewBox="0 -5 10 10"
+                refX="8"
+                refY="0"
+                markerWidth="4"
+                markerHeight="4"
+                orient="auto"
+              >
+                <svg:path d="M0,-5L10,0L0,5" class="arrow-head" />
+              </svg:marker>
+            </ng-template>
+
+            <ng-template #nodeTemplate let-node>
+              <svg:g class="node" ngx-tooltip>
+                <svg:circle
+                  [attr.r]="node.dimension.width / 2"
+                  [attr.cx]="node.dimension.width / 2"
+                  [attr.cy]="node.dimension.height / 2"
+                  [attr.fill]="node.data?.color2"
+                  (dblclick)="nodeDblClick(mdiGraph, node)"/>
+                  <svg:text (dblclick)="nodeDblClick(mdiGraph, node)" dominant-baseline="middle" [attr.y]="node.dimension.height / 2" [attr.fill]="node.data?.colorText" [attr.x]="node.dimension.width / 2 - 8" >
+                    {{node.label}}
+                  </svg:text>
+              </svg:g>
+            </ng-template>
+
+            <ng-template #linkTemplate let-link >
+              <svg:g class="edge">
+                <svg:path class="line" stroke-width="2" marker-end="url(#arrow)" [attr.stroke]="link.data?.stroke" (click)="linkDblClick(mdiGraph, link)">
+                </svg:path>
+                <svg:text class="edge-label" text-anchor="middle">
+                  <textPath
+                    font-size="13pt"
+                    (click)="linkDblClick(mdiGraph, link)"
+                    class="text-path"
+                    [attr.href]="'#' + link.id"
+                    [style.dominant-baseline]="link.dominantBaseline"
+                    startOffset="50%">
+                    {{link.data?.weight}}
+                  </textPath>
+                </svg:text>
+              </svg:g>
+            </ng-template>
+          </ngx-graph>
+        </div>
+
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+
+</div>
+
