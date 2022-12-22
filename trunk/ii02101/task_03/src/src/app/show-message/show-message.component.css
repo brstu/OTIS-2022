@@ -1,0 +1,19 @@
+
+.null {
+  color: blue;
+}
+
+.key::before {
+  color: yellow;
+  background-color: black;
+}
+
+.string {
+  color: red;
+  background-color: black;
+}
+
+.number {
+  color: green;
+  background-color: black;
+}
