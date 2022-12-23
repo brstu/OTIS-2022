@@ -82,22 +82,22 @@
 ---
 # Описание работы программы: #
 ## Окно программы
-![image](window.png)
+![Окно программы](window.png)
 ## Добавление вершин
-![image](add_vertex.png)
+![Добавление вершин](add_vertex.png)
 ## Cоединение вершин ребрами
-![image](add_adjes.png)
+![Cоединение вершин ребрами](add_adjes.png)
 ## Перемещение вершин
-![image](move.png)
+![Перемещение вершин](move.png)
 ## Изменяем вес ребер
-![image](change_weight.png)
+![Изменяем вес ребер](change_weight.png)
 ## Изменяем название вершин
-![image](change_name_vertex.png)
+![Изменяем название вершин](change_name_vertex.png)
 ## Изменяем цвета вершин, ребер
-![image](change_color.png)
+![Изменяем цвета вершин, ребер](change_color.png)
 ## Удаление ребер и вершин
-![image](delete.png)
+![Удаление ребер и вершин](delete.png)
 ## Кратчайший путь
-![image](path.png)
+![Кратчайший путь](path.png)
 ## Эйлеров цикл
-![image](eulerian_path.png)
+![Эйлеров цикл](eulerian_path.png)
