@@ -82,22 +82,22 @@
 ---
 # Описание работы программы: #
 ## Окно программы
-![image](image/window.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/window.png)
 ## Добавление вершин
-![image](image/add_vertex.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/add_vertex.png)
 ## Cоединение вершин ребрами
 ![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/add_adjes.png)
 ## Перемещение вершин
-![image](image/move.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/move.png)
 ## Изменяем вес ребер
-![image](image/change_weight.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/change_weight.png)
 ## Изменяем название вершин
-![image](image/change_name_vertex.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/change_name_vertex.png)
 ## Изменяем цвета вершин, ребер
-![image](image/change_color.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/change_color.png)
 ## Удаление ребер и вершин
-![image](image/delete.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/delete.png)
 ## Кратчайший путь
-![image](image/path.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/path.png)
 ## Эйлеров цикл
-![image](image/eulerian_path.png)
+![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/eulerian_path.png)
