@@ -86,7 +86,7 @@
 ## Добавление вершин
 ![image](add_vertex.png)
 ## Cоединение вершин ребрами
-![image](https://raw.githubusercontent.com/brstu/OTIS-2022/96f594716c1f3633b55e2b279be895fd2764cd94/trunk/ii002117/task_03/doc/add_adjes.png)
+![image](add_adjes.png)
 ## Перемещение вершин
 ![image](move.png)
 ## Изменяем вес ребер
