@@ -35,8 +35,8 @@
 множество тем. 
 
 
-![О системе](image/NIKA.png)
-![О системе](image/inf.png)
+![О системе](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/NIKA.png)
+![О системе](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/inf.png)
 
 ## 2.Запуск ##
 ```
@@ -50,18 +50,18 @@ docker compose up --no-build
 </ol>
 <h2>3. Веб-интерфейс документации</h2>
 
-![Веб-интерфейс диалогового окна](image/doci.png)
+![Веб-интерфейс диалогового окна](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/doci.png)
 
 <h2>4.Диалоговое окно</h2>
 
-![Работа](image/work3.png)
+![Работа](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/work3.png)
 
 
 <h2>5.Работа с диалоговым окном</h2>
 
-![Работа](image/work1.png)
-![Работа](image/work2.png)
-![Работа](image/work3.png)
+![Работа](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/work1.png)
+![Работа](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/work2.png)
+![Работа](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/work3.png)
 
 ---
 
