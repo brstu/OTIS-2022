@@ -36,7 +36,7 @@
 ---
 
 # Основное задание
-В ходе работы с NIKA не нашел багов, опубликовал два вопроса: [по запуску](https://github.com/ostis-apps/nika/issues/175) и [предложение облегчить установку](https://github.com/ostis-apps/nika/issues/176)  
+В ходе работы с NIKA не нашел багов, опубликовал вопросs: [по запуску](https://github.com/ostis-apps/nika/issues/175) и [предложение облегчить установку](https://github.com/ostis-apps/nika/issues/176)  
 
 # Дополнительное задание
 Помог проекту пользователя @SenchaBrest, отсортировав набор данных (изображений) для его проекта: https://github.com/SenchaBrest/Dataset-For-Compare-Objects/pull/4
