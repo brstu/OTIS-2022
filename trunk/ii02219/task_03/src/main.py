@@ -1,20 +1,12 @@
-import pickle
 import random
-import threading
 import tkinter
 import tkinter.ttk
 from collections import deque
 from heapq import heapify, heappop, heappush
 import colour as clr
 import random as rnd
-from tkinter import filedialog
-import json
-import pygubu as pg
-
-import networkx as nx
 from tkinter import *
 import numpy as np
-import matplotlib.pyplot as plt
 
 
 class Arc:
@@ -196,17 +188,6 @@ class Window(Tk):
 
     def __init__(self):
         super().__init__()
-        # self.canvas1 = Canvas(self.tab_1)
-        # self.node2 = self.canvas1.create_oval(5, 5, 75, 75, fill=clr.Color("Red"))
-        # self.canvas2 = Canvas(self.tab_2)
-        # self.canvas1.pack(fill=tkinter.BOTH, expand=1)
-        # self.canvas2.pack(fill=tkinter.BOTH, expand=1)
-        # Событие на переключение между графами
-
-        # self.current_canvas.tag_bind(self.node2, "<ButtonRelease-1>", self.on_node_release)
-        # self.current_canvas.tag_bind(self.node2, "<ButtonPress-1>", self.on_node_press)
-        # self.current_canvas.tag_bind(self.node2, "<B1-Motion>", self.on_node_motion)
-
         self.mainloop()
 
     def set_notebook(self, notebook):
@@ -391,24 +372,6 @@ def print_info():
     window.mainloop()
 
 
-def save_file():
-    file = tkinter.filedialog.asksaveasfilename(filetypes=[("Graph files", ".graph"), ("TXT Graph", ".txt")])
-    with open(file, 'wb') as f:
-        # Сериализация
-        pickle.dump(Window.current_graph.nodes, f)
-        pickle.dump(Window.current_graph.arcs, f)
-
-
-def load_file():
-    file = tkinter.filedialog.askopenfilename()
-    if file:
-        # Чтение данных из файла
-        with open(file, 'r') as f:
-            data = f.read()
-        obj2 = json.loads(data)
-        print(obj2)
-    # redraw()
-
 
 def main():
     # создаем окно программы
@@ -432,11 +395,6 @@ def main():
     graph_menu = Menu(menu)
     # создаем пункт меню управления вершинами и ребрами
     control_menu = Menu(menu)
-    # создаем подменю пункта "Файл"
-    # file_menu.add_command(label='Открыть', command=load_file)
-    # file_menu.add_command(label='Сохранить', command=save_file)
-    # file_menu.add_command(label='Сохранить в текст. варианте')
-    # menu.add_cascade(label="Файл", menu=file_menu)
     # создаем подменю пункта "Граф"
     graph_menu.add_command(label='Вывести информацию', command=print_info)
     menu.add_cascade(label="Граф", menu=graph_menu)
