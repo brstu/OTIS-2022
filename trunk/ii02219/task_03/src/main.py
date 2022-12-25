@@ -1,4 +1,3 @@
-import random
 import tkinter
 import tkinter.ttk
 from collections import deque
@@ -19,8 +18,8 @@ class Arc:
         self.name = name
         self.color = color
         self.graph = graph
-        self.shape = Canvas
-        self.text = Canvas
+        self.shape = Canvas()
+        self.text = Canvas()
         self.start_node = Node
         self.finish_node = Node
 
@@ -172,19 +171,16 @@ class Graph:
 
 
 class Window(Tk):
-    btn_add_arc = Button
-    t1 = threading.Thread
-    t2 = threading.Thread
+    btn_add_arc = Button()
     current_graph = Graph("")
     current_node = Node
-    current_canvas = Canvas
+    current_canvas = Canvas()
     current_arc = Arc
     notebook = None
     graph_1 = None
     graph_2 = None
     canvas1 = None
-    canvas2 = Canvas
-    isArcActivate = False
+    canvas2 = None
 
     def __init__(self):
         super().__init__()
@@ -233,14 +229,14 @@ def create_nodes_fnc(node):
 
 
 class Plt:
-    entry_color = Entry
-    label_color = Label
+    entry_color = Entry()
+    label_color = Label()
     color = clr
 
 
 def generate_color():
     Plt.entry_color.delete(0, END)
-    color = '#{:02x}{:02x}{:02x}'.format(*map(lambda x: random.randint(0, 255), range(3)))
+    color = '#{:02x}{:02x}{:02x}'.format(*map(lambda x: rnd.randint(0, 255), range(3)))
     Plt.label_color['bg'] = color
     Plt.entry_color.insert(0, color)
     Plt.color = color
@@ -266,7 +262,7 @@ def commit_clr():
 
 
 class Name(Tk):
-    name = Tk
+    name = Tk()
     text = Entry()
 
 
