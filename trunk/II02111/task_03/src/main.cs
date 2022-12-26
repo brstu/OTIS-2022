@@ -16,17 +16,17 @@ namespace GraphEditor
         public Point mp { get { return MP; } set { MP = value; } }
 
         bool isone = true;
-        private  string Top_Name = "-";
+        private readonly string Top_Name = "-";
      
         private static Color Top_Color = Color.Black;
         
-        private List<Label> labellist = new List<Label>();
+        private readonly List<Label> labellist = new List<Label>();
        
-        private List<PictureBox> picturelist = new List<PictureBox>();
+        private readonly List<PictureBox> picturelist = new List<PictureBox>();
        
-        private Pen penmain = new Pen(Top_Color);
+        private readonly Pen penmain = new Pen(Top_Color);
        
-        private List<RIBSCLASS> RIBSCOLLISION = new List<RIBSCLASS>();
+        private readonly List<RIBSCLASS> RIBSCOLLISION = new List<RIBSCLASS>();
       
 
         public GraphEditorMain()
@@ -286,13 +286,15 @@ namespace GraphEditor
          int times2 ;
         int times3 ;
         int ribs ;
-       Point LOcfirst = new Point();
-      Point LocSecond = new Point();
-        PictureBox frst = new PictureBox();
-        PictureBox scnd = new PictureBox();
+
+    
 
         private void PictureBox_Click(object sender, MouseEventArgs e)
         {
+            PictureBox frst = new PictureBox();
+            PictureBox scnd = new PictureBox();
+            Point LOcfirst = new Point();
+            Point LocSecond = new Point();
             int i = 0;
             currentobj = sender;
             foreach (PictureBox pb in picturelist.ToList())
@@ -445,7 +447,7 @@ namespace GraphEditor
                                 if (weight != 999045)
                                 {
                                     MessageBox.Show("Вес задан успешно !");
-                                    DrawWeight(rb.firstloc, rb.secondloc, weight);
+                                    DrawWeight(rb.firstloc, rb.secondloc);
                                 }
                             }
                         }
@@ -460,7 +462,7 @@ namespace GraphEditor
             
            
         }
-        private int weight =3;  
+        private readonly int  weight =3;  
         void DrawRib(Point f,Point s)
         {
             Pen SuperPen = new Pen(Color.Black, 4);
@@ -468,11 +470,11 @@ namespace GraphEditor
              
 
         }
-        void DrawWeight (Point f,Point s,double Weight )
+        void DrawWeight (Point f,Point s)
         {
-            Point gr = new Point ((f.X+s.X)/2,(f.Y+s.Y)/2+13);
-            Font drawFont = new Font("CenturyGothic", 12);
-           
+          
+          
+           DrawRib(f,s);
         }
         private void GraphEditorMain_Paint(object sender, PaintEventArgs e)
         {
@@ -486,8 +488,8 @@ namespace GraphEditor
         void Repaint() {
 
             g.Clear(Color.White);
-            Point frst21 = new Point();
-            Point scnd21 = new Point();
+            Point frst21 ;
+            Point scnd21 ;
             foreach (RIBSCLASS RB in RIBSCOLLISION.ToList())
             {
               
@@ -502,7 +504,7 @@ namespace GraphEditor
                     scnd21.Y += RB.second.Height / 2;
                     DrawRib(frst21, scnd21);
                     
-                    DrawWeight(frst21, scnd21,RB.weight);
+                    DrawWeight(frst21, scnd21);
             }
            
 
@@ -511,20 +513,6 @@ namespace GraphEditor
         void Gamilton()
         {
             string TO_MB = "";
-
-            foreach (RIBSCLASS RB in RIBSCOLLISION)
-            {
-                for (int i = 0; i < picturelist.ToList().Count; i++) {
-
-                    if (picturelist[i] == RB.first || picturelist[i] == RB.second)
-                    {
-                       
-                    }
-
-
-            }
-
-            }
             MessageBox.Show(TO_MB, "Гамильтонов цикл :");
         }
 
