@@ -7,61 +7,27 @@ using System.Text;
 
 namespace GraphEditor
 {
-    public partial class GraphEditorMain : Form
+    public  class GraphEditorMain : Form
     {
         private object currentobj, currentobj2;
-        public object Currentobj
-        {
-            get { return currentobj; }
-            set { Currentobj = value; }
-        }
+    
         private Graphics g;
         private Point MP;
         public Point mp { get { return MP; } set { MP = value; } }
 
         bool isone = true;
-        private static string Top_Name = "-";
-        public string top_name
-        {
-            get { return top_name; }
-            set { top_name = value; }
-        }
+        private  string Top_Name = "-";
+     
         private static Color Top_Color = Color.Black;
-        public Color top_Color
-        {
-            get { return Top_Color; }
-            set
-            {
-                Top_Color = value;
-            }
-        }
-        private static List<Label> labellist = new List<Label>();
-        public List<Label> LabelList
-        {
-            get { return labellist; }
-            set
-            {
-                labellist = value;
-            }
-        }
+        
+        private List<Label> labellist = new List<Label>();
+       
         private List<PictureBox> picturelist = new List<PictureBox>();
-        public List<PictureBox> PictureList
-        {
-            get { return picturelist; }
-            set { picturelist = value; }
-        }
+       
         private Pen penmain = new Pen(Top_Color);
-        public Pen Penmain
-        {
-            get { return penmain; }
-            set { penmain = value; }
-        }
+       
         private List<RIBSCLASS> RIBSCOLLISION = new List<RIBSCLASS>();
-        public List<RIBSCLASS>  rIBCOLLISION
-        {
-            get { return RIBSCOLLISION; }
-            set { RIBSCOLLISION= value; }
-        } 
+      
 
         public GraphEditorMain()
         {
@@ -262,7 +228,7 @@ namespace GraphEditor
                     }
                     MessageBox.Show("Ваш граф сохранен в файлы проекта ", "Cохранено успешно");
                     break;
-                default : break; 
+                default :MessageBox.Show("XFDF"); break; 
 
             }
         }
@@ -469,18 +435,20 @@ namespace GraphEditor
                     foreach (RIBSCLASS rb in RIBSCOLLISION.ToList())
                     {
                         if (ribs > 0)
-                            if (rb1 == rb) 
+                        {
+                            if (rb1 == rb)
                             {
                                 Save sv = new Save();
                                 sv.ShowDialog();
 
-                                rb.weight=weight;
+                                rb.weight = weight;
                                 if (weight != 999045)
                                 {
                                     MessageBox.Show("Вес задан успешно !");
                                     DrawWeight(rb.firstloc, rb.secondloc, weight);
                                 }
-                            } 
+                            }
+                        }
                     }
                     if (weight == 999045)
                     {
@@ -492,7 +460,7 @@ namespace GraphEditor
             
            
         }
-        private int weight ;  
+        private int weight =3;  
         void DrawRib(Point f,Point s)
         {
             Pen SuperPen = new Pen(Color.Black, 4);
@@ -504,7 +472,7 @@ namespace GraphEditor
         {
             Point gr = new Point ((f.X+s.X)/2,(f.Y+s.Y)/2+13);
             Font drawFont = new Font("CenturyGothic", 12);
-            g.DrawString(Weight.ToString(), drawFont,Brushes.Olive,gr);
+           
         }
         private void GraphEditorMain_Paint(object sender, PaintEventArgs e)
         {
@@ -518,23 +486,23 @@ namespace GraphEditor
         void Repaint() {
 
             g.Clear(Color.White);
-            Point frst = new Point();
-            Point scnd = new Point();
+            Point frst21 = new Point();
+            Point scnd21 = new Point();
             foreach (RIBSCLASS RB in RIBSCOLLISION.ToList())
             {
               
                 
-                    frst = RB.firstloc;
-                    frst.X += RB.first.Width / 2;
-                    frst.Y += RB.first.Height / 2;
+                    frst21 = RB.firstloc;
+                    frst21.X += RB.first.Width / 2;
+                    frst21.Y += RB.first.Height / 2;
               
                    
-                    scnd = RB.secondloc;
-                    scnd.X += RB.second.Width / 2;
-                    scnd.Y += RB.second.Height / 2;
-                    DrawRib(frst, scnd);
+                    scnd21 = RB.secondloc;
+                    scnd21.X += RB.second.Width / 2;
+                    scnd21.Y += RB.second.Height / 2;
+                    DrawRib(frst21, scnd21);
                     
-                    DrawWeight(frst, scnd,RB.weight);
+                    DrawWeight(frst21, scnd21,RB.weight);
             }
            
 
@@ -550,7 +518,7 @@ namespace GraphEditor
 
                     if (picturelist[i] == RB.first || picturelist[i] == RB.second)
                     {
-                        TO_MB += " " + labellist[i].Text + "=> ";
+                       
                     }
 
 
@@ -626,5 +594,3 @@ namespace GraphEditor
         }
     }
 }
-
-
