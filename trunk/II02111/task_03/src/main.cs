@@ -1,22 +1,67 @@
 using System;
 using System.Configuration;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Net.Http.Headers;
+using System.Text;
 
 namespace GraphEditor
 {
     public partial class GraphEditorMain : Form
     {
-        public object currentobj, currentobj2;
-        public Graphics g;
-        public Point MP;
+        private object currentobj, currentobj2;
+        public object Currentobj
+        {
+            get { return currentobj; }
+            set { Currentobj = value; }
+        }
+        private Graphics g;
+        private Point MP;
+        public Point mp { get { return MP; } set { MP = value; } }
+
         bool isone = true;
-        public static string Top_Name = "-";
-        public static Color Top_Color = Color.Black;
-        static public List<Label> labellist = new List<Label>();
-        public List<PictureBox> picturelist = new List<PictureBox>();
-        public Pen penmain = new Pen(Top_Color);
-        public List<RIBSCLASS> RIBSCOLLISION = new List<RIBSCLASS>();
+        private static string Top_Name = "-";
+        public string top_name
+        {
+            get { return top_name; }
+            set { top_name = value; }
+        }
+        private static Color Top_Color = Color.Black;
+        public Color top_Color
+        {
+            get { return Top_Color; }
+            set
+            {
+                Top_Color = value;
+            }
+        }
+        private static List<Label> labellist = new List<Label>();
+        public List<Label> LabelList
+        {
+            get { return labellist; }
+            set
+            {
+                labellist = value;
+            }
+        }
+        private List<PictureBox> picturelist = new List<PictureBox>();
+        public List<PictureBox> PictureList
+        {
+            get { return picturelist; }
+            set { picturelist = value; }
+        }
+        private Pen penmain = new Pen(Top_Color);
+        public Pen Penmain
+        {
+            get { return penmain; }
+            set { penmain = value; }
+        }
+        private List<RIBSCLASS> RIBSCOLLISION = new List<RIBSCLASS>();
+        public List<RIBSCLASS>  rIBCOLLISION
+        {
+            get { return RIBSCOLLISION; }
+            set { RIBSCOLLISION= value; }
+        } 
 
         public GraphEditorMain()
         {
@@ -82,7 +127,7 @@ namespace GraphEditor
         {
             int j = 0;
             int counter = 0;
-            string TO_MESSAGEBOX = "";
+            StringBuilder TO_MESSAGEBOX = new StringBuilder();
             foreach (PictureBox pb in picturelist.ToList())
             {
                 
@@ -95,33 +140,35 @@ namespace GraphEditor
                     if (i == RIBSCOLLISION.Count - 1)
                     {
                        
-                        TO_MESSAGEBOX += "Степень вершины " + labellist[j].Text + "- " + counter.ToString()+"\n";
+                        TO_MESSAGEBOX .Append("Степень вершины " + labellist[j].Text + "- " + counter.ToString()+"\n");
                         counter = 0;
                     }
                    
                 }
+               
                 j++;
             }
-            MessageBox.Show(TO_MESSAGEBOX, "Степени всех текущих верщшин : ");
+            string TO_MB = TO_MESSAGEBOX.ToString();
+            MessageBox.Show(TO_MB, "Степени всех текущих верщшин : ");
         
         }
         void MATRIXES()
         {
-            string TO_MB = "";
+            StringBuilder TO_MB = new StringBuilder();
             bool [,]AdjencyMatrix = new bool[picturelist.Count, picturelist.Count]; 
             for(int i = 0; i < picturelist.ToList().Count; i++)
             {
                 for(int j = 0; j < picturelist.ToList().Count;j++) {
                   foreach(RIBSCLASS rbcls in RIBSCOLLISION.ToList())
                     {
-                        if (picturelist[i]==rbcls.first || picturelist[i] == rbcls.second)
+                        if (picturelist[i] == rbcls.first || picturelist[i] == rbcls.second)
                         {
                             if (picturelist[j] == rbcls.first || picturelist[j] == rbcls.second)
                             {
-                                AdjencyMatrix[j,i] = true;
+                                AdjencyMatrix[j, i] = true;
                             }
                         }
-                        else AdjencyMatrix[j, i] = false;
+                        else { AdjencyMatrix[j, i] = false; }
                         if (picturelist[j] == picturelist[i])
                         {
                             AdjencyMatrix[j, i] = true;
@@ -129,33 +176,34 @@ namespace GraphEditor
                     }
                 }
                    }
-            TO_MB += "   Матрица смежности : \n";
+            TO_MB .Append( "   Матрица смежности : \n");
             for (int i = 0; i < picturelist.ToList().Count; i++)
             {
                 for (int j = 0; j < picturelist.ToList().Count; j++)
                 {
                     if (AdjencyMatrix[i, j] == true)
                     {
-                        TO_MB += "1 ";
+                        TO_MB.Append("1 ");
                     }
-                    else TO_MB += "0 ";
+                    else { TO_MB.Append("0 "); }
                 }
-                TO_MB += "\n";
+                TO_MB.Append("\n");
             }
-            TO_MB += " Матрица инцидентности : \n";
+            TO_MB.Append(" Матрица инцидентности : \n");
             for (int i = 0; i < picturelist.ToList().Count; i++)
             {
                 for (int j = 0; j < picturelist.ToList().Count; j++)
                 {
                     if (AdjencyMatrix[i, j] == true)
                     {
-                        TO_MB += "0 ";
+                        TO_MB.Append("0 ");
                     }
-                    else TO_MB += "1 ";
+                    else { TO_MB.Append("1 "); }
                 }
-                TO_MB += "\n";
+                TO_MB.Append("\n");
             }
-            MessageBox.Show(TO_MB, "Матрицы графа :");
+            string TO_MBx    = TO_MB.ToString();
+            MessageBox.Show(TO_MBx, "Матрицы графа :");
         }
         void RadiusandCenter()
         {
@@ -197,8 +245,8 @@ namespace GraphEditor
                         CLR.Show();
 
                     }
-                
-                    else break;
+
+                    else { break; }
                     break;
                 case 4: break;
                 case 7:
@@ -214,6 +262,7 @@ namespace GraphEditor
                     }
                     MessageBox.Show("Ваш граф сохранен в файлы проекта ", "Cохранено успешно");
                     break;
+                default : break; 
 
             }
         }
@@ -233,13 +282,13 @@ namespace GraphEditor
         Bitmap CreateTopEllipse(Pen pen)
         {
             Bitmap bmp = new Bitmap(30, 30);
-            using (Graphics g = Graphics.FromImage(bmp))
+            using (Graphics gr = Graphics.FromImage(bmp))
             {
                 for (int x = 0; x < bmp.Width; x++)
                 {
                     for (float i = 0; i < 25; i += (float)0.1)
                     {
-                        g.DrawEllipse(pen, 1, 1, i, i);
+                        gr.DrawEllipse(pen, 1, 1, i, i);
                     }
 
                 }
@@ -267,12 +316,12 @@ namespace GraphEditor
         }
 
 
-        static int times = 0;
-        static int times2 = 0;
-        static int times3 = 0;
-        static int ribs = 0;
-        static Point LOcfirst = new Point();
-        static Point LocSecond = new Point();
+       int times ;
+         int times2 ;
+        int times3 ;
+        int ribs ;
+       Point LOcfirst = new Point();
+      Point LocSecond = new Point();
         PictureBox frst = new PictureBox();
         PictureBox scnd = new PictureBox();
 
@@ -303,7 +352,7 @@ namespace GraphEditor
                 }
                 picturelist.Remove(picturelist[i]);
                 labellist.Remove(labellist[i]);
-                Repaint(g);
+                Repaint();
             }
             if (comboBox1.SelectedIndex == 2)
             {
@@ -389,7 +438,9 @@ namespace GraphEditor
                     foreach (RIBSCLASS rb in RIBSCOLLISION.ToList())
                     {
                         if (ribs > 0)
-                            if (rb1 == rb) { RIBSCOLLISION.Remove(rb);ribs--; Repaint(g); }
+                        {
+                            if (rb1 == rb) { RIBSCOLLISION.Remove(rb); ribs--; Repaint(); }
+                        }
                     }
                     
                     
@@ -431,15 +482,17 @@ namespace GraphEditor
                                 }
                             } 
                     }
-                    if(weight==999045)
-                      MessageBox.Show("Вес ребра не был задан", "Неудача");
+                    if (weight == 999045)
+                    {
+                        MessageBox.Show("Вес ребра не был задан", "Неудача");
+                    }
                 }
 
             }
             
            
         }
-        public static double weight  = 999045;
+        private int weight ;  
         void DrawRib(Point f,Point s)
         {
             Pen SuperPen = new Pen(Color.Black, 4);
@@ -458,14 +511,11 @@ namespace GraphEditor
             g = CreateGraphics();
         }
 
-        private void GraphEditorMain_Load(object sender, EventArgs e)
-        {
-
-        }
+    
 
        
       
-        void Repaint(Graphics g1) {
+        void Repaint() {
 
             g.Clear(Color.White);
             Point frst = new Point();
@@ -547,10 +597,7 @@ namespace GraphEditor
             }
         }
 
-        private void label143_Click(object sender, EventArgs e)
-        {
-
-        }
+    
 
         private void GraphEditorMain_MouseClick_1(object sender, MouseEventArgs e)
         {
@@ -575,154 +622,9 @@ namespace GraphEditor
                 }
             }
             g.Clear(Color.White);
-            Repaint(g);
+            Repaint();
         }
     }
 }
 
-using System;
-
-
-
-namespace GraphEditor
-{
-    public class RIBSCLASS
-    {
-  
-        public  PictureBox first;
-        public  PictureBox second;
-        public   Point firstloc;
-        public   Point secondloc  ;
-        public double weight;
-        public PictureBox GetFirst()
-        {
-            return first;
-        }
-        public PictureBox GetSecond()
-        {
-            return second;
-        }
-
-        public Point GetFirstLoc() { 
-            return firstloc;
-                
-                }
-        public Point GetSecondLoc()
-        {
-            return secondloc;
-        }
-
-        public    RIBSCLASS ( PictureBox first ,PictureBox second, Point firstloc, Point secondloc)
-        {
-            this.first = first; 
-            this.second = second;
-            this.firstloc = firstloc;
-            this.secondloc = secondloc;
-            this.weight = 0;
-        }
-       public RIBSCLASS()
-        {
-            this.first = new PictureBox();
-            this.second = new PictureBox();   
-             this.firstloc = new Point();
-            this.secondloc = new Point();
-            this.weight= 0;
-        }
-   
-        public static bool operator != (RIBSCLASS first, RIBSCLASS second)
-        {
-             if(first.first==second.first && first.second==second.second) { return false; }
-             if(first.second == second.first&& first.second == second.second) { return false; }
-             return true;
-        }
-        public static bool operator == (RIBSCLASS first,RIBSCLASS second)
-        {
-            if (first.first == second.first && first.second == second.second) { return true; }
-            if (first.second == second.first && first.first == second.second) { return true; }
-            return false;
-
-        }
-
-    }
-}
-using System;
-
-namespace GraphEditor
-{
-    public partial class Save : Form
-    {
-        public Save()
-        {
-            InitializeComponent();
-            textBox1.Text = "0";
-        }
-
-        private void textBox1_TextChanged(object sender, EventArgs e)
-        {
-            
-        }
-        bool wasset = true; 
-        private void button1_Click(object sender, EventArgs e)
-        {
-            double weight =0;
-            wasset = true;
-            try { weight=Convert.ToDouble(textBox1.Text); }
-            catch (Exception ex) 
-            { 
-               wasset = false; 
-              MessageBox.Show("Неверное значение !", "Неудача");
-            }
-            if (wasset == true)
-            {
-                GraphEditor.GraphEditorMain.weight = weight;
-                this.Close();
-            }
-         
-        }
-    }
-}
-namespace GraphEditor
-{
-    public partial class StartForm : Form
-    {
-        public StartForm()
-        {
-            InitializeComponent();
-            StartPageButton.Hide();
-           
-        }
-
-        private void StartForm_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            GraphEditorMain gem = new GraphEditorMain();    
-            gem.Show();
-            this.Hide();    
-        }
-
-        private void checkBox1_CheckedChanged(object sender, EventArgs e)
-        {
-            if (StartPageCheck.Checked)
-            {
-                StartPageButton.Show();
-              
-
-            }
-            else 
-            { 
-                StartPageButton.Hide();
-               
-            }
-        }
-
-        private void timer1_Tick(object sender, EventArgs e)
-        {
-
-        }
-    }
-}
 
