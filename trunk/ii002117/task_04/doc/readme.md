@@ -63,9 +63,3 @@ docker compose up --no-build
 ![Работа](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/work2.png)
 ![Работа](https://github.com/y-vladislav/OTIS-2022/blob/lab-4/trunk/ii002117/task_04/doc/image/work3.png)
 
----
-
-<h1>Вывод</h1>
-
-
-Видно, что продукт еще находится в разработке.Присутствуют баги и ошибки, но в части "упрощения и автоматизирования процесса обучения студентов" всё работает вполне нормально. 
