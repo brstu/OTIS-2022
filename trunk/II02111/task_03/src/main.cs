@@ -292,9 +292,9 @@ namespace GraphEditor
         private void PictureBox_Click(object sender, MouseEventArgs e)
         {
             PictureBox frst = new PictureBox();
-            PictureBox scnd = new PictureBox();
+            PictureBox scnd ;
             Point LOcfirst = new Point();
-            Point LocSecond = new Point();
+            Point LocSecond ;
             int i = 0;
             currentobj = sender;
             foreach (PictureBox pb in picturelist.ToList())
