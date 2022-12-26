@@ -1,0 +1,14 @@
+﻿  Graph.cpp
+D:\Graph Editor\Graph Editor\Graph.cpp(12,46): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(22,46): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(48,46): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(68,46): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(69,46): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(108,30): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(113,30): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(123,39): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(157,31): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(157,26): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(167,29): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Graph Editor\Graph Editor\Graph.cpp(167,24): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+  Graph Editor.vcxproj -> D:\Graph Editor\x64\Debug\Graph Editor.exe
