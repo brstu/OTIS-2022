@@ -2,6 +2,7 @@
 
 ContentPage::ContentPage() {
 	this->isVisible = true;
+	this->write = false;
 }
 
 void ContentPage::add_btn(
@@ -36,17 +37,17 @@ void ContentPage::add_input(
 
 void ContentPage::offAll()
 {
-	for (vector<Button>::iterator btn = this->btns.begin(); btn != this->btns.end(); btn++) {
+	for (vector<Button>::iterator btn = this->btns.begin(); btn != this->btns.end(); btn += 1)  {
 		btn->off();
 	}
-	for (vector<Input>::iterator input = this->inputs.begin(); input != this->inputs.end(); input++) {
+	for (vector<Input>::iterator input = this->inputs.begin(); input != this->inputs.end(); input += 1) {
 		input->off();
 	}
 }
 
 bool ContentPage::isMouseOnBtn(int& i, int M_x, int M_y) {
 	int k = 0;
-	for (vector<Button>::iterator btn = btns.begin(); btn != btns.end(); btn++) {
+	for (vector<Button>::iterator btn = btns.begin(); btn != btns.end(); btn += 1) {
 		if (btn->isCursorOnMe(M_x, M_y)) {
 			i = k;
 			return true;
@@ -58,7 +59,7 @@ bool ContentPage::isMouseOnBtn(int& i, int M_x, int M_y) {
 
 bool ContentPage::isMouseOnInput(int& i, int M_x, int M_y) {
 	int k = 0;
-	for (vector<Input>::iterator input = inputs.begin(); input != inputs.end(); input++) {
+	for (vector<Input>::iterator input = inputs.begin(); input != inputs.end(); input += 1) {
 		if (input->isCursorOnMe(M_x, M_y)) {
 			i = k;
 			return true;
@@ -106,7 +107,7 @@ void ContentPage::view()
 
 void ContentPage::hide() 
 {
-	for (vector<Input>::iterator input = this->inputs.begin(); input != this->inputs.end(); input++) {
+	for (vector<Input>::iterator input = this->inputs.begin(); input != this->inputs.end(); input += 1) {
 		input->clear();
 	}
 	this->isVisible = false;
@@ -134,7 +135,7 @@ int ContentPage::IndexOfPressedInput()
 
 bool ContentPage::isButtonPressed()
 {
-	for (vector<Button>::iterator btn = this->btns.begin(); btn != this->btns.end(); btn++) {
+	for (vector<Button>::iterator btn = this->btns.begin(); btn != this->btns.end(); btn += 1) {
 		if (btn->isPressed())
 			return true;
 	}
