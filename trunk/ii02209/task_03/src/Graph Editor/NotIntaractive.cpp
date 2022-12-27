@@ -2,7 +2,7 @@
 
 NotIntaractive::NotIntaractive(
 	float x, float y,
-	string txt,
+	const string txt,
 	float r_t, float g_t, float b_t
 ) {
 	this->x = x;
@@ -24,7 +24,7 @@ NotIntaractive::NotIntaractive(
 	float x, float y,
 	float w, float h,
 	float r_b, float g_b, float b_b,
-	string txt,
+	const string txt,
 	float r_t, float g_t, float b_t
 ) {
 	this->field = createRectangle(
@@ -110,16 +110,16 @@ void NotIntaractive::setTxt(string str)
 
 void NotIntaractive::setBgColor(float r, float g, float b)
 {
-	this->r_b = r_b;
-	this->g_b = g_b;
-	this->b_b = b_b;
+	this->r_b = r;
+	this->g_b = g;
+	this->b_b = b;
 }
 
 void NotIntaractive::setTxtColor(float r, float g, float b)
 {
-	this->r_t = r_t;
-	this->g_t = g_t;
-	this->b_t = b_t;
+	this->r_t = r;
+	this->g_t = g;
+	this->b_t = b;
 }
 
 float NotIntaractive::getX()

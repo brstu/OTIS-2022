@@ -9,7 +9,7 @@ void ContentPage::add_btn(
 	float x, float y,
 	float w, float h,
 	float r_b, float g_b, float b_b,
-	string text,
+	const string text,
 	float r_t, float g_t, float b_t
 ) {
 	Button btn(x, y, w, h, r_b, g_b, b_b, text, r_t, g_t, b_t);
@@ -18,7 +18,7 @@ void ContentPage::add_btn(
 
 void ContentPage::add_txt(
 	float x, float y,
-	string txt,
+	const string txt,
 	float r_t, float g_t, float b_t
 ) {
 	Txt text(x, y, txt, r_t, g_t, b_t);
@@ -142,12 +142,12 @@ bool ContentPage::isButtonPressed()
 	return false;
 }
 
-void ContentPage::setTxt_toInput(int i, string txt)
+void ContentPage::setTxt_toInput(int i, const string txt)
 {
 	this->inputs[i].setTxt(txt);
 }
 
-void ContentPage::setTxt_toTxt(int i, string txt)
+void ContentPage::setTxt_toTxt(int i, const string txt)
 {
 	this->txts[i].setTxt(txt);
 }

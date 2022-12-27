@@ -40,11 +40,11 @@ void Program::add_page(
 
 void Program::offAll()
 {
-	for (vector<Button>::iterator btn = this->btns.begin(); btn != this->btns.end(); btn++) 
+	for (vector<Button>::iterator btn = this->btns.begin(); btn != this->btns.end(); btn += 1) 
 	{
 		btn->off();
 	}
-	for (vector<Input>::iterator input = this->inputs.begin(); input != this->inputs.end(); input++) 
+	for (vector<Input>::iterator input = this->inputs.begin(); input != this->inputs.end(); input += 1) 
 	{
 		input->off();
 	}
@@ -52,7 +52,7 @@ void Program::offAll()
 
 void Program::offAllPages()
 {
-	for (vector<Page>::iterator pg = this->pages.begin(); pg != this->pages.end(); pg++)
+	for (vector<Page>::iterator pg = this->pages.begin(); pg != this->pages.end(); pg += 1)
 	{
 		pg->off();
 	}
@@ -96,7 +96,7 @@ int Program::getCurrentPage()
 bool Program::isMouseOnPage(int& i, int M_x, int M_y)
 {
 	int k = 0;
-	for (vector<Page>::iterator pg = pages.begin(); pg != pages.end(); pg++) {
+	for (vector<Page>::iterator pg = pages.begin(); pg != pages.end(); pg += 1) {
 		if (pg->isCursorOnMe(M_x, M_y))
 		{
 			i = k;
@@ -123,19 +123,19 @@ void Program::draw()
 	WINDOW.draw(tools_bg);
 	WINDOW.draw(vertex_and_branch_info_bg);
 	WINDOW.draw(info_bg);
-	for (vector<Button>::iterator btn = btns.begin(); btn != btns.end(); btn++)
+	for (vector<Button>::iterator btn = btns.begin(); btn != btns.end(); btn += 1)
 	{
 		btn->draw();
 	}
-	for (vector<Txt>::iterator txt = txts.begin(); txt != txts.end(); txt++)
+	for (vector<Txt>::iterator txt = txts.begin(); txt != txts.end(); txt += 1)
 	{
 		txt->draw();
 	}
-	for (vector<Input>::iterator input = inputs.begin(); input != inputs.end(); input++)
+	for (vector<Input>::iterator input = inputs.begin(); input != inputs.end(); input += 1)
 	{
 		input->draw();
 	}
-	for (vector<Page>::iterator pg = pages.begin(); pg != pages.end(); pg++) 
+	for (vector<Page>::iterator pg = pages.begin(); pg != pages.end(); pg += 1) 
 	{
 		pg->draw();
 	}

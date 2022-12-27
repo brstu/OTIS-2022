@@ -116,4 +116,3 @@ void Branch::draw()
 	}
 	WINDOW.draw(this->weight_txt);
 }
-

@@ -41,15 +41,15 @@ void FlowWindow::draw()
 	{
 		WINDOW.draw(dark);
 		WINDOW.draw(bg);
-		for (vector<Button>::iterator btn = btns.begin(); btn != btns.end(); btn++)
+		for (vector<Button>::iterator btn = btns.begin(); btn != btns.end(); btn += 1)
 		{
 			btn->draw();
 		}
-		for (vector<Txt>::iterator txt = txts.begin(); txt != txts.end(); txt++)
+		for (vector<Txt>::iterator txt = txts.begin(); txt != txts.end(); txt += 1)
 		{
 			txt->draw();
 		}
-		for (vector<Input>::iterator input = inputs.begin(); input != inputs.end(); input++)
+		for (vector<Input>::iterator input = inputs.begin(); input != inputs.end(); input += 1)
 		{
 			input->draw();
 		}

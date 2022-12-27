@@ -4,7 +4,7 @@ Intaractive::Intaractive(
 	float x, float y,
 	float w, float h,
 	float r_b, float g_b, float b_b,
-	string txt,
+	const string txt,
 	float r_t, float g_t, float b_t,
 	bool pressed
 ) : NotIntaractive(

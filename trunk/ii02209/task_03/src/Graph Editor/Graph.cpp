@@ -29,7 +29,7 @@ void Graph::setAdjacenciesMatrix()
 			this->matrix[i][j] = 0;
 		}
 	}
-	for (vector<Branch>::iterator branch = branches.begin(); branch != branches.end(); branch++)
+	for (vector<Branch>::iterator branch = branches.begin(); branch != branches.end(); branch += 1)
 	{
 		if (branch->isOriented())
 		{
@@ -142,13 +142,13 @@ void Graph::tryMoveVertex()
 	{		
 		return;
 	}
-	for (vector<Vertex>::iterator vertex = vertices.begin(); vertex != vertices.end(); vertex++)
+	for (vector<Vertex>::iterator vertex = vertices.begin(); vertex != vertices.end(); vertex += 1)
 	{
 		if (vertex->isCursorOnMe())
 		{
 			vertex->setPos(M_x + vertex->getRad(), M_y + vertex->getRad());
 			int n = vertex->getNumber();
-			for (vector<Branch>::iterator branch = branches.begin(); branch != branches.end(); branch++)
+			for (vector<Branch>::iterator branch = branches.begin(); branch != branches.end(); branch += 1)
 			{
 				int start = branch->getStart();
 				int end = branch->getEnd();
@@ -198,7 +198,7 @@ void Graph::draw()
 {
 	if (this->branches.size() > 0)
 	{
-		for (vector<Branch>::iterator branch = branches.begin(); branch != branches.end(); branch++)
+		for (vector<Branch>::iterator branch = branches.begin(); branch != branches.end(); branch += 1)
 		{
 			branch->draw();
 		}
@@ -206,7 +206,7 @@ void Graph::draw()
 
 	if (this->vertices.size() > 0)
 	{
-		for (vector<Vertex>::iterator vertex = vertices.begin(); vertex != vertices.end(); vertex++)
+		for (vector<Vertex>::iterator vertex = vertices.begin(); vertex != vertices.end(); vertex += 1)
 		{
 			vertex->draw();
 		}

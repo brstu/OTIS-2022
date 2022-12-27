@@ -3,8 +3,8 @@
 Vertex::Vertex
 (
 	int number,
-	string name,
-	string content,
+	const string name,
+	const string content,
 	float rad,
 	float r, float g, float b
 ) {
@@ -14,6 +14,7 @@ Vertex::Vertex
 	this->y = WIN_HEIGHT / 2 - rad;
 	this->name = name;
 	this->content = content;
+	this->degree = 0;
 	this->r = r;
 	this->g = g;
 	this->b = b;
@@ -24,12 +25,12 @@ Vertex::Vertex
 	this->num = createText(x + rad - FONT_SIZE / 1.55 * k / 2, y + rad - FONT_SIZE / 2 - 2, to_string(number), 255, 255, 255);
 }
 
-void Vertex::setName(string name) 
+void Vertex::setName(const string name)
 { 
 	this->name = name; 
 }
 
-void Vertex::setContent(string content) 
+void Vertex::setContent(const string content)
 { 
 	this->content = content; 
 }
