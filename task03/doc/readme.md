@@ -51,3 +51,18 @@
 
 5. Исходный код разработанной программы разместить в каталоге: **trunk\ii0xxyy\task_03\src**.
 nk\ii0xxyy\task_04\doc.
+![Снимок экрана (4)](https://user-images.githubusercontent.com/113057337/210046865-b5a8c02a-66c9-496a-bf1e-9ddbaf55432f.png)
+![Снимок экрана (5)](https://user-images.githubusercontent.com/113057337/210046959-886fac87-c8d9-46ff-affc-055dfe968aa2.png)
+![Снимок экрана (6)](https://user-images.githubusercontent.com/113057337/210046971-d77db5bf-7443-457c-b205-bde4a387d028.png)
+![Снимок экрана (7)](https://user-images.githubusercontent.com/113057337/210046982-80e71a5f-2499-4b90-b1a3-b500565864cc.png)
+![Снимок экрана (8)](https://user-images.githubusercontent.com/113057337/210046990-d4a92e4f-05ee-4d3a-966c-8b747d78b820.png)
+![Снимок экрана (9)](https://user-images.githubusercontent.com/113057337/210046999-917aa6fb-7b05-4ac0-b15d-c2d5d2575b75.png)
+![Снимок экрана (10)](https://user-images.githubusercontent.com/113057337/210047016-07904e15-7813-447c-93d1-83cb4f007238.png)
+![Снимок экрана (11)](https://user-images.githubusercontent.com/113057337/210047033-6fcf82b5-01f2-47ac-bba9-294e29508325.png)
+
+
+
+
+
+
+
