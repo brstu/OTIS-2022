@@ -305,7 +305,7 @@ void texting(string& str, T& win)
         else if (sf::Keyboard::isKeyPressed(sf::Keyboard::BackSpace))
         {
             string temp = "";
-            int length = (str.size() - 1 >= 0) ? str.size() - 1 : 0;
+            int length = (str.size() - 1 > 0) ? str.size() - 1 : 0;
             for (int i = 0; i < length; i++)
                 temp += str[i];
             str = temp;

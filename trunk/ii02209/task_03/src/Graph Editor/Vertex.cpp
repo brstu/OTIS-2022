@@ -3,8 +3,8 @@
 Vertex::Vertex
 (
 	int number,
-	const string name,
-	const string content,
+	const string& name,
+	const string& content,
 	float rad,
 	float r, float g, float b
 ) {
@@ -25,12 +25,12 @@ Vertex::Vertex
 	this->num = createText(x + rad - FONT_SIZE / 1.55 * k / 2, y + rad - FONT_SIZE / 2 - 2, to_string(number), 255, 255, 255);
 }
 
-void Vertex::setName(const string name)
+void Vertex::setName(const string& name)
 { 
 	this->name = name; 
 }
 
-void Vertex::setContent(const string content)
+void Vertex::setContent(const string& content)
 { 
 	this->content = content; 
 }

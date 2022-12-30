@@ -18,12 +18,12 @@ public:
 		float x, float y,
 		float w, float h,
 		float r_b, float g_b, float b_b,
-		const string text,
+		const string& text,
 		float r_t, float g_t, float b_t
 	);
 	void add_txt(
 		float x, float y,
-		const string txt,
+		const string& txt,
 		float r_t, float g_t, float b_t
 	);
 	void add_input(
@@ -44,8 +44,8 @@ public:
 	int IndexOfPressedInput();
 	int IndexOfPressedButton();
 	bool isButtonPressed();
-	void setTxt_toInput(int i, const string txt);
-	void setTxt_toTxt(int i, const string txt);
+	void setTxt_toInput(int i, const string& txt);
+	void setTxt_toTxt(int i, const string& txt);
 	string getTxt_fromInput(int i);
 	string getTxt_fromTxt(int i);
 };

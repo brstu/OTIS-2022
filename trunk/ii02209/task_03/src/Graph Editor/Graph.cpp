@@ -113,14 +113,15 @@ int Graph::amountOfBranches()
 	return this->branches.size();
 }
 
-void Graph::addVertex(string name, string content, int rad, float r, float g, float b) 
+void Graph::addVertex(const string& name, const string& content, int rad, float r, float g, float b)
 {
 	int number = amountOfVertices();
-	if (name == "")
+	string temp = name;
+	if (temp == "")
 	{
-		name = to_string(amountOfVertices());
+		temp = to_string(amountOfVertices());
 	}
-	Vertex vertex(number, name, content, rad, r, g, b);
+	Vertex vertex(number, temp, content, rad, r, g, b);
 	this->vertices.push_back(vertex);
 	setAdjacenciesMatrix();
 }

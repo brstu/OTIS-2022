@@ -11,7 +11,7 @@ public:
 		float r_b, float g_b, float b_b,
 		float r_t, float g_t, float b_t
 	);
-	void setTxt(string str);
+	void setTxt(const string& str);
 	void clear();
 };
 

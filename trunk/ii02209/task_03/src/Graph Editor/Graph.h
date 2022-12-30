@@ -18,7 +18,7 @@ public:
 	void setAdjacenciesMatrix();
 	string getAdjacenciesMatrixAsStr();
 	string getTranscendenceMatrixAsStr();
-	void addVertex(string name, string content, int rad, float r, float g, float b); 
+	void addVertex(const string& name, const string& content, int rad, float r, float g, float b);
 	void getVertexPos(int num, float& x, float& y);
 	void tryMoveVertex();
 	void addBranch(int start, int end, float weight, bool oriented);

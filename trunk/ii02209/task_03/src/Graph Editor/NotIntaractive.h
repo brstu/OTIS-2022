@@ -20,14 +20,14 @@ protected:
 public:
 	NotIntaractive(
 		float x, float y,
-		const string txt,
+		const string& txt,
 		float r_t, float g_t, float b_t
 	);
 	NotIntaractive(
 		float x, float y,
 		float w, float h,
 		float r_b, float g_b, float b_b,
-		const string txt,
+		const string& txt,
 		float r_t, float g_t, float b_t
 	);
 	NotIntaractive(const NotIntaractive& obj);
@@ -35,7 +35,7 @@ public:
 	void setY(float y);
 	void setW(float w);
 	void setH(float h);
-	void setTxt(string str);
+	void setTxt(const string& str);
 	void setBgColor(float r, float g, float b);
 	void setTxtColor(float r, float g, float b);
 	float getX();

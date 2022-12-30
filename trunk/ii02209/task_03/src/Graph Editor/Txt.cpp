@@ -2,7 +2,7 @@
 
 Txt::Txt(
 	float x, float y,
-	const string txt,
+	const string& txt,
 	float r_t, float g_t, float b_t
 ) : NotIntaractive (
 	x, y,

@@ -13,7 +13,7 @@ Input::Input(
 	r_t, g_t, b_t
 ) {}
 
-void Input::setTxt(string str)
+void Input::setTxt(const string& str)
 {
 	this->txt = str;
 	string temp = "";

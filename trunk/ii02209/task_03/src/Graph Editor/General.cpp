@@ -18,7 +18,7 @@ sf::CircleShape createCircle(float x, float y, float rad, float r, float g, floa
 	return item;
 }
 
-sf::Text createText(float x, float y, string str, float r, float g, float b)
+sf::Text createText(float x, float y, const string& str, float r, float g, float b)
 {
 	sf::Text text;
 	text.setFont(FONT);
