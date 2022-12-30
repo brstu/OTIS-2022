@@ -32,7 +32,7 @@
 ![Скриншот №2](https://github.com/offendeddddd/myrepos/blob/main/picutres/ii/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-12-30%2016-26-28.png)
 
 Доступ к документации:
-``` http://127.0.0.1:8000/ ```
+``` localhost:8000 ```
 
 ### Запуск NIKA ###
 ![Скриншот №3](https://github.com/offendeddddd/myrepos/blob/main/picutres/ii/%D0%A1%D0%BD%D0%B8%D0%BC%D0%BE%D0%BA%20%D1%8D%D0%BA%D1%80%D0%B0%D0%BD%D0%B0%20%D0%BE%D1%82%202022-12-30%2016-13-53.png)
