@@ -1,0 +1,30 @@
+<div >
+
+  <div style="display: flex;">
+    <!-- <mat-icon *ngIf="data.options.icon==undefined" svgIcon="message-question-outline" style="width: 28px; height: 28px;"></mat-icon>
+    <mat-icon *ngIf="data.options.icon!==undefined" [svgIcon]="data.options.icon" style="width: 28px; height: 28px;"></mat-icon> -->
+    <label style="position: relative; align-self: center; margin-left: 4pt;">{{data.title}}</label>
+  </div>
+
+  <mat-divider style="margin-top: 8px; margin-bottom: 8px;"></mat-divider>
+
+  <div style="overflow-y: auto;">
+
+    <div style="display: flex; flex-flow: row; max-width: 600px;">
+      {{data.text}}
+    </div>
+    <div #divObject *ngIf="objectHtml!==''" [innerHTML]="objectHtml">
+    </div>
+    <textarea *ngIf="textAreaString!==''" cols="100" rows="45" style="height: 100%;">{{textAreaString}}</textarea>
+
+  </div>
+
+  <div>
+    <mat-dialog-actions style="float: right;">
+      <button *ngIf="data.options.buttons.length===0" mat-button color="primary" (click)="close(0)">Закрыть</button>
+      <button *ngFor="let button of data.options.buttons; let i = index;" mat-stroked-button color="primary" (click)="close(i)">{{button}}</button>
+    </mat-dialog-actions>
+  </div>
+
+</div>
+
