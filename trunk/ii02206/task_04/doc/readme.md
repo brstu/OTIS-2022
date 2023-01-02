@@ -28,6 +28,6 @@
 # Результат выполнения #
 1. На домашнем пк под операционной системой Windows был запущен данный проект.
 2. Результаты использования продемонстрированы на следующих скриншотах:
-![Screenshot_1](../screenshot1.png)
-![Screenshot_2](../screenshot2.png)
-![Screenshot_3](../screenshot3.png)
+![Screenshot_1](screenshot1.png)
+![Screenshot_2](screenshot2.png)
+![Screenshot_3](screenshot3.png)
