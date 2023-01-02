@@ -81,21 +81,23 @@
 6. Исходный код разработанной программы разместить в каталоге: **trunk\ii0xxyy\task_03\src**.
 ---
 # Описание работы программы: #
+## Окно
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/window.png)
 ## Добавление вершин
-![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/add_vertex.png))
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/add_vertex.png)
 ## Cоединение вершин ребрами
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/add_adjes.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/add_adjes.png)
 ## Перемещение вершин
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/move.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/move.png)
 ## Изменяем вес ребер
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/change_weight.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/waightchange.png)
 ## Изменяем название вершин
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/change_name_vertex.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/vertexchangename.png)
 ## Изменяем цвета вершин, ребер
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/change_color.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/colorchange.png)
 ## Удаление ребер и вершин
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/delete.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/deleteimage.png)
 ## Кратчайший путь
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/path.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/shortpath.png)
 ## Эйлеров цикл
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/eulerian_path.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/eulerianpath.png)
