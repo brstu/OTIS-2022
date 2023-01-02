@@ -3,7 +3,7 @@
 <p style="text-align: center;">“Брестский Государственный Технический Университет”</p>
 <p style="text-align: center;">Кафедра ИИТ</p>
 <div style="margin-bottom: 10em;"></div>
-<p style="text-align: center;">Лабораторная работа №4</p>
+<p style="text-align: center;">Лабораторная работа №5</p>
 <p style="text-align: center;">По дисциплине “Общая теория интеллектуальных систем”</p>
 <p style="text-align: center;">Тема: “Работа с проектом "NIKA" (Intelligent Knowledge-driven Assistant)”</p>
 <div style="margin-bottom: 10em;"></div>
