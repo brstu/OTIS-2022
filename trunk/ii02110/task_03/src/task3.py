@@ -255,7 +255,6 @@ def display_props(title, props):
 def eulerian_cycle():
     display_props("Эйлеров цикл", nx.algorithms.eulerian_path(graph))
 
-
 nodes = []# Список имен вершин
 edges = []# Список ребер
 color_vertex = "#fff"
@@ -267,22 +266,15 @@ root.resizable(False, False)
 canvas = Canvas(root, width=795, height=596, bg="grey")
 canvas.place(x=0, y=0)
 #главное меню
-
 main_menu = Menu()
 file_menu = Menu()
 file_menu1 = Menu()
-
- 
 main_menu.add_cascade(label="Работа с вершинами", menu=file_menu)
 file_menu.add_command(label="Добавление вершин",command= menu_add_vertex)
 file_menu.add_command(label="Добавление ребра",command=menu_add_edge)
-
-
 main_menu.add_cascade(label="Алгоритмы", menu=file_menu1)
 file_menu1.add_command(label="Эйлеров цикл",command=eulerian_cycle)
 file_menu1.add_command(label="Кратчайший путь",command=shortest_path)
-
- 
 root.config(menu=main_menu)
 canvas.bind('<B1-Motion>', move_node)
 canvas.bind('<Button-2>', change_name_or_weight)
