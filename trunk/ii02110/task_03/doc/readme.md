@@ -81,10 +81,8 @@
 6. Исходный код разработанной программы разместить в каталоге: **trunk\ii0xxyy\task_03\src**.
 ---
 # Описание работы программы: #
-## Окно программы
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/window.png)
 ## Добавление вершин
-![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/add_vertex.png)
+![image](https://github.com/hxxler/OTIS-2022/blob/lab3/trunk/ii02110/task_03/doc/image/add_vertex.png))
 ## Cоединение вершин ребрами
 ![image](https://github.com/y-vladislav/OTIS-2022/blob/main/trunk/ii002117/task_03/doc/image/add_adjes.png)
 ## Перемещение вершин
