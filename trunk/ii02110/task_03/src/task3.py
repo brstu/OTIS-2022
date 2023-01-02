@@ -254,6 +254,8 @@ def display_props(title, props):
     win.mainloop()
 def eulerian_cycle():
     display_props("Эйлеров цикл", nx.algorithms.eulerian_path(graph))
+    
+    
 nodes = []# Список имен вершин
 edges = []# Список ребер
 color_vertex = "#fff"
