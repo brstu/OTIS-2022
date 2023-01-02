@@ -1,5 +1,5 @@
 #подключение библиотек
-from tkinter import *
+from tkinter import messagebox,Canvas, Label, Entry, Button, Tk, Menu
 from tkinter.colorchooser import askcolor
 from numpy.random import randint
 from numpy import sqrt
