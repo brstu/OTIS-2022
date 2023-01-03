@@ -8,6 +8,7 @@ NotIntaractive::NotIntaractive(
 	this->x = x;
 	this->y = y;
 	this->h = FONT_SIZE + 4 * OUTL;
+	this->w = 0;
 	this->text = createText(
 		x + OUTL + PADDING_LEFT,
 		y + (h - FONT_SIZE) / 2 - 2,

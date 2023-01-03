@@ -1,13 +1,27 @@
-﻿  General.cpp
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(8,36): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(8,33): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(8,30): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(17,36): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(17,33): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(17,30): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(26,24): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(27,36): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(27,33): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(27,30): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
-D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\General.cpp(41,17): warning C4244: return: преобразование "double" в "float", возможна потеря данных
+﻿  NotIntaractive.cpp
+  Program.cpp
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Program.cpp(38,31): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Program.cpp(112,27): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+  main.cpp
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(37,44): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(37,33): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(38,30): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(70,41): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(79,128): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(79,65): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(82,41): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(90,128): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(90,65): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(128,232): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(128,191): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(128,150): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(128,141): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(156,157): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(308,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(214): message : выполняется компиляция ссылки на экземпляр шаблон функции "void texting<Program>(std::string &,T &)"
+          with
+          [
+              T=Program
+          ]
+  Создание кода...
   Graph Editor.vcxproj -> D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\x64\Debug\Graph Editor.exe

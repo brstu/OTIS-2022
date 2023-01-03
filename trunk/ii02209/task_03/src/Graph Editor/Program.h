@@ -9,7 +9,7 @@ class Program : public ContentPage
 private:
 	int page;
 	vector<Page> pages;
-	sf::RectangleShape bg;
+	sf::RectangleShape bg = createRectangle(OUTL, OUTL, WIN_WIDTH - OUTL * 2, WIN_HEIGHT - OUTL * 2, 205, 190, 205);
 	sf::RectangleShape tools_bg;
 	sf::RectangleShape vertex_and_branch_info_bg;
 	sf::RectangleShape info_bg;

@@ -2,7 +2,6 @@
 
 Program::Program() : ContentPage()
 {
-	bg = createRectangle(OUTL, OUTL, WIN_WIDTH - OUTL * 2, WIN_HEIGHT - OUTL * 2, 205, 190, 205);
 	bg.setOutlineThickness(OUTL);
 	bg.setOutlineColor(sf::Color(50, 0, 50));
 	tools_bg = createRectangle(OUTL, OUTL, BTN_W - OUTL * 2 + 2 * MARGIN, BTN_H * 5 + MARGIN * 6, 120, 10, 120);
@@ -23,6 +22,7 @@ Program::Program() : ContentPage()
 	info_bg.setOutlineThickness(OUTL);
 	info_bg.setOutlineColor(sf::Color(50, 0, 50));
 	this->write = false;
+	this->page = 0;
 }
 
 void Program::add_page(
