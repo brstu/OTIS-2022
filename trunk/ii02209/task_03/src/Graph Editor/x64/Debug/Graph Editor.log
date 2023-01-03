@@ -1,7 +1,28 @@
-﻿  NotIntaractive.cpp
+﻿  Button.cpp
+  ContentPage.cpp
+  FlowWindow.cpp
+  Input.cpp
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Input.cpp(20,15): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Input.cpp(21,13): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+  Intaractive.cpp
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(41,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(40,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(39,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(46,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(45,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(44,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(53,41): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(53,36): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(53,31): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(54,40): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(54,35): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(54,30): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+  NotIntaractive.cpp
+  Page.cpp
   Program.cpp
 D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Program.cpp(38,31): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
 D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Program.cpp(112,27): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+  Txt.cpp
   main.cpp
 D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(37,44): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
 D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(37,33): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
@@ -24,4 +45,6 @@ D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\t
               T=Program
           ]
   Создание кода...
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\ContentPage.cpp(124): warning C4715: ContentPage::IndexOfPressedButton: значение возвращается не при всех путях выполнения
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\ContentPage.cpp(134): warning C4715: ContentPage::IndexOfPressedInput: значение возвращается не при всех путях выполнения
   Graph Editor.vcxproj -> D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\x64\Debug\Graph Editor.exe

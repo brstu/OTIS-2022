@@ -2,27 +2,6 @@
 
 NotIntaractive::NotIntaractive(
 	float x, float y,
-	const string& txt,
-	float r_t, float g_t, float b_t
-) {
-	this->x = x;
-	this->y = y;
-	this->h = FONT_SIZE + 4 * OUTL;
-	this->w = 0;
-	this->text = createText(
-		x + OUTL + PADDING_LEFT,
-		y + (h - FONT_SIZE) / 2 - 2,
-		txt,
-		r_t, g_t, b_t
-	);
-	this->txt = txt;
-	this->r_t = r_t;
-	this->g_t = g_t;
-	this->b_t = b_t;
-}
-
-NotIntaractive::NotIntaractive(
-	float x, float y,
 	float w, float h,
 	float r_b, float g_b, float b_b,
 	const string& txt,
