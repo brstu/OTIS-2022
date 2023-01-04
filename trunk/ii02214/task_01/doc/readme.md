@@ -91,7 +91,6 @@ y_func = 1
 
 warm_1 = 1
 time_c = 20
-
 function main()
     # функция main для вызова всех функций
     get_y_func_first()
