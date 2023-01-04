@@ -11,7 +11,7 @@
 Выполнил: <br/>
 Студент 2 курса <br/>
 Группы ИИ-22 <br/>
-Сидоренко А.А. <br/>
+Клебанович В.Н. <br/>
 
 Проверил: <br/>
 Иванюк Д.С. <br/>
@@ -83,424 +83,529 @@
 
 
 ``` python
-import pickle
-import random
-import threading
-import tkinter
-import tkinter.ttk
-from collections import deque
-from heapq import heapify, heappop, heappush
-import colour as clr
-import random as rnd
-from tkinter import filedialog
-import json
-import pygubu as pg
-import networkx as nx
 from tkinter import *
+from tkinter import messagebox as mb
 import numpy as np
-import matplotlib.pyplot as plt
-class Arc:
-    i = 0
-    color = clr.Color("Black")
-    def __init__(self, name, color, graph, is_oriented):
-        Arc.i += 1
-        self.id = self.i
-        self.name = name
+
+app = Tk()  # Creating a window
+app.title("Working with graphs")  # Window title
+app.geometry("890x860+410+10")  # Window size and location
+
+canvas = Canvas(app, bg="white", width=2000, height=1000)  # Creating a canvas
+canvas.place(x=0, y=130)  # Canvas layout
+
+lbl = Label(app)  # Creating a label
+lbl.place(x=0, y=100)  # Label location
+lbl["text"] = "Name of the graph"  # Label text
+
+
+# Vertex creation class
+class VERTEX:
+    def __init__(self, canvas, color):
+        global x_press, y_press, vertex_name, vertex_counter
+        self.vertex_counter = vertex_counter
+        self.vertex_name = vertex_name[-1]
+        self.canvas = canvas
         self.color = color
-        self.graph = graph
-        self.shape = Canvas
-        self.text = Canvas
-        self.start_node = Node
-        self.finish_node = Node
-        self.is_oriented = is_oriented
-        self.x_s = None
-        self.y_s = None
-        self.x_f = None
-        self.y_f = None
-    def __dict__(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'start_node': self.start_node,
-            'finish_node': self.finish_node,
-        }
-class Node:
-    i = 0
-    stnd_color = clr.Color("White")
-    radius = 20
-    x = 10
-    y = 100
-    def __init__(self, name, color, graph, x, y):
-        Node.i += 1
-        self.id = self.i
-        self.name = name
-        self.color = color
-        self.graph = graph
-        self.arcs = []
-        self.x = x
-        self.y = y
-        self.shape = Canvas
-        self.text = Canvas
-    def add_arc(self, arc):
-        self.arcs.append(arc)
-    def get_arcs(self):
-        return self.arcs
-    def is_has_arc(self, arc):
-        if arc in self.arcs:
-            return True
+        self.x = x_press
+        self.y = y_press
+        self.id_vert = canvas.create_oval(self.x - 20, self.y - 20, self.x + 20, self.y + 20, fill=color, width=2)
+        self.id_txt = self.canvas.create_text(self.x, self.y,
+                                              anchor='center', text=self.vertex_name, font="Arial 10", fill="black")
+        canvas.unbind("<Button-1>")
+
+    def get_info(self):
+        return self.vertex_counter, self.vertex_name[self.vertex_counter - 1]
+
+
+# Edge creation class
+class EDGE:
+    def __init__(self, vertex1: VERTEX, vertex2: VERTEX, weight: int = 0):
+        self.vertex1 = vertex1
+        self.vertex2 = vertex2
+        self.x1, self.y1 = vertex1.x, vertex1.y
+        self.x2, self.y2 = vertex2.x, vertex2.y
+
+        self.weight = weight
+        if var1.get():
+            self.line = canvas.create_line(line_intersect_circle(self.x1, self.y1, self.x2, self.y2),
+                                           width=2, arrow="last")
+            if weight != "0":
+                self.rect = canvas.create_rectangle((self.x1 + self.x2) / 2 - 5,
+                                                    (self.y1 + self.y2) / 2 - 8,
+                                                    (self.x1 + self.x2) / 2 + 5,
+                                                    (self.y1 + self.y2) / 2 + 8,
+                                                    fill='white', width=0)
+                self.text = canvas.create_text((self.x1 + self.x2) / 2,
+                                               (self.y1 + self.y2) / 2,
+                                               text=self.weight,
+                                               font=('Arial', 14), fill='black', )
+            else:
+                self.rect = None
+                self.text = None
         else:
-            return False
-    def set_color(self, color):
-        self.color = color
-    def set_name(self, name):
-        self.name = name
-    def __dict__(self):
-        return {
-            'id': self.id,
-            'name': self.name,
-            'arcs': self.arcs,
-            'x': self.x,
-            'y': self.y
-        }
-class Graph:
-    def __init__(self, name):
-        self.name = name
-        self.nodes = []
-        self.arcs = []
-        self.d = {'': []}
-        self.oval = None
-        self.text = None
-        self.canvases = []
-    def __str__(self):
-        return f"Кол-во вершин: {len(self.nodes)}\n" \
-               f"Кол-во дуг: {len(self.arcs)}\n" \
-               f"Матрица инцидентности: {self.count_incidence_matrix()}\n" \
-               f"Матрица смежности: {self.count_adjacency_matrix()}"
-    def add_node(self, node):
-        self.nodes.append(node)
-    def add_arc(self, arc):
-        self.arcs.append(arc)
-    def count_incidence_matrix(self):
-        matrix = np.zeros((len(self.nodes), len(self.arcs)))
-        for node in self.nodes:
-            for arc in self.arcs:
-                if node.is_has_arc(arc):
-                    matrix[node.id - 1][arc.id - 1] = 1
-        return matrix
-    def count_adjacency_matrix(self):
-        self.d.clear()
-        matrix = np.zeros((len(self.nodes), len(self.nodes)))
-        for node in self.nodes:
-            arr = []
-            for arc in self.arcs:
-                if node.is_has_arc(arc):
-                    if node == arc.start_node:
-                        arr.append(arc.finish_node.name)
-                        matrix[node.id - 1][arc.finish_node.id - 1] = 1
-                    else:
-                        arr.append(arc.start_node.name)
-                        matrix[node.id - 1][arc.start_node.id - 1] = 1
-            self.d[node.name] = arr
-        return matrix
-    def breadth_first_search(self, start, end):
-        queue = deque([start])
-        visited = []
-        while queue:
-            point = queue.popleft()
-            if point not in visited:
-                visited.append(point)
-                if point == end:
-                    return visited
-                queue.extend(self.d[point])
-        return []
-    def dijkstra(self, start, end):
-        distances = {node: float('inf') for node in self.d}
-        distances[start] = 0
-        queue = [(0, start)]
-        heapify(queue)
-        while queue:
-            distance, node = heappop(queue)
-            if node == end:
-                return distance
-            if distance == distances[node]:
-                for neighbor, cost in self.d[node].items():
-                    new_distance = distance + cost
-                    if new_distance < distances[neighbor]:
-                        distances[neighbor] = new_distance
-                        heappush(queue, (new_distance, neighbor))
-        return float('inf')
-    def remove_node(self, node):
-        self.nodes.remove(node)
-    def remove_arc(self, arc):
-        self.arcs.remove(arc)
-    def to_dict(self):
-        return {'nodes': self.nodes, 'arcs': self.arcs}
-class Window(Tk):
-    btn_add_arc = Button
-    t1 = threading.Thread
-    t2 = threading.Thread
-    current_graph = Graph("")
-    current_node = Node
-    current_canvas = Canvas
-    current_arc = Arc
-    notebook = None
-    graph_1 = None
-    graph_2 = None
-    canvas1 = None
-    canvas2 = Canvas
-    isArcActivate = False
-    def __init__(self):
-        super().__init__()
-        # self.canvas1 = Canvas(self.tab_1)
-        # self.node2 = self.canvas1.create_oval(5, 5, 75, 75, fill=clr.Color("Red"))
-        # self.canvas2 = Canvas(self.tab_2)
-        # self.canvas1.pack(fill=tkinter.BOTH, expand=1)
-        # self.canvas2.pack(fill=tkinter.BOTH, expand=1)
-        # Событие на переключение между графами
-        # self.current_canvas.tag_bind(self.node2, "<ButtonRelease-1>", self.on_node_release)
-        # self.current_canvas.tag_bind(self.node2, "<ButtonPress-1>", self.on_node_press)
-        # self.current_canvas.tag_bind(self.node2, "<B1-Motion>", self.on_node_motion)
-        self.mainloop()
-    def set_notebook(self, notebook):
-        self.notebook = notebook
-# Bind event handlers to the nodes
-def create_nodes_fnc(node):
-    def start(e):
-        global x_prev
-        global y_prev
-        x_prev = e.x
-        y_prev = e.y
-    def drag(event):
-        x = event.x - x_prev
-        y = event.y - y_prev
-        node.x = node.x + x
-        node.y = node.y + y
-        Window.current_canvas.move(node.text, x, y)
-        Window.current_canvas.move(node.shape, x, y)
-        redraw()
-    def choose(event):
-        Window.btn_add_arc.config(state=ACTIVE)
-        Window.current_node = node
-        redraw()
-    def set_arc(event):
-        node.add_arc(Window.current_arc)
-        Window.current_arc.finish_node = node
-        redraw()
-    Window.current_canvas.tag_bind(node.shape, "<ButtonPress-1>", start)
-    Window.current_canvas.tag_bind(node.shape, "<Double-Button-1>", choose)
-    Window.current_canvas.tag_bind(node.text, "<Double-Button-1>", choose)
-    Window.current_canvas.tag_bind(node.shape, "<Button-3>", set_arc)
-    Window.current_canvas.tag_bind(node.text, "<Button-3>", set_arc)
-    Window.current_canvas.tag_bind(node.text, "<ButtonPress-1>", start)
-    Window.current_canvas.tag_bind(node.text, "<ButtonRelease-1>", drag)
-    Window.current_canvas.tag_bind(node.shape, "<ButtonRelease-1>", drag)
-class Plt:
-    entry_color = Entry
-    label_color = Label
-    color = clr
-def generate_color():
-    Plt.entry_color.delete(0, END)
-    color = '#{:02x}{:02x}{:02x}'.format(*map(lambda x: random.randint(0, 255), range(3)))
-    Plt.label_color['bg'] = color
-    Plt.entry_color.insert(0, color)
-    Plt.color = color
-def change_clr():
-    window = Tk()
-    window.geometry('200x300')
-    window.resizable(0, 0)
-    Plt.label_color = Label(window, bg='white')
-    Plt.label_color.place(relx=0.5, rely=0.3, anchor=CENTER, width=150, height=130)
-    Plt.entry_color = Entry(window, borderwidth=4)
-    Plt.entry_color.place(relx=0.5, rely=0.6, anchor=CENTER, width=150, height=30)
-    btn_generate_clr = Button(window, text="Сгенерировать", font='Arial 13 bold', borderwidth=4, command=generate_color)
-    btn_generate_clr.place(relx=0.5, rely=0.8, anchor=CENTER, width=150, height=60)
-    btn_commit = Button(window, text="Изменить", font='Arial 13 bold', borderwidth=4, command=commit_clr)
-    btn_commit.place(relx=0.5, rely=0.10, anchor=CENTER, width=150, height=60)
-    window.mainloop()
-def commit_clr():
-    Window.current_node.set_color(Plt.color)
-class Name(Tk):
-    name = Tk
-    text = Entry()
-def change_name():
-    Window.current_node.set_name(Name.text.get())
-    redraw()
-def window_cng_name():
-    name = Tk()
-    name.geometry('200x300')
-    name.resizable(0, 0)
-    Label(name, text="Название").grid(row=0)
-    Name.text = Entry(name)
-    Name.text.grid(row=0, column=1)
-    Button(name, text='Изменить', command=change_name).grid(row=3, column=1, sticky=W, pady=4)
-    name.mainloop()
-def on_add_node():
-    node = Node(f'node{len(Window.current_graph.nodes)}', Node.stnd_color, Window.current_graph, rnd.uniform(0, 800),
-                rnd.uniform(0, 500))
-    Window.current_graph.add_node(node)
-    redraw()
-    create_nodes_fnc(node)
-def on_add_arc():
-    arc = Arc(f'arc{len(Window.current_graph.arcs)}', clr.Color("Black"), Window.current_graph, False)
-    Window.current_graph.add_arc(arc)
-    Window.current_arc = arc
-    Window.current_node.add_arc(arc)
-    arc.start_node = Window.current_node
-    Window.btn_add_arc.config(state=tkinter.DISABLED)
-def on_tab_changed(event):
-    Window.current_graph = Window.graph_1 if Window.notebook.index(Window.notebook.select()) == 0 else Window.graph_2
-    Window.current_canvas = Window.canvas1 if Window.notebook.index(Window.notebook.select()) == 0 else Window.canvas2
-    Node.i = len(Window.current_graph.nodes)
-    Arc.i = len(Window.current_graph.arcs)
-    redraw()
-def on_remove_node():
-    try:
-        Window.current_graph.remove_node(Window.current_node)
-        redraw()
-    except Exception:
-        print("not choose node to delete")
-    Node.i = len(Window.current_graph.nodes)
-    a = 1
-    for node in Window.current_graph.nodes:
-        node.id = a
-        a += 1
-def on_remove_arc():
-    Window.current_graph.remove_arc(Window.current_arc)
-    Window.current_arc = Window.current_graph.arcs[len(Window.current_graph.arcs) - 1]
-    Arc.i = len(Window.current_graph.arcs)
-    a = 1
-    for arc in Window.current_graph.arcs:
-        arc.id = a
-        a += 1
-    redraw()
-def redraw():
-    print(Node.i)
-    print(Window.current_graph.nodes)
-    print(Window.current_graph.arcs)
-    Window.current_canvas.delete('all')
-    clr_n = None
-    for node in Window.current_graph.nodes:
-        if Window.current_node != node:
-            clr_n = node.color
+            self.line = canvas.create_line(line_intersect_circle(self.x1, self.y1, self.x2, self.y2), width=2)
+            if weight != "0":
+                self.rect = canvas.create_rectangle((self.x1 + self.x2) / 2 - 5,
+                                                    (self.y1 + self.y2) / 2 - 8,
+                                                    (self.x1 + self.x2) / 2 + 5,
+                                                    (self.y1 + self.y2) / 2 + 8,
+                                                    fill='white', width=0)
+                self.text = canvas.create_text((self.x1 + self.x2) / 2,
+                                               (self.y1 + self.y2) / 2,
+                                               text=self.weight,
+                                               font=('Arial', 14), fill='black', )
+            else:
+                self.rect = None
+                self.text = None
+
+    def delete(self):
+        canvas.delete(self.line)
+        canvas.delete(self.rect)
+        canvas.delete(self.text)
+
+
+def line_intersect_circle(x1, y1, x2, y2):
+    main_hypotenuse = np.sqrt((x2 - x1) ** 2 + (y2 - y1) ** 2)
+    main_dx = x2 - x1
+    main_dy = y2 - y1
+    dx = (main_hypotenuse - 20) * main_dx / main_hypotenuse
+    dy = (main_hypotenuse - 20) * main_dy / main_hypotenuse
+
+    return x2 - dx, y2 - dy, x1 + dx, y1 + dy
+
+
+# Tracking mouse clicks and writing to global variables
+def on_wasd(occasion):
+    global x_press, y_press
+    x_press = occasion.x
+    y_press = occasion.y
+
+
+# Program exit function
+def exit_function(root):
+    root.destroy()
+
+
+# Data saving function
+def saving_data():
+    pass
+
+
+# Graph name creation function
+def name_of_the_graf():
+    new_window = Tk()
+    new_window.title("Specify the name of the graph")  # Window title
+    new_window.wm_attributes('-topmost', 1)  # The window is always on top
+    new_window.resizable(False, False)  # Prohibiting window resizing
+    lbl_graph = Label(new_window)
+    lbl_graph["text"] = "Enter the name of the graph"
+    lbl_graph.grid(row=0, column=0, sticky="ew")
+    ent = Entry(new_window)
+    ent.grid(row=1, column=0)
+    btn_graf = Button(new_window, text="Input", command=lambda: change_the_name_of_the_graf(ent.get(), new_window))
+    btn_graf.grid(row=2, column=0, sticky="ew")
+    if ent.get == lbl["text"]:
+        new_window.destroy()
+    new_window.mainloop()
+
+
+# Vertex creation function
+def create_a_vertex(root, ent):
+    global call_count, vertex_counter, color, vertex, vertex_name
+    if '' == ent.get():
+        mb.showerror("Error", "You didn't enter the vertex name")
+    elif ent.get() in [vert.vertex_name for vert in vertex]:
+        mb.showerror("Error", "Such a vertex already exists")
+    elif ent.get() not in [vert.vertex_name for vert in vertex]:
+        vertex_name[vertex_counter] = ent.get()
+        call_count += 1
+    if call_count != 0:
+        vertex_counter += 1
+        vertex.append(VERTEX(canvas, color))
+        call_count = 0
+        root.destroy()
+
+
+call_count = 0
+
+
+# Completed graph name creation function
+def change_the_name_of_the_graf(name, root):
+    lbl["text"] = name
+    exit_function(root)
+
+
+# Vertex color selection function
+def color_selection(number):
+    global color
+    if number == 1:
+        color = "red"
+    elif number == 2:
+        color = "blue"
+    elif number == 3:
+        color = "yellow"
+    elif number == 4:
+        color = "green"
+    else:
+        color = "white"
+
+
+# Vertex Creation Menu
+def vertex_creation_menu():
+    global vertex_name, call_count
+    call_count = 0
+    canvas.bind("<Button-1>", on_wasd)  # The case of clicking the mouse button
+    vertex_name.append("")
+    new_window = Tk()
+    new_window.geometry("230x100+0+0")
+    new_window.wm_attributes('-topmost', 1)
+    new_window.resizable(False, False)
+    lbl = Label(new_window)
+    lbl["text"] = "Enter the vertex name"
+    ent = Entry(new_window)
+    btn_color1 = Button(new_window, text="Red", command=lambda: color_selection(1), bg="red")
+    btn_color2 = Button(new_window, text="Blue", command=lambda: color_selection(2), bg="blue")
+    btn_color3 = Button(new_window, text="Yellow", command=lambda: color_selection(3), bg="yellow")
+    btn_color4 = Button(new_window, text="Green", command=lambda: color_selection(4), bg="green")
+    btn_create = Button(new_window, text="Create\na vertex", command=lambda: create_a_vertex(new_window, ent))
+    lbl.grid(row=0, column=0, sticky="ew")
+    ent.grid(row=1, column=0, sticky="ewn")
+    btn_color1.grid(row=0, column=1, sticky="ew")
+    btn_color2.grid(row=1, column=1, sticky="ew")
+    btn_color3.grid(row=2, column=1, sticky="ew")
+    btn_color4.grid(row=3, column=1, sticky="ewn")
+    btn_create.grid(row=3, column=0, sticky="ew")
+
+    new_window.mainloop()
+
+
+# Vertex movement function
+def moving_a_vertex(occasion):
+    global x_press, y_press, select_vertex, vertex
+    x_press = occasion.x
+    y_press = occasion.y
+    select_vertex.x = x_press
+    select_vertex.y = y_press
+    canvas.coords(select_vertex.id_vert, x_press - 20, y_press - 20, x_press + 20, y_press + 20)
+    canvas.coords(select_vertex.id_txt, x_press, y_press)
+    for edge in edges:
+        if edge.vertex1 == select_vertex:
+            canvas.coords(edge.line, line_intersect_circle(x_press, y_press, edge.vertex2.x, edge.vertex2.y))
+            canvas.coords(edge.rect, (x_press + edge.vertex2.x) / 2 - 5,
+                          (y_press + edge.vertex2.y) / 2 - 8,
+                          (x_press + edge.vertex2.x) / 2 + 5,
+                          (y_press + edge.vertex2.y) / 2 + 8)
+            canvas.coords(edge.text, (x_press + edge.vertex2.x) / 2, (y_press + edge.vertex2.y) / 2)
+
+        elif edge.vertex2 == select_vertex:
+            canvas.coords(edge.line, line_intersect_circle(edge.vertex1.x, edge.vertex1.y, x_press, y_press))
+            canvas.coords(edge.rect, (x_press + edge.vertex1.x) / 2 - 5,
+                          (y_press + edge.vertex1.y) / 2 - 8,
+                          (x_press + edge.vertex1.x) / 2 + 5,
+                          (y_press + edge.vertex1.y) / 2 + 8)
+            canvas.coords(edge.text, (x_press + edge.vertex1.x) / 2, (y_press + edge.vertex1.y) / 2)
+
+
+# Finished vertex moving function
+def moving_a_vertex1():
+    canvas.bind("<Button-1>", vertex_selection)
+
+
+# function select vertex with mouse click
+def vertex_selection(occasion):
+    global x_press, y_press, select_vertex
+    x_press = occasion.x
+    y_press = occasion.y
+    for vert in vertex:
+        if vert.x - 20 <= x_press <= vert.x + 20 and vert.y - 20 <= y_press <= vert.y + 20:
+            select_vertex = vert
+            canvas.bind("<B1-Motion>", moving_a_vertex)
+            canvas.bind("<ButtonRelease-1>", canceling_vertex_selection)
+            print(select_vertex.vertex_name, x_press, y_press)
+            break
+
+
+# Canceling vertex selection
+def canceling_vertex_selection(occasion):
+    canvas.unbind("<B1-Motion>")
+    canvas.unbind("<ButtonRelease-1>")
+
+
+# Vertex deleting menu
+def finding_a_delete_vertex(ent, root):
+    global vertex_name, vertex, vertex_counter, edge_counter
+    vertex_counter -= 1
+    flag = 1
+    while flag:
+        for j, edge in enumerate(edges):
+            if edge.vertex1.vertex_name == ent or edge.vertex2.vertex_name == ent:
+                canvas.delete(edge.line)
+                canvas.delete(edge.text)
+                canvas.delete(edge.rect)
+                edges.pop(j)
+                edge_counter -= 1
+        for i, vert in enumerate(vertex):
+            if vert.vertex_name == ent:
+                canvas.delete(vert.id_vert)  # Deleting a vertex by its id
+                canvas.delete(vert.id_txt)  # Deleting text by vertex id
+                vertex.pop(i)
+                vertex_name.pop(i)
+                root.destroy()
+                flag = 0
+                break
         else:
-            clr_n = clr.Color("Blue")
-        x, y = node.x, node.y
-        r = node.radius
-        node.shape = Window.current_canvas.create_oval(x - r, y - r, x + r, y + r, fill=clr_n)
-        node.text = Window.current_canvas.create_text(x + 1, y, text=node.name)
-        create_nodes_fnc(node)
-        try:
-            for arc in Window.current_graph.arcs:
-                if arc.start_node != arc.finish_node:
-                    arc.shape = Window.current_canvas.create_line(arc.start_node.x, arc.start_node.y, arc.finish_node.x,
-                                                                  arc.finish_node.y, fill=arc.color)
-        except Exception:
-            print("Arc not found")
-    # self.canvas2.delete('all')
-    # self.draw(self.current_canvas)
-def print_info():
+            mb.showerror("Error", "You entered the wrong vertex name")
+            break
+    if edge_counter == 0:
+        c1["state"] = "normal"
+
+
+# Deleting a vertex
+def deleting_a_vertex():
+    new_window = Tk()
+    new_window.title("Specify the name of the graph")
+    new_window.wm_attributes('-topmost', 1)
+    new_window.resizable(False, False)
+    lbl = Label(new_window)
+    lbl["text"] = "Enter the name of the vertex to delete"
+    lbl.grid(row=0, column=0, sticky="ew")
+    ent = Entry(new_window)
+    ent.grid(row=1, column=0)
+    btn_delete = Button(new_window, text="Input", command=lambda: finding_a_delete_vertex(ent.get(), new_window))
+    btn_delete.grid(row=2, column=0, sticky="ew")
+    if ent.get == lbl["text"]:
+        new_window.destroy()
+
+
+# Renaming a vertex
+def renaming_a_vertex(en1, en2, root):
+    global vertex_name, vertex
+    for vert in vertex:
+        if vert.vertex_name == en1 and en2 not in vertex_name:
+            vert.vertex_name = en1
+            canvas.itemconfigure(vert.id_txt, text=en2)
+            vertex_name[vertex_name.index(en1)] = en2
+            root.destroy()
+            break
+    else:
+        mb.showerror("Error", "You entered the wrong vertex name")
+
+
+# Vertex renaming menu
+def vertex_renaming_menu():
+    new_window = Tk()
+    new_window.title("Specify the name of the graph")
+    new_window.wm_attributes('-topmost', 1)
+    new_window.resizable(False, False)
+    lbl1 = Label(new_window)
+    lbl1["text"] = "Enter the name of the vertex to change"
+    lbl1.grid(row=0, column=0, sticky="ew")
+    ent1 = Entry(new_window)
+    ent1.grid(row=1, column=0, sticky="ew")
+    lbl2 = Label(new_window)
+    lbl2["text"] = "Enter a new vertex name"
+    lbl2.grid(row=2, column=0, sticky="ew")
+    ent2 = Entry(new_window)
+    ent2.grid(row=3, column=0, sticky="ew")
+    btn_rename = Button(new_window, text="Change the name",
+                        command=lambda: renaming_a_vertex(ent1.get(), ent2.get(), new_window))
+    btn_rename.grid(row=4, column=0, sticky="ew")
+
+
+# Creating an edge
+def creating_an_edge(ent1, ent2, weight, root):
+    global vertex, vertex_name, edge_counter
+    vert1, vert2 = 0, 0
+    for vert in vertex:
+        if vert.vertex_name == ent1:
+            vert1 = vert
+            break
+    else:
+        mb.showerror("Error", "You entered the wrong vertex name")
+    for vert in vertex:
+        if vert.vertex_name == ent2:
+            vert2 = vert
+            break
+    else:
+        mb.showerror("Error", "You entered the wrong vertex name")
+    edges.append(EDGE(vert1, vert2, weight))
+    c1["state"] = "disable"
+    edge_counter += 1
+    root.destroy()
+
+
+# Edge creation menu
+def edge_creation_menu():
+    new_window = Tk()
+    new_window.title("Specify the name of the graph")
+    new_window.wm_attributes('-topmost', 1)
+    new_window.resizable(False, False)
+    lbl1 = Label(new_window)
+    lbl1["text"] = "Enter the name of the first vertex"
+    ent1 = Entry(new_window)
+    ent2 = Entry(new_window)
+    ent3 = Entry(new_window)
+    ent3.insert(0, "0")
+    lbl2 = Label(new_window)
+    lbl3 = Label(new_window)
+    lbl3["text"] = "Enter the vertex weight"
+    lbl2["text"] = "Enter the name of the second vertex"
+    lbl1.grid(row=0, column=0, sticky="ew")
+    btn_vertex_name = Button(new_window, text="Input",
+                             command=lambda: creating_an_edge(ent1.get(), ent2.get(), ent3.get(), new_window))
+    ent1.grid(row=1, column=0, sticky="ew")
+    lbl2.grid(row=2, column=0, sticky="ew")
+    ent2.grid(row=3, column=0, sticky="ew")
+    lbl3.grid(row=4, column=0, sticky="ew")
+    ent3.grid(row=5, column=0, sticky="ew")
+    btn_vertex_name.grid(row=0, column=1, rowspan=6, sticky="ns")
+
+
+# Finding the edge to be deleted
+def finding_the_edge_to_be_deleted(ent1, ent2, root):
+    global vertex, vertex_name, edge_counter, edges
+    for i, edge in enumerate(edges):
+        if edge.vertex1.vertex_name == ent1 and edge.vertex2.vertex_name == ent2:
+            canvas.delete(edge.line)
+            canvas.delete(edge.text)
+            canvas.delete(edge.rect)
+            edges.pop(i)
+            edge_counter -= 1
+            root.destroy()
+            break
+    else:
+        mb.showerror("Error", "There is no such edge")
+    if edge_counter == 0:
+        c1["state"] = "normal"
+
+
+# Edge deleting menu
+def edge_deleting_menu():
+    new_window = Tk()
+    new_window.title("Specify the name of the graph")
+    new_window.wm_attributes('-topmost', 1)
+    new_window.resizable(False, False)
+    lbl = Label(new_window)
+    lbl["text"] = "Enter the name of the vertices between \nwhich the edge is being removed\nFirst vertex"
+    lbl.grid(row=0, column=0, sticky="ew")
+    lbl2 = Label(new_window)
+    lbl2["text"] = "Second vertex"
+    ent1 = Entry(new_window)
+    ent2 = Entry(new_window)
+    ent1.grid(row=1, column=0, sticky="ew")
+    lbl2.grid(row=2, column=0, sticky="ew")
+    ent2.grid(row=3, column=0, sticky="ew")
+    btn_delete = Button(new_window, text="Input",
+                        command=lambda: finding_the_edge_to_be_deleted(ent1.get(), ent2.get(), new_window))
+    btn_delete.grid(row=4, column=0, sticky="ew")
+
+
+# function create matrix adjacency from list of edges and print it in new window tkinter
+def creating_an_adjacency_matrix():
+    global vertex_name, edges
+    matrix_adjacency = [[0 for i in range(vertex_name.__len__())] for i in range(vertex_name.__len__())]
+    for edge in edges:
+        matrix_adjacency[vertex_name.index(edge.vertex1.vertex_name)][vertex_name.index(edge.vertex2.vertex_name)] = 1
+        matrix_adjacency[vertex_name.index(edge.vertex2.vertex_name)][vertex_name.index(edge.vertex1.vertex_name)] = 1
     window = Tk()
-    print(Window.current_graph.name)
-    label = Label(window, text=f'{Window.current_graph.__str__()}')
-    label.pack()
+    window.title("The adjacency matrix")
+    window.geometry("300x300+0+0")
+    for i in range(matrix_adjacency.__len__()):
+        for j in range(len(matrix_adjacency[0])):
+            Label(window, text=matrix_adjacency[i][j], font="Arial 10", width=5, height=2, borderwidth=1,
+                  relief="solid").grid(
+                row=i, column=j)
     window.mainloop()
-def save_file():
-    file = tkinter.filedialog.asksaveasfilename(filetypes=[("Graph files", ".graph"), ("TXT Graph", ".txt")])
-    with open(file, 'wb') as f:
-        # Сериализация
-        pickle.dump(Window.current_graph.nodes, f)
-        pickle.dump(Window.current_graph.arcs, f)
-def load_file():
-    file = tkinter.filedialog.askopenfilename()
-    if file:
-        # Чтение данных из файла
-        with open(file, 'r') as f:
-            data = f.read()
-        obj2 = json.loads(data)
-        print(obj2)
-    # redraw()
-def main():
-    # создаем окно программы
+
+
+# function create matrix incidence from list of edges and print it in new window tkinter
+def creating_an_incidence_matrix():
+    global vertex_name, edges
+    matrix_incidence = [[0 for i in range(len(edges))] for i in range(len(vertex_name))]
+    for i in range(edges.__len__()):
+        matrix_incidence[vertex_name.index(edges[i].vertex1.vertex_name)][i] = 1
+        matrix_incidence[vertex_name.index(edges[i].vertex2.vertex_name)][i] = 1
     window = Tk()
-    width = window.winfo_screenwidth()
-    height = window.winfo_screenheight()
-    width = width // 2  # середина экрана
-    height = height // 2
-    width = width - 400  # смещение от середины
-    height = height - 400
-    window.geometry('800x700+{}+{}'.format(width, height))
-    window.resizable = False
-    # создаем меню программы
-    menu = Menu(window)
-    window.config(menu=menu)
-    # создаем пункт меню "Файл"
-    file_menu = Menu(menu)
-    # создаем пункт меню "Граф"
-    graph_menu = Menu(menu)
-    # создаем пункт меню управления вершинами и ребрами
-    control_menu = Menu(menu)
-    # создаем подменю пункта "Файл"
-    # file_menu.add_command(label='Открыть', command=load_file)
-    # file_menu.add_command(label='Сохранить', command=save_file)
-    # file_menu.add_command(label='Сохранить в текст. варианте')
-    # menu.add_cascade(label="Файл", menu=file_menu)
-    # создаем подменю пункта "Граф"
-    graph_menu.add_command(label='Вывести информацию', command=print_info)
-    menu.add_cascade(label="Граф", menu=graph_menu)
-    control_menu.add_command(label="Изменить цвет", command=change_clr)
-    control_menu.add_command(label='Изменить имя', command=window_cng_name)
-    menu.add_cascade(label="Управление", menu=control_menu)
-    # создаем MDI для графов
-    notebook = tkinter.ttk.Notebook(window)
-    notebook.bind('<<NotebookTabChanged>>', on_tab_changed)
-    tab_1 = Frame(notebook)
-    tab_2 = Frame(notebook)
-    graph_1 = Graph('Graph1')
-    Window.graph_1 = graph_1
-    graph_2 = Graph('Graph2')
-    Window.graph_2 = graph_2
-    notebook.add(tab_1, text='Graph1')
-    notebook.add(tab_2, text='Graph2')
-    notebook.pack()
-    Window.notebook = notebook
-    # Создаем холст для вершин и графов
-    canvas = Canvas(tab_1, width=800, height=500)
-    canvas2 = Canvas(tab_2, width=800, height=500)
-    Window.canvas1 = canvas
-    canvas.pack()
-    canvas2.pack()
-    Window.canvas2 = canvas2
-    # Создаем кнопки для создания и удаления вершин
-    add_node_button = Button(window, text='Добавить узел', command=on_add_node)
-    add_node_button.pack()
-    remove_node_button = Button(window, text='Удалить узел', command=on_remove_node)
-    remove_node_button.pack()
-    add_arc_button = Button(window, text='Добавить ребро', command=on_add_arc)
-    add_arc_button.config(state=DISABLED)
-    add_arc_button.pack()
-    Window.btn_add_arc = add_arc_button
-    remove_arc_button = Button(window, text='Удалить ребро', command=on_remove_arc)
-    remove_arc_button.pack()
-    # Draw two nodes
+    window.title("The incidence matrix")
+    window.geometry("300x300+0+0")
+    for i in range(matrix_incidence.__len__()):
+        for j in range(len(matrix_incidence[0])):
+            Label(window, text=matrix_incidence[i][j],
+                  font="Arial 10", width=5, height=2, borderwidth=1, relief="solid").grid(row=i, column=j)
     window.mainloop()
-    # Define event handlers for dragging the nodes
-if __name__ == '__main__':
-    main()
+
+
+select_vertex = None
+vertex_name = []  # List of vertex names
+edges = []
+vertex = []  # Global variables
+color = "red"  # Vertex color
+x_press = 0  # Global variables
+x_move = []  # List of x coordinates
+y_press = 0  # Global variables
+y_move = []  # List of y coordinates
+vertex_counter = 0  # Vertex counter
+edge_counter = 0
+var1 = BooleanVar()
+var1.set(False)
+var2 = BooleanVar()
+var2.set(False)
+
+# Creating the button "Set the name of the graph"
+btn1 = Button(app, text="Set the name of the graph", command=name_of_the_graf)
+# Creating the button "Create a vertex"
+btn2 = Button(app, text="Create a vertex", command=vertex_creation_menu)
+# Creating the button "Delete a vertex"
+btn3 = Button(app, text="Delete a vertex", command=deleting_a_vertex)
+# Creating the button "Create an edge"
+btn4 = Button(app, text="Create an edge", command=edge_creation_menu)
+# Creating the button "Delete an edge"
+btn5 = Button(app, text="Delete an edge", command=edge_deleting_menu)
+# Creating the button "Moving vertexes"
+btn6 = Button(app, text="Moving vertexes", command=moving_a_vertex1)
+# Creating the button "The adjacency vertex"
+btn7 = Button(app, text="The adjacency matrix", command=creating_an_adjacency_matrix)
+# Creating the button "The incidence matrix"
+btn8 = Button(app, text="The incidence matrix", command=creating_an_incidence_matrix)
+# Creating the button "Rename a vertex"
+btn9 = Button(app, text="Rename a vertex", command=vertex_renaming_menu)
+# Creating the button "Save values"
+btn10 = Button(app, text="Save values", command=saving_data)
+# Creating the button "Exit"
+btn11 = Button(app, text="Exit", command=exit)
+# Creating the button "Orientation"
+c1 = Checkbutton(app, text="Orientation", onvalue=1, offvalue=0, variable=var1, bg="gray")
+
+# Enter data for the location of the vertices
+btn1.grid(row=0, column=0, stick="ew")
+btn2.grid(row=1, column=0, stick="ew")
+btn3.grid(row=2, column=0, stick="ew")
+btn4.grid(row=0, column=1, stick="ew")
+btn5.grid(row=1, column=1, stick="ew")
+btn6.grid(row=2, column=1, stick="ew")
+btn7.grid(row=0, column=2, stick="ew")
+btn8.grid(row=1, column=2, stick="ew")
+btn9.grid(row=2, column=2, stick="ew")
+btn10.grid(row=0, column=3, stick="ew")
+btn11.grid(row=1, column=3, stick="ew")
+c1.grid(row=2, column=3, stick="ew")
+
+app.mainloop()
+
 ```
 
-## Работа с несколькими графами(MDI) ##
-
-![1](10.png)
-Можно работать одновременно с 2-мя графами, переключаясь между холстами
-
-## Создавать, удалять, именовать, переименовывать, перемещать узлы ##
+## Создание вершин ##
 ![1](1.png)
-![1](2.png)
-![1](3.png)
-![1](4.png)
-![1](5png.png)
 
-Чтобы создать дугу между двумя вершина сначала нужно нажать два раза левой кнопкой мыши по узлу, затем правой кнопкой мыши по второму узлу. 
+## Создание ребер ##
+![2](2.png)
 
-## Выводить информацию о графе ##
-![1](11.png)
+## Удаление ребер ##
+![3](3.png)
+
+## Перемещение вершин ##
+![4](4.png)
+
+## Вывод матриц смежности и инцидентности ##
+![5](5.png)
