@@ -17,6 +17,6 @@
 | 13 | Худик Андрей Александрович    |[ShadowPlayer34](https://github.com/ShadowPlayer34)      |✔️  |✔️ |✔️ | ✔️ |✔️  |✔️ |6      |
 | 14 | Шнур Анастасия Андреевна      |[MrsAnyki](https://github.com/MrsAnyki)                  |✔️  |✔️ |✔️ | ✔️ |    |    |6      |
 | 15 | Шпак Илья Сергеевич           |[IlyaShpak](https://github.com/IlyaShpak)                |✔️  |✔️ |✔️ |     |✔️  |✔️ |8      |
-| 16 | Шурина Ангелина Александровна |                                                         |0   |   |    |     |    |    |4      |
+| 16 | Шурина Ангелина Александровна |[pashtettttt](https://github.com/pashtettttt)            |0   |   |    |     |    |    |4      |
 | 17 | Ясюкевич Владислав Сергеевич  |[y-vladislav](https://github.com/y-vladislav)            |✔️  |✔️ |✔️ | ✔️ |✔️  |✔️ |7      |
 
