@@ -9,8 +9,8 @@
 <br><br><br><br><br>
 <p align="right">Выполнил:</p>
 <p align="right">Студент 2 курса</p>
-<p align="right">Группы ИИ-21</p>
-<p align="right">Кабак Д. Н.</p>
+<p align="right">Группы ИИ-22</p>
+<p align="right">Полиенко В. Э.</p>
 <p align="right">Проверил:</p>
 <p align="right">Иванюк Д. С.</p>
 <br><br><br><br><br>
@@ -32,6 +32,6 @@
 
 # Выполнение задания #
 
-При выполнении 4 лабораторной работы столкнулся с ошибкой в проекте NIKA на странице sc-web (localhost:8000), о чем и сообщил в репозитории проекта: https://github.com/ostis-ai/sc-web/issues/57
+При выполнении  лабораторной работы не обнаружил ошибок при работе с NIKA 
 
-![issue](issue.png)
+
