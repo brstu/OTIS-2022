@@ -1,0 +1,50 @@
+﻿  Button.cpp
+  ContentPage.cpp
+  FlowWindow.cpp
+  Input.cpp
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Input.cpp(20,15): warning C4244: инициализация: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Input.cpp(21,13): warning C4244: инициализация: преобразование "float" в "int", возможна потеря данных
+  Intaractive.cpp
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(41,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(40,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(39,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(46,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(45,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(44,13): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(53,41): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(53,36): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(53,31): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(54,40): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(54,35): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Intaractive.cpp(54,30): warning C4244: аргумент: преобразование "float" в "sf::Uint8", возможна потеря данных
+  NotIntaractive.cpp
+  Page.cpp
+  Program.cpp
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Program.cpp(38,31): warning C4267: =: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\Program.cpp(112,27): warning C4267: return: преобразование из "size_t" в "int"; возможна потеря данных
+  Txt.cpp
+  main.cpp
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(37,44): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(37,33): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(38,30): warning C4244: аргумент: преобразование "float" в "unsigned int", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(70,41): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(79,128): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(79,65): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(82,41): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(90,128): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(90,65): warning C4244: аргумент: преобразование "double" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(128,232): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(128,191): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(128,150): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(128,141): warning C4244: аргумент: преобразование "float" в "int", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(156,157): warning C4244: аргумент: преобразование "int" в "float", возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(308,1): warning C4267: инициализация: преобразование из "size_t" в "int"; возможна потеря данных
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\main.cpp(214): message : выполняется компиляция ссылки на экземпляр шаблон функции "void texting<Program>(std::string &,T &)"
+          with
+          [
+              T=Program
+          ]
+  Создание кода...
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\ContentPage.cpp(124): warning C4715: ContentPage::IndexOfPressedButton: значение возвращается не при всех путях выполнения
+D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\Graph Editor\ContentPage.cpp(134): warning C4715: ContentPage::IndexOfPressedInput: значение возвращается не при всех путях выполнения
+  Graph Editor.vcxproj -> D:\Текстовые работы\2 курс\ОТИС\OTIS-2022\trunk\ii02209\task_03\src\x64\Debug\Graph Editor.exe
