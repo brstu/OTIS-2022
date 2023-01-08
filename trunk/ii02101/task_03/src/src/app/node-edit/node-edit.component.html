@@ -1,0 +1,21 @@
+
+<div style="display: flex; flex-flow: column;">
+  <div style="width: 100%;">
+    <mat-form-field appearance="fill" style="width: 140px;">
+      <mat-label>Имя вершины</mat-label>
+      <input matInput type="text" [(ngModel)]="data.label" >
+    </mat-form-field>
+    <button mat-flat-button [(colorPicker)]="data.data.color2" [style.background]="data.data.color2" style="margin-left: 2px; margin-right: 2px;">Цвет</button>
+  </div>
+
+  <div style="width: 100%;">
+    <mat-form-field appearance="fill" style="width: 340px;">
+      <mat-label>Ссылка</mat-label>
+      <input matInput type="text" [(ngModel)]="data.data.uri" >
+    </mat-form-field>
+  </div>
+
+  <div style="width: 100%;">
+    <button mat-stroked-button color="accent" (click)="close()" style="margin-left: 4px;">Закрыть</button>
+  </div>
+</div>
