@@ -1,0 +1,46 @@
+using Plots #подключение пакетов
+using Printf
+
+#массивы, которые хранят значения 
+unlinearr=[] #нелинейный массив
+linearr=[] #линейный массив
+
+function linear(sec, fx, kof1, kof2, kof3) #функция для линейной модели
+    k = 1 #счетчик
+    X = 1:sec
+    linearr = [] #массив для значений y
+    while k <= sec
+        push!(linearr, fx)
+        println(fx) #выведение значений линейной модели
+        fx = kof1 * fx + kof2 * kof3 #формула 1
+        k += 1
+    end
+    plot(X, linearr, color = :green , label = "Linear_model") #построение графика линейной модели
+end
+
+function unlinear(sec, fx, kof1, kof2, kof3, kof4, kof5) #функция для нелинейной модели
+    k = 1
+    X = 1:sec
+    unlinearr = [] #массив для значений y
+    while k <= sec
+        println(fx) #выведение значений нелинейной модели
+        fx = kof1 * fx - kof2 * fx^2 + kof4 * kof3 + kof5 * sin(kof3) #формула 2
+        push!(unlinearr, fx)
+        k += 1
+    end
+    plot!(X, unlinearr, color = :blue , label = "UnLinear_model") #построение графика нелинейной модели
+    savefig("lab1.png") #сохранение графика
+end
+
+fx = 0.0 #Значение y
+sec = 25 #Значение времени
+kof1 = 0.6 #Значение констант
+kof2 = 1.1
+kof3 = 0.3
+kof4 = 2.0
+kof5 = 0.7
+
+@printf("Линейная модель принимает значения за %d секунд: ",sec) #вывод линейной модели
+linear(sec, fx, kof1, kof2, kof3)
+@printf("Нелинейная модель принимает значения за %d секунд: ",sec) #вывод нелинейной модели
+unlinear(sec, fx, kof1, kof2, kof3, kof4, kof5)
