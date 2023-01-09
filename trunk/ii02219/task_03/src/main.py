@@ -1,10 +1,12 @@
-import tkinter
-import tkinter.ttk
+import pickle
+import random
+import threading
+import tkinter as tk
 from collections import deque
+import tkinter.ttk
 from heapq import heapify, heappop, heappush
 import colour as clr
 import random as rnd
-from tkinter import *
 import numpy as np
 
 
@@ -18,8 +20,8 @@ class Arc:
         self.name = name
         self.color = color
         self.graph = graph
-        self.shape = Canvas()
-        self.text = Canvas()
+        self.shape = tk.Canvas
+        self.text = tk.Canvas
         self.start_node = Node
         self.finish_node = Node
 
@@ -54,8 +56,8 @@ class Node:
         self.arcs = []
         self.x = x
         self.y = y
-        self.shape = Canvas
-        self.text = Canvas
+        self.shape = tk.Canvas
+        self.text = tk.Canvas
 
     def add_arc(self, arc):
         self.arcs.append(arc)
@@ -170,27 +172,45 @@ class Graph:
         return {'nodes': self.nodes, 'arcs': self.arcs}
 
 
-class Window(Tk):
-    btn_add_arc = Button()
+class Window(tk.Tk):
+    btn_add_arc = tk.Button
+    t1 = threading.Thread
+    t2 = threading.Thread
     current_graph = Graph("")
     current_node = Node
-    current_canvas = Canvas()
+    current_canvas = tk.Canvas
     current_arc = Arc
     notebook = None
     graph_1 = None
     graph_2 = None
     canvas1 = None
-    canvas2 = None
+    canvas2 = tk.Canvas
+    isArcActivate = False
 
     def __init__(self):
         super().__init__()
+        # self.canvas1 = Canvas(self.tab_1)
+        # self.node2 = self.canvas1.create_oval(5, 5, 75, 75, fill=clr.Color("Red"))
+        # self.canvas2 = Canvas(self.tab_2)
+        # self.canvas1.pack(fill=tkinter.BOTH, expand=1)
+        # self.canvas2.pack(fill=tkinter.BOTH, expand=1)
+        # Событие на переключение между графами
+
+        # self.current_canvas.tag_bind(self.node2, "<ButtonRelease-1>", self.on_node_release)
+        # self.current_canvas.tag_bind(self.node2, "<ButtonPress-1>", self.on_node_press)
+        # self.current_canvas.tag_bind(self.node2, "<B1-Motion>", self.on_node_motion)
+
         self.mainloop()
 
     def set_notebook(self, notebook):
         self.notebook = notebook
 
 
+x_prev = 0
+y_prev = 0
 # Bind event handlers to the nodes
+
+
 def create_nodes_fnc(node):
     def start(e):
         global x_prev
@@ -208,7 +228,7 @@ def create_nodes_fnc(node):
         redraw()
 
     def choose(event):
-        Window.btn_add_arc.config(state=ACTIVE)
+        Window.btn_add_arc.config(state=tk.ACTIVE)
         Window.current_node = node
         redraw()
 
@@ -229,31 +249,31 @@ def create_nodes_fnc(node):
 
 
 class Plt:
-    entry_color = Entry()
-    label_color = Label()
+    entry_color = tk.Entry
+    label_color = tk.Label
     color = clr
 
 
 def generate_color():
-    Plt.entry_color.delete(0, END)
-    color = '#{:02x}{:02x}{:02x}'.format(*map(lambda x: rnd.randint(0, 255), range(3)))
+    Plt.entry_color.delete(0, tk.END)
+    color = '#{:02x}{:02x}{:02x}'.format(*map(lambda x: random.randint(0, 255), range(3)))
     Plt.label_color['bg'] = color
     Plt.entry_color.insert(0, color)
     Plt.color = color
 
 
 def change_clr():
-    window = Tk()
+    window = tk.Tk()
     window.geometry('200x300')
     window.resizable(0, 0)
-    Plt.label_color = Label(window, bg='white')
-    Plt.label_color.place(relx=0.5, rely=0.3, anchor=CENTER, width=150, height=130)
-    Plt.entry_color = Entry(window, borderwidth=4)
-    Plt.entry_color.place(relx=0.5, rely=0.6, anchor=CENTER, width=150, height=30)
-    btn_generate_clr = Button(window, text="Сгенерировать", font='Arial 13 bold', borderwidth=4, command=generate_color)
-    btn_generate_clr.place(relx=0.5, rely=0.8, anchor=CENTER, width=150, height=60)
-    btn_commit = Button(window, text="Изменить", font='Arial 13 bold', borderwidth=4, command=commit_clr)
-    btn_commit.place(relx=0.5, rely=0.10, anchor=CENTER, width=150, height=60)
+    Plt.label_color = tk.Label(window, bg='white')
+    Plt.label_color.place(relx=0.5, rely=0.3, anchor=tk.CENTER, width=150, height=130)
+    Plt.entry_color = tk.Entry(window, borderwidth=4)
+    Plt.entry_color.place(relx=0.5, rely=0.6, anchor=tk.CENTER, width=150, height=30)
+    btn_generate_clr = tk.Button(window, text="Сгенерировать", font='Arial 13 bold', borderwidth=4, command=generate_color)
+    btn_generate_clr.place(relx=0.5, rely=0.8, anchor=tk.CENTER, width=150, height=60)
+    btn_commit = tk.Button(window, text="Изменить", font='Arial 13 bold', borderwidth=4, command=commit_clr)
+    btn_commit.place(relx=0.5, rely=0.10, anchor=tk.CENTER, width=150, height=60)
     window.mainloop()
 
 
@@ -261,9 +281,9 @@ def commit_clr():
     Window.current_node.set_color(Plt.color)
 
 
-class Name(Tk):
-    name = Tk()
-    text = Entry()
+class Name(tk.Tk):
+    name = tk.Tk
+    text = tk.Entry()
 
 
 def change_name():
@@ -272,13 +292,13 @@ def change_name():
 
 
 def window_cng_name():
-    name = Tk()
+    name = tk.Tk()
     name.geometry('200x300')
     name.resizable(0, 0)
-    Label(name, text="Название").grid(row=0)
-    Name.text = Entry(name)
+    tk.Label(name, text="Название").grid(row=0)
+    Name.text = tk.Entry(name)
     Name.text.grid(row=0, column=1)
-    Button(name, text='Изменить', command=change_name).grid(row=3, column=1, sticky=W, pady=4)
+    tk.Button(name, text='Изменить', command=change_name).grid(row=3, column=1, sticky=tk.W, pady=4)
     name.mainloop()
 
 
@@ -296,7 +316,7 @@ def on_add_arc():
     Window.current_arc = arc
     Window.current_node.add_arc(arc)
     arc.start_node = Window.current_node
-    Window.btn_add_arc.config(state=tkinter.DISABLED)
+    Window.btn_add_arc.config(state=tk.tkinter.DISABLED)
 
 
 def on_tab_changed(event):
@@ -360,18 +380,36 @@ def redraw():
 
 
 def print_info():
-    window = Tk()
+    window = tk.Tk()
     print(Window.current_graph.name)
-    label = Label(window, text=f'{Window.current_graph.__str__()}')
+    label = tk.Label(window, text=f'{Window.current_graph.__str__()}')
     label.pack()
 
     window.mainloop()
 
 
+def save_file():
+    file = tk.tkinter.filedialog.asksaveasfilename(filetypes=[("Graph files", ".graph"), ("TXT Graph", ".txt")])
+    with open(file, 'wb') as f:
+        # Сериализация
+        pickle.dump(Window.current_graph.nodes, f)
+        pickle.dump(Window.current_graph.arcs, f)
+
+
+#def load_file():def
+   # file = tkinter.filedialog.askopenfilename()def
+   # if file:def
+     #   # Чтение данных из файлаdef
+      #  with open(file, 'r') as f:def
+       #    data = f.read()def
+       #obj2 = json.loads(data)def
+        #print(obj2)def
+    # redraw()def
+
 
 def main():
     # создаем окно программы
-    window = Tk()
+    window = tk.Tk()
 
     width = window.winfo_screenwidth()
     height = window.winfo_screenheight()
@@ -383,14 +421,19 @@ def main():
     window.resizable = False
 
     # создаем меню программы
-    menu = Menu(window)
+    menu = tk.Menu(window)
     window.config(menu=menu)
     # создаем пункт меню "Файл"
-    file_menu = Menu(menu)
+    file_menu = tk.Menu(menu)
     # создаем пункт меню "Граф"
-    graph_menu = Menu(menu)
+    graph_menu = tk.Menu(menu)
     # создаем пункт меню управления вершинами и ребрами
-    control_menu = Menu(menu)
+    control_menu = tk.Menu(menu)
+    # создаем подменю пункта "Файл"
+    # file_menu.add_command(label='Открыть', command=load_file)
+    # file_menu.add_command(label='Сохранить', command=save_file)
+    # file_menu.add_command(label='Сохранить в текст. варианте')
+    # menu.add_cascade(label="Файл", menu=file_menu)
     # создаем подменю пункта "Граф"
     graph_menu.add_command(label='Вывести информацию', command=print_info)
     menu.add_cascade(label="Граф", menu=graph_menu)
@@ -399,10 +442,11 @@ def main():
     control_menu.add_command(label='Изменить имя', command=window_cng_name)
     menu.add_cascade(label="Управление", menu=control_menu)
     # создаем MDI для графов
-    notebook = tkinter.ttk.Notebook(window)
+
+    notebook = tk.ttk.Notebook(window)
     notebook.bind('<<NotebookTabChanged>>', on_tab_changed)
-    tab_1 = Frame(notebook)
-    tab_2 = Frame(notebook)
+    tab_1 = tk.Frame(notebook)
+    tab_2 = tk.Frame(notebook)
     graph_1 = Graph('Graph1')
     Window.graph_1 = graph_1
     graph_2 = Graph('Graph2')
@@ -413,23 +457,23 @@ def main():
     Window.notebook = notebook
 
     # Создаем холст для вершин и графов
-    canvas = Canvas(tab_1, width=800, height=500)
-    canvas2 = Canvas(tab_2, width=800, height=500)
+    canvas = tk.Canvas(tab_1, width=800, height=500)
+    canvas2 = tk.Canvas(tab_2, width=800, height=500)
     Window.canvas1 = canvas
     canvas.pack()
     canvas2.pack()
     Window.canvas2 = canvas2
     # Создаем кнопки для создания и удаления вершин
-    add_node_button = Button(window, text='Добавить узел', command=on_add_node)
+    add_node_button = tk.Button(window, text='Добавить узел', command=on_add_node)
     add_node_button.pack()
 
-    remove_node_button = Button(window, text='Удалить узел', command=on_remove_node)
+    remove_node_button = tk.Button(window, text='Удалить узел', command=on_remove_node)
     remove_node_button.pack()
-    add_arc_button = Button(window, text='Добавить ребро', command=on_add_arc)
-    add_arc_button.config(state=DISABLED)
+    add_arc_button = tk.Button(window, text='Добавить ребро', command=on_add_arc)
+    add_arc_button.config(state=tk.DISABLED)
     add_arc_button.pack()
     Window.btn_add_arc = add_arc_button
-    remove_arc_button = Button(window, text='Удалить ребро', command=on_remove_arc)
+    remove_arc_button = tk.Button(window, text='Удалить ребро', command=on_remove_arc)
     remove_arc_button.pack()
 
     # Draw two nodes
